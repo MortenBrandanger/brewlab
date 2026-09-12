@@ -86,7 +86,8 @@
 		const profile = WATER_PROFILE_BY_ID.get(brew.recipe.water.profileId);
 		rows.push({
 			label: 'Water',
-			value: `${profile?.name ?? 'Custom'} · ${brew.recipe.batchVolumeL.toFixed(0)} L`
+			// The water you actually pour, not the beer that comes out at the end.
+			value: `${profile?.name ?? 'Custom'} · ${(brew.context?.totalWaterL ?? brew.recipe.preBoilVolumeL).toFixed(0)} L`
 		});
 
 		if (brew.knows('potential')) {

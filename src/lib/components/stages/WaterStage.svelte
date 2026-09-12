@@ -2,6 +2,7 @@
 	import SliderField from '../SliderField.svelte';
 	import LearningNote from '../LearningNote.svelte';
 	import { SALTS, WATER_PROFILES, WATER_PROFILE_BY_ID } from '$lib/brewing/water';
+	import { strikeTempC } from '$lib/brewing/calculations';
 	import { brew } from '$lib/state/brew.svelte';
 	import { prefs } from '$lib/state/prefs.svelte';
 
@@ -39,6 +40,24 @@
 	}
 
 	const hasGrist = $derived(brew.recipe.fermentables.length > 0);
+
+	/**
+	 * How hot to heat it, and how much.
+	 *
+	 * Neither is a free choice. The temperature follows from the mash rest and
+	 * the mash thickness — cold grain pulls the mash down the moment it goes in,
+	 * so the liquor has to start above the target. The volume follows from the
+	 * batch size and what boils away. Both are shown here because "heat the
+	 * water" is meaningless without them.
+	 */
+	const firstRest = $derived(
+		brew.recipe.mash.steps.find((step) => step.tempC >= 40 && step.tempC <= 78) ??
+			brew.recipe.mash.steps[0]
+	);
+	const strike = $derived(
+		firstRest ? strikeTempC(firstRest.tempC, brew.recipe.mash.thicknessLPerKg) : undefined
+	);
+	const totalWaterL = $derived(brew.context?.totalWaterL ?? brew.recipe.preBoilVolumeL);
 
 	/** Which way this water leans, in words rather than a ratio. */
 	const lean = $derived.by(() => {
@@ -171,6 +190,20 @@
 				</button>
 			</div>
 		</section>
+	{/if}
+
+	{#if strike !== undefined && firstRest}
+		<p class="prose-measure text-sm">
+			<span class="tnum font-medium"
+				>About {totalWaterL.toFixed(0)} litres, heated to
+				<span class="text-copper-text">{strike.toFixed(0)} °C</span>.</span
+			>
+			<span class="text-muted">
+				Not a number you pick: it follows from the {firstRest.tempC} °C mash rest you have set, because
+				cold grain will pull the temperature down about {(strike - firstRest.tempC).toFixed(0)} degrees
+				the moment it goes in. Change the mash and this changes with it.
+			</span>
+		</p>
 	{/if}
 
 	{#if hasGrist && water}
