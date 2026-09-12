@@ -48,10 +48,10 @@ export const STAGES: StageMeta[] = [
 		reality:
 			'You fill a pot with around 25 litres of water. If your tap water is not right for the beer you are making, you cut it with bottled or filtered water. Then you stir in a few grams of brewing salts, maybe a splash of acid, and put it on to heat.',
 		what: 'The minerals in the water decide how bitterness and malt come across, and together with the grain they set the acidity of the mash. Get that acidity wrong and the beer tastes dull and drying however good the recipe is.',
-		decide: 'which water you brew with, and whether to adjust its minerals',
+		decide: 'which water goes in the pot',
 		accent: 'hop',
 		action: 'Fill and heat the water',
-		actionHint: 'The salts go in and the pot goes on to heat.',
+		actionHint: 'The pot goes on to heat, ready for the grain.',
 		done: 'Water treated and heating.',
 		reveals: 'how the minerals will shape the finished beer'
 	},

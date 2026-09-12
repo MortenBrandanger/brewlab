@@ -51,7 +51,7 @@
 							{@const selected = option.id === brew.recipe.fermentation.yeastId}
 							<button
 								type="button"
-								class="rounded-lg p-2.5 text-start ring-1 transition-colors
+								class="rounded-lg p-2.5 text-start ring-1
 									{selected
 									? 'bg-copper-dim ring-copper'
 									: 'bg-surface ring-line hover:bg-ui-hover hover:ring-line-strong'}"
