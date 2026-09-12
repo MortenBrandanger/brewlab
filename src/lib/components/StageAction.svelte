@@ -37,12 +37,9 @@
 				</svg>
 				{meta.done}
 			</span>
-			<p class="text-xs text-subtle">
-				Change anything here and every number updates straight away.
-			</p>
 			{#if next}
-				<button type="button" class="btn btn-ghost ms-auto" onclick={() => ongo(next.id)}>
-					{next.name}
+				<button type="button" class="btn btn-primary ms-auto" onclick={() => ongo(next.id)}>
+					Next: {next.name}
 					<svg viewBox="0 0 16 16" class="h-4 w-4" aria-hidden="true">
 						<path
 							d="M6 3.5 L11 8 L6 12.5"

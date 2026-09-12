@@ -525,3 +525,16 @@ export function averageFermentationTemp(steps: { tempC: number; days: number }[]
 	if (totalDays <= 0) return 20;
 	return steps.reduce((sum, s) => sum + s.tempC * Math.max(0, s.days), 0) / totalDays;
 }
+
+/**
+ * Strike temperature: how hot the water has to be before the grain goes in.
+ *
+ * Room-temperature grain pulls a mash down several degrees the moment it is
+ * stirred in, so brewers heat the liquor past the target and let the grain take
+ * it the rest of the way. The 0.41 is the heat capacity of grain relative to
+ * water, which is why a thin mash needs less of a head start than a thick one.
+ */
+export function strikeTempC(targetTempC: number, thicknessLPerKg: number, grainTempC = 20): number {
+	const ratio = Math.max(0.5, thicknessLPerKg);
+	return targetTempC + (0.41 / ratio) * (targetTempC - grainTempC);
+}

@@ -9,6 +9,7 @@ import {
 	pointsToSg,
 	saturate,
 	sgToPoints,
+	strikeTempC,
 	tinsethBigness,
 	tinsethTimeFactor
 } from './calculations';
@@ -204,6 +205,23 @@ describe('bitterness', () => {
 	test('dry hops add no calculated IBU', () => {
 		const recipe = base({ hops: [dryHop('citra', 200, 5, 5)] });
 		expect(computeIbu(recipe, 1.05).total).toBe(0);
+	});
+});
+
+describe('strike temperature', () => {
+	test('a 66 degree mash at 3 L/kg needs water near 72 degrees', () => {
+		expect(strikeTempC(66, 3)).toBeGreaterThan(71);
+		expect(strikeTempC(66, 3)).toBeLessThan(73);
+	});
+
+	test('a thicker mash needs a bigger head start', () => {
+		expect(strikeTempC(66, 2)).toBeGreaterThan(strikeTempC(66, 4));
+	});
+
+	test('strike temperature is always above the target', () => {
+		for (const target of [50, 62, 66, 72]) {
+			expect(strikeTempC(target, 3)).toBeGreaterThan(target);
+		}
 	});
 });
 

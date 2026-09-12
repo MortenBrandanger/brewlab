@@ -60,7 +60,9 @@
 	const headHeight = $derived(12 + head * 30);
 
 	const CAPTION: Record<Phase, string> = {
-		liquor: 'Hot liquor tank',
+		// Brewers call this the hot liquor tank; everyone else reads "liquor" as
+		// spirits, so the caption stays plain.
+		liquor: 'Brewing water',
 		grist: 'Milled grist',
 		mash: 'Mash tun',
 		kettle: 'Boil kettle',
@@ -69,7 +71,7 @@
 	};
 
 	const DESCRIPTION: Record<Phase, string> = {
-		liquor: 'A tank of treated brewing water, heating up.',
+		liquor: 'A pot of treated brewing water, heating up.',
 		grist: 'Crushed malt, weighed out and waiting for the mash.',
 		mash: 'Grain and hot water resting together while the enzymes work.',
 		kettle: 'Wort in the kettle.',

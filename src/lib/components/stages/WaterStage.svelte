@@ -49,6 +49,12 @@
 	const lean = $derived.by(() => {
 		if (!water) return '';
 		const { sulfate, chloride } = water.final;
+		// A ratio between two near-zero numbers says nothing useful. Very soft
+		// water is not "balanced"; it is simply absent, which is the whole point
+		// of it.
+		if (sulfate + chloride < 40) {
+			return 'Almost no minerals at all. Nothing pushes the beer in either direction, which is exactly what a delicate pale lager wants and what a hoppy beer will find hollow.';
+		}
 		if (sulfate > chloride * 1.5) return 'Leans dry and sharp — bitterness will feel pointed.';
 		if (chloride > sulfate * 1.5) return 'Leans full and round — malt will come forward.';
 		return 'Balanced between sharp and round.';

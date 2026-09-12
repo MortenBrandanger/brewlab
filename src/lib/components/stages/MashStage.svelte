@@ -2,6 +2,7 @@
 	import SliderField from '../SliderField.svelte';
 	import LearningNote from '../LearningNote.svelte';
 	import { step } from '$lib/brewing/recipes';
+	import { strikeTempC } from '$lib/brewing/calculations';
 	import { brew } from '$lib/state/brew.svelte';
 	import type { MashStepKind } from '$lib/brewing/types';
 
@@ -14,6 +15,16 @@
 	};
 
 	const mash = $derived(brew.context?.mash);
+	const grainKg = $derived(brew.context?.gravity.grist.grainKg ?? 0);
+	const mashWaterL = $derived(grainKg * brew.recipe.mash.thicknessLPerKg);
+	/** The first rest is the one you actually have to hit with hot water. */
+	const firstRest = $derived(
+		brew.recipe.mash.steps.find((step) => step.tempC >= 40 && step.tempC <= 78) ??
+			brew.recipe.mash.steps[0]
+	);
+	const strike = $derived(
+		firstRest ? strikeTempC(firstRest.tempC, brew.recipe.mash.thicknessLPerKg) : undefined
+	);
 
 	const PRESETS = [
 		{
@@ -188,20 +199,46 @@
 		</ul>
 	</section>
 
-	<SliderField
-		label="Mash thickness"
-		bind:value={brew.recipe.mash.thicknessLPerKg}
-		min={1.5}
-		max={5}
-		step={0.1}
-		unit=" L/kg"
-		format={(n) => n.toFixed(1)}
-		marks={[
-			{ at: 2.5, label: '2.5' },
-			{ at: 3.5, label: '3.5' }
-		]}
-		why="Between 2.5 and 3.5 litres per kilogram is comfortable. Thicker protects the enzymes from heat; thinner converts a little more completely and slightly more fermentably."
-	/>
+	<div>
+		<SliderField
+			label="Mash thickness"
+			bind:value={brew.recipe.mash.thicknessLPerKg}
+			min={1.5}
+			max={5}
+			step={0.1}
+			unit=" L/kg"
+			format={(n) => n.toFixed(1)}
+			marks={[
+				{ at: 2.5, label: '2.5' },
+				{ at: 3.5, label: '3.5' }
+			]}
+			why="How soupy the porridge is. Between 2.5 and 3.5 litres per kilogram is comfortable to stir. Thicker protects the enzymes from the heat; thinner converts a little more completely and slightly more fermentably."
+		/>
+		{#if grainKg > 0}
+			<p class="tnum mt-1 text-xs text-muted">
+				That is {mashWaterL.toFixed(1)} litres of water on {grainKg.toFixed(2)} kg of grain.
+			</p>
+		{/if}
+	</div>
+
+	{#if strike !== undefined && grainKg > 0 && firstRest}
+		<section class="rounded-lg bg-surface p-4 ring-1 ring-line">
+			<h3 class="field-label mb-2">Before the grain goes in</h3>
+			<p class="prose-measure text-sm">
+				Heat your water to
+				<span class="tnum font-display text-lg font-semibold text-copper-text">
+					{strike.toFixed(0)} °C
+				</span>
+				— not {firstRest.tempC} °C.
+			</p>
+			<p class="prose-measure mt-1.5 text-xs text-muted">
+				Room-temperature grain is cold and there is a lot of it, so the moment you stir it in the
+				temperature drops. At {brew.recipe.mash.thicknessLPerKg.toFixed(1)} L/kg it falls about
+				{(strike - firstRest.tempC).toFixed(0)} degrees, which lands you on your {firstRest.tempC} °C
+				rest. A thicker mash has less water to hold the heat, so it needs a bigger head start.
+			</p>
+		</section>
+	{/if}
 
 	{#if mash}
 		<section class="rounded-lg bg-surface p-3 ring-1 ring-line">

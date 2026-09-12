@@ -74,7 +74,13 @@
 							>
 								{stage.name}
 							</h1>
-							<p class="prose-measure mt-2 text-sm text-muted">{stage.what}</p>
+							<p class="prose-measure mt-2 text-sm text-fg">{stage.reality}</p>
+							{#if stage.what}
+								<p class="prose-measure mt-2 text-sm text-muted">
+									<span class="text-subtle">Why it matters:</span>
+									{stage.what}
+								</p>
+							{/if}
 							{#if stage.decide}
 								<p class="prose-measure mt-2 text-sm">
 									<span class="field-label inline">You decide</span>

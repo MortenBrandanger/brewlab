@@ -48,11 +48,6 @@
 	const metrics = $derived(
 		[
 			{ label: 'Mash pH', value: result.metrics.mashPh.toFixed(2), reveal: 'potential' as Reveal },
-			{
-				label: 'Grain',
-				value: `${result.metrics.grainKg.toFixed(2)} kg`,
-				reveal: 'potential' as Reveal
-			},
 			{ label: 'EBC', value: String(Math.round(result.metrics.ebc)), reveal: 'colour' as Reveal },
 			{ label: 'OG', value: result.metrics.og.toFixed(3), reveal: 'gravity' as Reveal },
 			{
