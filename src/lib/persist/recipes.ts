@@ -184,20 +184,32 @@ export async function renameRecipe(stored: StoredRecipe, name: string): Promise<
 /* Autosave and challenge progress                                            */
 /* -------------------------------------------------------------------------- */
 
-export async function loadAutosave(): Promise<Recipe | undefined> {
+/** The working brew: the recipe plus how far the brew day has actually got. */
+export type Session = { recipe: Recipe; brewedTo: number };
+
+export async function loadAutosave(): Promise<Session | undefined> {
 	if (!storageAvailable()) return undefined;
 	try {
 		const raw = await idb.get<unknown>(STORE_META, AUTOSAVE_KEY);
-		return raw ? normaliseRecipe(raw) : undefined;
+		if (!raw || typeof raw !== 'object') return undefined;
+		const record = raw as Record<string, unknown>;
+		// Autosaves written before brew-day progress existed are bare recipes.
+		const isSession = 'recipe' in record;
+		const recipe = normaliseRecipe(isSession ? record.recipe : record);
+		const brewedTo =
+			isSession && typeof record.brewedTo === 'number' && Number.isFinite(record.brewedTo)
+				? record.brewedTo
+				: 8;
+		return { recipe, brewedTo };
 	} catch {
 		return undefined;
 	}
 }
 
-export async function saveAutosave(recipe: Recipe): Promise<void> {
+export async function saveAutosave(recipe: Recipe, brewedTo: number): Promise<void> {
 	if (!storageAvailable()) return;
 	try {
-		await idb.put(STORE_META, structuredClone(recipe), AUTOSAVE_KEY);
+		await idb.put(STORE_META, { recipe: structuredClone(recipe), brewedTo }, AUTOSAVE_KEY);
 	} catch {
 		// Autosave is a convenience, never a requirement.
 	}

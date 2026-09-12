@@ -25,6 +25,23 @@ pnpm build      # static site in build/
 
 Node 22+ and pnpm 10.
 
+## The brew day
+
+The simulator tracks two separate things. The recipe is what the beer _would_ be, and it
+recalculates the instant any control moves. `brewedTo` is how far the brew day has actually
+got, and it gates what the app is willing to claim.
+
+That distinction is the whole design. On the water stage there is no beer — there is water
+in a tank — so the monitor shows a tank, not a glass, and it does not report a final
+gravity, an alcohol figure or a style match. Colour arrives when the grain is milled, mash
+pH when there is a grist to buffer it, original gravity when the wort reaches the kettle,
+bitterness after the boil, alcohol after fermentation, and the scores only once the glass
+is poured.
+
+Each stage ends with the brewing action rather than a Next button: mill the grain, mash in,
+run off and sparge, pitch the yeast. Progress only ever moves forward, so revisiting an
+earlier stage to change something never costs anything — every number simply updates.
+
 ## How it is put together
 
 The brewing engine is pure TypeScript in `src/lib/brewing`, with no UI dependency and no

@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { CHALLENGES } from '$lib/brewing/challenges';
-	import { buildExample, defaultRecipe } from '$lib/brewing/recipes';
+	import { buildExample, emptyRecipe } from '$lib/brewing/recipes';
 	import { brew } from '$lib/state/brew.svelte';
 
 	$effect(() => {
@@ -12,10 +12,12 @@
 	const DIFFICULTY_LABEL = { easy: 'Gentle', medium: 'Involved', hard: 'Hard' } as const;
 
 	function start(id: string, startingRecipeId?: string) {
+		// A repair challenge hands you someone else's finished beer; the rest are
+		// a blank brew day.
 		const recipe = startingRecipeId
-			? (buildExample(startingRecipeId) ?? defaultRecipe())
-			: defaultRecipe();
-		brew.startChallenge(id, recipe);
+			? (buildExample(startingRecipeId) ?? emptyRecipe())
+			: emptyRecipe();
+		brew.startChallenge(id, recipe, !startingRecipeId);
 		void goto(resolve('/'));
 	}
 

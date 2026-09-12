@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Finding, Severity } from '$lib/brewing/types';
-	import { STAGES, type StageId } from '$lib/state/stages';
+	import { STAGES, stageForFields, type StageId } from '$lib/state/stages';
 
 	let { findings, ongoto }: { findings: Finding[]; ongoto?: (stage: StageId) => void } = $props();
 
@@ -10,34 +10,11 @@
 		caution: 'Worth checking',
 		info: 'Good practice'
 	};
-
-	/** Map the fields a finding names onto the stage that owns them. */
-	const FIELD_STAGE: [string, StageId][] = [
-		['water', 'water'],
-		['fermentables', 'grain'],
-		['mash', 'mash'],
-		['preBoilVolumeL', 'sparge'],
-		['batchVolumeL', 'sparge'],
-		['efficiencyPct', 'sparge'],
-		['hops', 'boil'],
-		['boilTimeMin', 'boil'],
-		['chill', 'chill'],
-		['fermentation', 'ferment'],
-		['conditioning', 'condition']
-	];
-
-	function stageFor(fields: string[]): StageId | undefined {
-		for (const field of fields) {
-			const match = FIELD_STAGE.find(([prefix]) => field.startsWith(prefix));
-			if (match) return match[1];
-		}
-		return undefined;
-	}
 </script>
 
 <ul class="flex flex-col gap-2">
 	{#each findings as finding (finding.code)}
-		{@const stage = stageFor(finding.fields)}
+		{@const stage = stageForFields(finding.fields)}
 		<li
 			class="rounded-lg border-s-4 bg-surface p-3 ring-1 ring-line
 				{finding.severity === 'severe'

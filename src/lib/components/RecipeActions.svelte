@@ -2,7 +2,6 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { brew } from '$lib/state/brew.svelte';
-	import { defaultRecipe } from '$lib/brewing/recipes';
 	import { exportJson, importJson, saveRecipe, wrap } from '$lib/persist/recipes';
 	import { shareUrl } from '$lib/persist/share';
 
@@ -61,12 +60,9 @@
 		}
 	}
 
-	function brewAgain() {
-		brew.load(defaultRecipe());
-		brew.stored = undefined;
-		brew.leaveChallenge();
-		brew.setStage('water');
-		announce('Started a fresh brew from the house pale ale.');
+	function newBrewDay() {
+		brew.startFresh();
+		announce('Fresh brew day. Empty kettle, water on.');
 	}
 </script>
 
@@ -85,7 +81,7 @@
 			<button type="button" class="btn btn-ghost" onclick={() => goto(resolve('/print'))}
 				>Print sheet</button
 			>
-			<button type="button" class="btn btn-quiet" onclick={brewAgain}>Start over</button>
+			<button type="button" class="btn btn-quiet" onclick={newBrewDay}>New brew day</button>
 		</div>
 	</div>
 

@@ -38,16 +38,94 @@
 	}
 
 	const categories = ['base', 'speciality', 'roast', 'adjunct', 'sugar'] as const;
+
+	/** Three grists that go somewhere, for a brewer staring at an empty tun. */
+	const STARTERS = [
+		{
+			name: 'Pale and hoppy',
+			note: 'A clean base for pale ales and IPAs.',
+			grist: [
+				['pale-ale', 4.4],
+				['munich-light', 0.4]
+			] as [string, number][]
+		},
+		{
+			name: 'Continental lager',
+			note: 'Pilsner malt with a little depth behind it.',
+			grist: [
+				['pilsner', 4.3],
+				['munich-light', 0.4]
+			] as [string, number][]
+		},
+		{
+			name: 'Dark and roasty',
+			note: 'The backbone of a stout or porter.',
+			grist: [
+				['pale-ale', 3.6],
+				['flaked-oats', 0.3],
+				['roasted-barley', 0.4]
+			] as [string, number][]
+		}
+	];
+
+	function useStarter(grist: [string, number][]) {
+		brew.recipe.fermentables = grist.map(([id, kg]) => ferm(id, kg));
+	}
 </script>
 
 <div class="flex flex-col gap-5">
 	{#if brew.recipe.fermentables.length === 0}
-		<p
-			class="rounded-lg border border-dashed border-line-strong p-6 text-center text-sm text-muted"
-		>
-			No grain yet. A beer needs something to ferment — start with 4–5 kg of a base malt.
-		</p>
+		<section class="rounded-lg border border-dashed border-line-strong p-5">
+			<h3 class="font-display text-sm font-semibold">The tun is empty</h3>
+			<p class="prose-measure mt-1 text-sm text-muted">
+				A beer needs something to ferment. Pick a starting grist and change it from there, or add
+				malts one at a time.
+			</p>
+			<ul class="mt-4 grid gap-2 sm:grid-cols-3">
+				{#each STARTERS as starter (starter.name)}
+					<li>
+						<button
+							type="button"
+							class="h-full w-full rounded-lg bg-surface p-3 text-start ring-1 ring-line transition-colors hover:bg-ui-hover hover:ring-line-strong"
+							onclick={() => useStarter(starter.grist)}
+						>
+							<span class="block text-sm font-medium">{starter.name}</span>
+							<span class="mt-0.5 block text-xs text-subtle">{starter.note}</span>
+						</button>
+					</li>
+				{/each}
+			</ul>
+		</section>
 	{:else}
+		<!-- The grist at a glance: real colours, real proportions. -->
+		<div>
+			<div class="flex h-7 overflow-hidden rounded-md ring-1 ring-line" aria-hidden="true">
+				{#each brew.recipe.fermentables as addition (addition.id)}
+					{@const f = getFermentable(addition.fermentableId)}
+					{#if f && totalKg > 0}
+						<div
+							class="transition-[width] duration-200"
+							style="width:{(addition.weightKg / totalKg) * 100}%; background:{srmToCss(
+								ebcToSrm(f.colourEbc)
+							)}"
+							title="{f.name} — {Math.round((addition.weightKg / totalKg) * 100)}%"
+						></div>
+					{/if}
+				{/each}
+			</div>
+			<p class="tnum mt-1.5 text-xs text-subtle">
+				{totalKg.toFixed(2)} kg of grist
+				{#if grist}
+					· {Math.round(grist.diastaticShare * 100)}% carries enzymes
+					{#if grist.specialityShare > 0}
+						· {Math.round(grist.specialityShare * 100)}% speciality
+					{/if}
+					{#if grist.roastShare > 0}
+						· {Math.round(grist.roastShare * 100)}% roasted
+					{/if}
+				{/if}
+			</p>
+		</div>
 		<ul class="flex flex-col gap-2">
 			{#each brew.recipe.fermentables as addition (addition.id)}
 				{@const f = getFermentable(addition.fermentableId)}

@@ -55,12 +55,16 @@
 							>
 								<span class="flex items-baseline justify-between gap-2">
 									<span class="text-sm font-medium">{option.name}</span>
-									<span class="tnum text-xs text-muted"
-										>{Math.round(option.attenuation * 100)}%</span
-									>
+									<span class="tnum text-xs {selected ? 'text-fg' : 'text-muted'}">
+										{Math.round(option.attenuation * 100)}%
+									</span>
 								</span>
-								<span class="mt-0.5 block text-xs text-subtle">{option.blurb}</span>
-								<span class="tnum mt-1 block text-[0.625rem] text-subtle">
+								<span class="mt-0.5 block text-xs {selected ? 'text-fg' : 'text-subtle'}"
+									>{option.blurb}</span
+								>
+								<span
+									class="tnum mt-1 block text-[0.625rem] {selected ? 'text-fg' : 'text-subtle'}"
+								>
 									{option.tempMinC}–{option.tempMaxC} °C · {option.flocculation} flocculation
 								</span>
 							</button>

@@ -26,7 +26,7 @@
 		void (async () => {
 			if (!(await loadSharedFragment())) {
 				const saved = await loadAutosave();
-				if (saved) brew.load(saved);
+				if (saved) brew.load(saved.recipe, undefined, saved.brewedTo);
 			}
 			await brew.hydrateProgress();
 			brew.hydrated = true;
@@ -42,9 +42,10 @@
 	// Autosave the working brew, debounced so dragging a slider does not thrash
 	// IndexedDB.
 	$effect(() => {
-		if (!brew.hydrated) return;
+		if (!brew.hydrated || !brew.started) return;
 		const snapshot = $state.snapshot(brew.recipe);
-		const timer = setTimeout(() => void saveAutosave(snapshot), 600);
+		const brewedTo = brew.brewedTo;
+		const timer = setTimeout(() => void saveAutosave(snapshot, brewedTo), 600);
 		return () => clearTimeout(timer);
 	});
 </script>

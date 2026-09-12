@@ -11,7 +11,8 @@
 		{ path: '/recipes', label: 'Recipes' }
 	] as const;
 
-	const onBrewPage = $derived(page.url.pathname === '/');
+	// The style target only means something once a brew is under way.
+	const onBrewPage = $derived(page.url.pathname === '/' && brew.started);
 </script>
 
 <header class="no-print border-b border-line bg-surface-2">
