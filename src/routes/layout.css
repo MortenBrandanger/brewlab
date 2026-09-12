@@ -1,0 +1,365 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+
+/*
+ * BrewLab design tokens.
+ *
+ * A single committed dark theme: a warm, low-light brewery. Neutrals are tinted
+ * toward malt rather than left as dead grey, and every colour is authored in
+ * OKLCH so the ramps stay perceptually even.
+ *
+ * Contrast, measured against the surface behind each token:
+ *   fg 16.6:1 · muted 8.3:1 · subtle 5.3:1 · border-strong 3.8:1
+ *   copper 5.1:1 · amber 10.3:1 · hop 9.6:1 · danger 5.3:1
+ * Solid copper, amber, hop and danger fills all carry ink-coloured text.
+ */
+
+@theme {
+	--color-*: initial;
+
+	/* Warm neutral ramp, dark to light */
+	--color-surface: oklch(0.155 0.012 62);
+	--color-surface-2: oklch(0.195 0.014 62);
+	--color-ui: oklch(0.235 0.016 62);
+	--color-ui-hover: oklch(0.275 0.018 62);
+	--color-ui-active: oklch(0.315 0.02 62);
+	--color-line: oklch(0.325 0.018 62);
+	--color-line-strong: oklch(0.535 0.026 62);
+	--color-subtle: oklch(0.635 0.02 65);
+	--color-muted: oklch(0.735 0.022 70);
+	--color-fg: oklch(0.945 0.016 78);
+	--color-ink: oklch(0.16 0.02 62);
+
+	/* Accents */
+	--color-copper: oklch(0.62 0.13 45);
+	--color-copper-hover: oklch(0.672 0.135 45);
+	--color-copper-text: oklch(0.78 0.11 52);
+	--color-copper-dim: oklch(0.47 0.09 45);
+	--color-amber: oklch(0.8 0.14 78);
+	--color-hop: oklch(0.76 0.15 145);
+	--color-hop-dim: oklch(0.43 0.075 145);
+	--color-danger: oklch(0.64 0.185 25);
+	--color-danger-text: oklch(0.76 0.14 25);
+	--color-danger-dim: oklch(0.42 0.1 25);
+	--color-warn: oklch(0.78 0.15 68);
+
+	--color-transparent: transparent;
+	--color-current: currentColor;
+
+	/* Type: five sizes, three weights */
+	--font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+
+	--text-xs: 0.75rem;
+	--text-xs--line-height: 1.45;
+	--text-xs--letter-spacing: 0.01em;
+	--text-sm: 0.875rem;
+	--text-sm--line-height: 1.5;
+	--text-base: 1rem;
+	--text-base--line-height: 1.55;
+	--text-lg: 1.375rem;
+	--text-lg--line-height: 1.3;
+	--text-lg--letter-spacing: -0.01em;
+	--text-xl: 2rem;
+	--text-xl--line-height: 1.15;
+	--text-xl--letter-spacing: -0.02em;
+
+	--radius-sm: 0.25rem;
+	--radius-md: 0.5rem;
+	--radius-lg: 0.875rem;
+	--radius-xl: 1.25rem;
+
+	/* One light source, from above. Shadows tinted to the surface hue. */
+	--shadow-raised:
+		0 0 0 1px oklch(0.325 0.018 62 / 0.9), 0 1px 2px oklch(0.08 0.01 62 / 0.5),
+		0 4px 10px -3px oklch(0.08 0.01 62 / 0.45);
+	--shadow-float:
+		0 0 0 1px oklch(0.36 0.02 62 / 0.9), 0 2px 4px oklch(0.08 0.01 62 / 0.5),
+		0 12px 28px -8px oklch(0.06 0.01 62 / 0.7);
+
+	--ease-out-soft: cubic-bezier(0.22, 0.8, 0.3, 1);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Base                                                                       */
+/* -------------------------------------------------------------------------- */
+
+:root {
+	color-scheme: dark;
+	--stage-accent: var(--color-copper);
+}
+
+html {
+	background: var(--color-surface);
+	scroll-padding-top: 5rem;
+}
+
+body {
+	background:
+		radial-gradient(120% 70% at 50% -10%, oklch(0.24 0.035 48 / 0.55), transparent 65%),
+		var(--color-surface);
+	background-attachment: fixed;
+	color: var(--color-fg);
+	font-family: var(--font-sans);
+	font-size: var(--text-sm);
+	min-height: 100dvh;
+	-webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+	font-family: var(--font-display);
+	font-weight: 600;
+}
+
+:focus-visible {
+	outline: 2px solid var(--color-amber);
+	outline-offset: 2px;
+	border-radius: var(--radius-sm);
+}
+
+::selection {
+	background: var(--color-copper-dim);
+	color: var(--color-fg);
+}
+
+/* Tabular figures everywhere a number can change under the reader. */
+.tnum {
+	font-variant-numeric: tabular-nums;
+	font-feature-settings: 'tnum';
+}
+
+.prose-measure {
+	max-width: 68ch;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Controls                                                                   */
+/* -------------------------------------------------------------------------- */
+
+@layer components {
+	.field-label {
+		display: block;
+		font-size: var(--text-xs);
+		font-weight: 500;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+
+	.input {
+		width: 100%;
+		background: var(--color-surface);
+		border: 1px solid var(--color-line-strong);
+		border-radius: var(--radius-md);
+		color: var(--color-fg);
+		font-size: var(--text-sm);
+		padding: 0.4rem 0.6rem;
+		font-variant-numeric: tabular-nums;
+	}
+	.input:hover {
+		border-color: var(--color-subtle);
+	}
+	.input:focus-visible {
+		border-color: var(--color-amber);
+		outline: 2px solid var(--color-amber);
+		outline-offset: 1px;
+	}
+
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		min-height: 2.25rem;
+		padding: 0 0.85rem;
+		border-radius: var(--radius-md);
+		font-size: var(--text-sm);
+		font-weight: 500;
+		border: 1px solid transparent;
+		transition:
+			background-color 160ms var(--ease-out-soft),
+			border-color 160ms var(--ease-out-soft),
+			transform 120ms var(--ease-out-soft);
+	}
+	.btn:active {
+		transform: translateY(1px);
+	}
+	.btn-primary {
+		background: var(--color-copper);
+		color: var(--color-ink);
+		font-weight: 700;
+	}
+	.btn-primary:hover {
+		background: var(--color-copper-hover);
+	}
+	.btn-ghost {
+		background: var(--color-ui);
+		color: var(--color-fg);
+		border-color: var(--color-line);
+	}
+	.btn-ghost:hover {
+		background: var(--color-ui-hover);
+		border-color: var(--color-line-strong);
+	}
+	.btn-quiet {
+		color: var(--color-muted);
+	}
+	.btn-quiet:hover {
+		background: var(--color-ui);
+		color: var(--color-fg);
+	}
+	.btn:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	.panel {
+		background: var(--color-surface-2);
+		border-radius: var(--radius-lg);
+		box-shadow: var(--shadow-raised);
+	}
+
+	.chip {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		border-radius: 999px;
+		padding: 0.15rem 0.6rem;
+		font-size: var(--text-xs);
+		font-weight: 500;
+		background: var(--color-ui);
+		color: var(--color-muted);
+	}
+}
+
+/* Range inputs: the main tactile control in the app. */
+input[type='range'] {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 100%;
+	height: 1.75rem;
+	background: transparent;
+	cursor: grab;
+}
+input[type='range']:active {
+	cursor: grabbing;
+}
+input[type='range']::-webkit-slider-runnable-track {
+	height: 0.4rem;
+	border-radius: 999px;
+	background: linear-gradient(
+		to right,
+		var(--stage-accent) calc(var(--fill, 0) * 1%),
+		var(--color-ui-active) calc(var(--fill, 0) * 1%)
+	);
+	border: 1px solid var(--color-line);
+}
+input[type='range']::-moz-range-track {
+	height: 0.4rem;
+	border-radius: 999px;
+	background: var(--color-ui-active);
+	border: 1px solid var(--color-line);
+}
+input[type='range']::-moz-range-progress {
+	height: 0.4rem;
+	border-radius: 999px;
+	background: var(--stage-accent);
+}
+input[type='range']::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 1.25rem;
+	height: 1.25rem;
+	margin-top: -0.5rem;
+	border-radius: 999px;
+	background: var(--color-fg);
+	border: 2px solid var(--color-ink);
+	box-shadow: 0 1px 3px oklch(0.08 0.01 62 / 0.8);
+}
+input[type='range']::-moz-range-thumb {
+	width: 1.25rem;
+	height: 1.25rem;
+	border-radius: 999px;
+	background: var(--color-fg);
+	border: 2px solid var(--color-ink);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Motion                                                                     */
+/* -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+/* -------------------------------------------------------------------------- */
+/* Print                                                                      */
+/* -------------------------------------------------------------------------- */
+
+@media print {
+	/*
+	 * One token swap, rather than per-element print overrides: every utility in
+	 * the app resolves through these variables, so redefining them here turns the
+	 * whole page into ink on paper.
+	 */
+	:root {
+		color-scheme: light;
+		--color-surface: #fff;
+		--color-surface-2: #fff;
+		--color-ui: #f2f0ec;
+		--color-ui-hover: #eceae5;
+		--color-ui-active: #e2dfd8;
+		--color-line: #b5afa5;
+		--color-line-strong: #8d867c;
+		--color-subtle: #5d564c;
+		--color-muted: #3d382f;
+		--color-fg: #17140f;
+		--color-ink: #17140f;
+		--color-copper: #8a4a22;
+		--color-copper-text: #7a4520;
+		--color-copper-dim: #d9c6b6;
+		--color-amber: #8a6a12;
+		--color-hop: #2f6a33;
+		--color-hop-dim: #cfe0cf;
+		--color-danger: #8e2420;
+		--color-danger-text: #8e2420;
+		--color-danger-dim: #efd2d0;
+		--color-warn: #855108;
+	}
+
+	body {
+		background: #fff;
+		font-size: 10.5pt;
+	}
+
+	.no-print {
+		display: none !important;
+	}
+
+	.panel {
+		box-shadow: none;
+		border: 1px solid #b5afa5;
+		break-inside: avoid;
+	}
+
+	section,
+	li,
+	figure {
+		break-inside: avoid;
+	}
+
+	a[href^='http']::after {
+		content: ' (' attr(href) ')';
+		font-size: 8pt;
+		color: #5d564c;
+	}
+}
