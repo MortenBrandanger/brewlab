@@ -83,7 +83,7 @@
 							{/if}
 							{#if stage.decide}
 								<p class="prose-measure mt-2 text-sm">
-									<span class="field-label inline">You decide</span>
+									<span class="field-label inline">This sets</span>
 									<span class="text-fg"> {stage.decide}.</span>
 								</p>
 							{/if}

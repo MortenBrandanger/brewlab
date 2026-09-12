@@ -4,6 +4,7 @@
 	import { step } from '$lib/brewing/recipes';
 	import { strikeTempC } from '$lib/brewing/calculations';
 	import { brew } from '$lib/state/brew.svelte';
+	import { prefs } from '$lib/state/prefs.svelte';
 	import type { MashStepKind } from '$lib/brewing/types';
 
 	const KIND_LABEL: Record<MashStepKind, string> = {
@@ -92,12 +93,14 @@
 
 	<section>
 		<h3 class="field-label mb-1">Enzyme map</h3>
-		<p class="prose-measure mb-2 text-xs text-muted">
-			Two enzymes in the malt compete, and temperature picks the winner. The cooler one,
-			beta-amylase, makes simple sugar the yeast can eat, so the beer finishes dry. The hotter one,
-			alpha-amylase, makes longer sugars the yeast cannot touch, so the beer finishes full and
-			sweet. Your rest sits somewhere between them.
-		</p>
+		{#if prefs.showWhy}
+			<p class="prose-measure mb-2 text-xs text-muted">
+				Two enzymes in the malt compete, and temperature picks the winner. The cooler one,
+				beta-amylase, makes simple sugar the yeast can eat, so the beer finishes dry. The hotter
+				one, alpha-amylase, makes longer sugars the yeast cannot touch, so the beer finishes full
+				and sweet. Your rest sits somewhere between them.
+			</p>
+		{/if}
 		<div class="relative h-24 rounded-lg bg-surface ring-1 ring-line">
 			<div class="absolute inset-x-0 top-3 h-8" aria-hidden="true">
 				<div

@@ -16,7 +16,10 @@ export type StageMeta = {
 	 * such explanation: the report is the explanation.
 	 */
 	what?: string;
-	/** The decision the brewer is actually making here. Absent on the last stage. */
+	/**
+	 * What this stage sets in the finished beer. Deliberately a consequence and
+	 * never a list of the controls below it, which say their own names.
+	 */
 	decide?: string;
 	/** Accent used for the stage's controls and scene. */
 	accent: 'copper' | 'amber' | 'hop';
@@ -48,7 +51,6 @@ export const STAGES: StageMeta[] = [
 		reality:
 			'You fill a pot with your brewing water. If your tap water is not right for the beer you are making, you cut it with bottled or filtered water. Then you stir in a few grams of brewing salts, maybe a splash of acid, and put it on to heat.',
 		what: 'The minerals in the water decide how bitterness and malt come across, and together with the grain they set the acidity of the mash. Get that acidity wrong and the beer tastes dull and drying however good the recipe is.',
-		decide: 'which water goes in the pot',
 		accent: 'hop',
 		action: 'Fill and heat the water',
 		actionHint: 'The pot goes on to heat, ready for the grain.',
@@ -61,7 +63,7 @@ export const STAGES: StageMeta[] = [
 		reality:
 			'You weigh out four or five kilos of malt and run it through a mill, which cracks the husks open without grinding them to flour. Ten minutes with a hand crank, or the shop does it when you buy it.',
 		what: 'Malt is barley that has been sprouted and then kilned to stop it, which leaves starch plus the enzymes that can convert it. How hard each malt was kilned sets the colour and most of the flavour; how much of the grist still carries enzymes decides whether the mash works at all.',
-		decide: 'the backbone of the recipe: colour, body and most of the flavour',
+		decide: 'the backbone of the beer: its colour, its body and most of its flavour',
 		accent: 'amber',
 		action: 'Mill the grain',
 		actionHint: 'The grist is crushed and weighed, ready to mash.',
@@ -75,8 +77,7 @@ export const STAGES: StageMeta[] = [
 		reality:
 			'You tip the crushed grain into the hot water, stir the lumps out, put the lid on and walk away for an hour. It looks and smells like hot porridge.',
 		what: "The enzymes break the malt's starch into sugar, and the sweet liquid that results is called wort — that is what the yeast will live on. The temperature you hold decides which enzyme does most of the work, and so how much of that sugar the yeast can actually eat.",
-		decide:
-			'the rest temperature and how long to hold it, which sets how much of the sugar the yeast can actually eat',
+		decide: 'how dry or how full the finished beer will be',
 		accent: 'copper',
 		action: 'Mash in',
 		actionHint: 'The grain goes into the liquor and the rest begins.',
@@ -90,7 +91,7 @@ export const STAGES: StageMeta[] = [
 		reality:
 			'You open the tap at the bottom of the tun and let the liquid run into the kettle, trickling more hot water over the top of the grain as it drains. Half an hour of watching a hose. The spent grain goes on the compost.',
 		what: 'Something like a third of your sugar is still clinging to the grain when the mash ends. How much of it you rinse out sets the gravity — but rinse too hard and you start pulling tannin out of the husks along with it.',
-		decide: 'how much wort you collect, which decides how concentrated the finished beer is',
+		decide: 'how strong the beer ends up',
 		accent: 'copper',
 		action: 'Run off and sparge',
 		actionHint: 'The wort is drained and the grain rinsed into the kettle.',
@@ -103,8 +104,7 @@ export const STAGES: StageMeta[] = [
 		reality:
 			'You bring the kettle to a rolling boil and set a timer. Hops go in at the times you planned — a handful at the start, more towards the end. There is a lot of steam, so open a window.',
 		what: 'Boiling sterilises the wort, drives off raw grain notes, concentrates the sugar, and turns hop resin into bitterness — which is the reason hops go in here at all. It is still not beer: no yeast, no alcohol.',
-		decide:
-			'how long to boil, and the whole hop schedule — in the kettle, after the flame, and days later in the fermenter',
+		decide: 'how bitter it is, and how much of the hops you will smell',
 		accent: 'hop',
 		action: 'Boil the wort',
 		actionHint: 'The kettle comes up, the hops go in on schedule, and the flame goes out.',
@@ -117,7 +117,7 @@ export const STAGES: StageMeta[] = [
 		reality:
 			'You drop a coiled copper pipe into the kettle and run cold tap water through it, or stand the whole pot in a sink of ice. Twenty minutes later it is cool enough to put your hand in, and you siphon it into a clean bucket.',
 		what: 'Warm wort is sugar water with nothing defending it. Cooling fast closes the window for anything else to take hold, and the temperature you pitch at sets the flavour the yeast will make for the entire batch.',
-		decide: 'how fast you chill, how cool you pitch, and how carefully the wort is transferred',
+		decide: 'how much risk the beer carries into fermentation',
 		accent: 'amber',
 		action: 'Chill and transfer',
 		actionHint: 'The wort comes down to pitching temperature and moves to the fermenter.',
@@ -130,7 +130,7 @@ export const STAGES: StageMeta[] = [
 		reality:
 			'You sprinkle the yeast on top, seal the lid with an airlock, and put the bucket somewhere the temperature does not swing. Within a day it is bubbling. Then you leave it alone for one to three weeks.',
 		what: 'The yeast turns sugar into alcohol and carbon dioxide, which is the step that makes it beer. On the way it also makes the fruity and spicy compounds that give the beer much of its character, and temperature is what controls how much of them you get.',
-		decide: 'which strain, how much of it, and what temperature to hold it at',
+		decide: 'how much of its own character the yeast puts into the beer',
 		accent: 'hop',
 		action: 'Pitch the yeast',
 		actionHint: 'The yeast goes in and the schedule runs to the end.',
@@ -143,7 +143,7 @@ export const STAGES: StageMeta[] = [
 		reality:
 			'You siphon the beer into bottles with a measured dose of sugar and cap them, or into a keg and force CO₂ in. Then they go somewhere cool and you wait.',
 		what: 'Two clocks run at once. Time softens the alcohol, settles the yeast and knits the malt together — and it also lets hop aroma fade and oxygen do its slow damage. Which clock matters depends entirely on the beer.',
-		decide: 'how long to leave it, how cold, and how much carbonation to give it',
+		decide: 'how the beer actually arrives in the glass',
 		accent: 'copper',
 		action: 'Package it',
 		actionHint: 'The beer is carbonated and put away to condition.',

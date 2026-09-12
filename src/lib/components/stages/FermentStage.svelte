@@ -7,6 +7,7 @@
 	import { YEASTS, getYeast } from '$lib/brewing/ingredients';
 	import { fermStep } from '$lib/brewing/recipes';
 	import { brew } from '$lib/state/brew.svelte';
+	import { prefs } from '$lib/state/prefs.svelte';
 
 	const yeast = $derived(getYeast(brew.recipe.fermentation.yeastId) ?? YEASTS[0]);
 	const risks = $derived(brew.context?.risks);
@@ -37,11 +38,13 @@
 <div class="flex flex-col gap-6">
 	<section>
 		<h3 class="field-label mb-1">Yeast</h3>
-		<p class="prose-measure mb-3 text-xs text-muted">
-			The percentage is attenuation: how much of the sugar that strain will eat, and so how dry the
-			beer finishes. Flocculation is how readily the yeast clumps together and sinks when it is
-			done, which decides how clear the beer ends up.
-		</p>
+		{#if prefs.showWhy}
+			<p class="prose-measure mb-3 text-xs text-muted">
+				The percentage is attenuation: how much of the sugar that strain will eat, and so how dry
+				the beer finishes. Flocculation is how readily the yeast clumps together and sinks when it
+				is done, which decides how clear the beer ends up.
+			</p>
+		{/if}
 		<div class="flex flex-col gap-3">
 			{#each byKind as group (group.kind)}
 				<div>

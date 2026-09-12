@@ -5,6 +5,7 @@
 	import { HOPS, getHop } from '$lib/brewing/ingredients';
 	import { newHopAddition } from '$lib/brewing/recipes';
 	import { brew } from '$lib/state/brew.svelte';
+	import { prefs } from '$lib/state/prefs.svelte';
 	import type { HopUse } from '$lib/brewing/types';
 
 	/**
@@ -39,6 +40,8 @@
 	);
 
 	let picking = $state<HopUse | undefined>(undefined);
+	/** An unusual boil length is a deliberate choice, so it survives a revisit. */
+	let customBoil = $state(![30, 60, 90].includes(brew.recipe.boilTimeMin));
 	let originFilter = $state<string>('all');
 
 	const origins = $derived(['all', ...new Set(HOPS.map((h) => h.origin))]);
@@ -67,35 +70,48 @@
 </script>
 
 <div class="flex flex-col gap-6">
-	<div class="grid gap-x-6 gap-y-3 sm:grid-cols-2">
-		<div>
-			<span class="field-label mb-1.5">Common boil lengths</span>
-			<div class="flex flex-wrap gap-1.5">
-				{#each [30, 60, 90] as preset (preset)}
-					<button
-						type="button"
-						class="btn h-9 text-xs {brew.recipe.boilTimeMin === preset
-							? 'btn-primary'
-							: 'btn-ghost'}"
-						aria-pressed={brew.recipe.boilTimeMin === preset}
-						onclick={() => (brew.recipe.boilTimeMin = preset)}
-					>
-						{preset} min
-					</button>
-				{/each}
-			</div>
+	<div>
+		<span class="field-label mb-1.5">How long to boil</span>
+		<div class="flex flex-wrap items-center gap-1.5">
+			{#each [30, 60, 90] as preset (preset)}
+				<button
+					type="button"
+					class="btn h-9 text-xs {brew.recipe.boilTimeMin === preset && !customBoil
+						? 'btn-primary'
+						: 'btn-ghost'}"
+					aria-pressed={brew.recipe.boilTimeMin === preset && !customBoil}
+					onclick={() => {
+						brew.recipe.boilTimeMin = preset;
+						customBoil = false;
+					}}
+				>
+					{preset} min
+				</button>
+			{/each}
+			<button
+				type="button"
+				class="btn h-9 text-xs {customBoil ? 'btn-primary' : 'btn-ghost'}"
+				aria-pressed={customBoil}
+				onclick={() => (customBoil = true)}
+			>
+				Other
+			</button>
 		</div>
-		<SliderField
-			label="Boil time"
-			bind:value={brew.recipe.boilTimeMin}
-			min={0}
-			max={180}
-			step={5}
-			unit=" min"
-			marks={[
-				{ at: 60, label: '60' },
-				{ at: 90, label: '90' }
-			]}
+
+		{#if customBoil}
+			<div class="mt-2 max-w-sm">
+				<SliderField
+					label="Boil time"
+					bind:value={brew.recipe.boilTimeMin}
+					min={0}
+					max={180}
+					step={5}
+					unit=" min"
+				/>
+			</div>
+		{/if}
+
+		<LearningNote
 			why="Sixty minutes is the default because that is roughly how long it takes to isomerise most of the alpha acid you are going to get. Pilsner malt wants ninety, to drive off the precursor that becomes cooked-corn DMS."
 		/>
 	</div>
@@ -113,11 +129,13 @@
 				· aroma reads as {descriptors.join(', ')}
 			{/if}
 		</p>
-		<p class="prose-measure mt-1 text-xs text-subtle">
-			IBU counts the bitter compounds the boil created. BU:GU weighs that against how much sugar is
-			in the wort, which is the better guide: the same bitterness feels sharp in a small beer and
-			mild in a big one. Most balanced beers land between 0.4 and 0.8.
-		</p>
+		{#if prefs.showWhy}
+			<p class="prose-measure mt-1 text-xs text-subtle">
+				IBU counts the bitter compounds the boil created. BU:GU weighs that against how much sugar
+				is in the wort, which is the better guide: the same bitterness feels sharp in a small beer
+				and mild in a big one. Most balanced beers land between 0.4 and 0.8.
+			</p>
+		{/if}
 	</div>
 
 	{#each grouped as group (group.use)}
