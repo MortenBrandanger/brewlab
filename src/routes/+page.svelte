@@ -131,7 +131,9 @@
 					</nav>
 				{/if}
 
-				<RecipeActions />
+				{#if brew.stage === 'taste'}
+					<RecipeActions />
+				{/if}
 			</div>
 
 			<!-- Monitor: a sidebar on desktop, a sheet on small screens. -->

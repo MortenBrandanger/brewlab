@@ -3,6 +3,8 @@
 	import Meter from './Meter.svelte';
 	import { appearanceOf } from '$lib/brewing/appearance';
 	import { SENSORY_LABELS } from '$lib/brewing/sensory';
+	import { getFermentable, getHop, getYeast } from '$lib/brewing/ingredients';
+	import { WATER_PROFILE_BY_ID } from '$lib/brewing/water';
 	import { brew } from '$lib/state/brew.svelte';
 	import { STAGES, stageForFields, stageIndex, type Reveal } from '$lib/state/stages';
 	import type { SensoryKey } from '$lib/brewing/types';
@@ -78,7 +80,52 @@
 	);
 
 	const closest = $derived(brew.knows('judgement') ? result.styles[0] : undefined);
-	const doneCount = $derived(brew.brewedTo + 1);
+
+	/**
+	 * What has physically gone into the brew so far. Once you are three stages
+	 * past the grain you can no longer see your own grist, so this is the one
+	 * place that keeps the whole build visible.
+	 */
+	const contents = $derived.by(() => {
+		const rows: { label: string; value: string }[] = [];
+		const profile = WATER_PROFILE_BY_ID.get(brew.recipe.water.profileId);
+		rows.push({
+			label: 'Water',
+			value: `${profile?.name ?? 'Custom'} · ${brew.recipe.batchVolumeL.toFixed(0)} L`
+		});
+
+		if (brew.knows('potential')) {
+			const names = brew.recipe.fermentables
+				.map((f) => getFermentable(f.fermentableId)?.name)
+				.filter((n) => n !== undefined);
+			rows.push({
+				label: 'Grain',
+				value: `${result.metrics.grainKg.toFixed(2)} kg · ${names.slice(0, 3).join(', ')}${names.length > 3 ? ` +${names.length - 3}` : ''}`
+			});
+		}
+
+		if (brew.knows('bitterness')) {
+			const names = [
+				...new Set(
+					brew.recipe.hops.map((h) => getHop(h.hopId)?.name).filter((n) => n !== undefined)
+				)
+			];
+			rows.push({
+				label: 'Hops',
+				value: names.length
+					? `${names.slice(0, 3).join(', ')}${names.length > 3 ? ` +${names.length - 3}` : ''}`
+					: 'none'
+			});
+		}
+
+		if (brew.knows('alcohol')) {
+			rows.push({
+				label: 'Yeast',
+				value: getYeast(brew.recipe.fermentation.yeastId)?.name ?? 'none'
+			});
+		}
+		return rows;
+	});
 
 	const status = $derived(
 		brew.brewedTo < 0
@@ -107,19 +154,6 @@
 			</h2>
 			<p class="mt-0.5 text-xs text-muted">{status}</p>
 
-			<div class="mt-3">
-				<div class="flex items-center gap-1" aria-hidden="true">
-					{#each STAGES as stage, index (stage.id)}
-						<span
-							class="h-1.5 flex-1 rounded-full {index <= brew.brewedTo
-								? 'bg-copper'
-								: 'bg-ui-active'}"
-						></span>
-					{/each}
-				</div>
-				<p class="tnum mt-1.5 text-xs text-subtle">{doneCount} of {STAGES.length} stages done</p>
-			</div>
-
 			{#if closest}
 				<p class="mt-3 text-xs text-subtle">
 					Closest style
@@ -129,6 +163,18 @@
 			{/if}
 		</div>
 	</div>
+
+	<section class="border-t border-line pt-4">
+		<h3 class="field-label mb-2">In the brew</h3>
+		<dl class="flex flex-col gap-1.5">
+			{#each contents as row (row.label)}
+				<div class="flex items-baseline justify-between gap-3 text-xs">
+					<dt class="shrink-0 text-subtle">{row.label}</dt>
+					<dd class="text-end text-fg">{row.value}</dd>
+				</div>
+			{/each}
+		</dl>
+	</section>
 
 	{#if metrics.length}
 		<dl class="grid grid-cols-3 gap-x-3 gap-y-3 border-t border-line pt-4">

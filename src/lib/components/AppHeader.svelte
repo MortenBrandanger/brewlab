@@ -71,6 +71,11 @@
 		{/if}
 
 		<div class="ms-auto flex items-center gap-1">
+			{#if brew.started}
+				<button type="button" class="btn btn-quiet h-9 text-xs" onclick={() => brew.startFresh()}>
+					New brew
+				</button>
+			{/if}
 			<button
 				type="button"
 				class="btn btn-quiet h-9 text-xs"
