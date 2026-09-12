@@ -11,7 +11,7 @@
 		listRecipes,
 		renameRecipe
 	} from '$lib/persist/recipes';
-	import { deleteAllLocalData } from '$lib/persist/db';
+	import { deleteAllLocalData } from '$lib/persist/db.svelte';
 	import { brew } from '$lib/state/brew.svelte';
 	import type { StoredRecipe } from '$lib/brewing/types';
 

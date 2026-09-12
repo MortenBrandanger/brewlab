@@ -109,3 +109,15 @@ describe('without IndexedDB', () => {
 		await expect(loadProgress()).resolves.toEqual({});
 	});
 });
+
+describe('resuming a session', () => {
+	test('a legacy bare-recipe autosave with a real grist counts as brewed', () => {
+		const legacy = migrateStored(defaultRecipe());
+		expect(legacy.recipe.fermentables.length).toBeGreaterThan(0);
+	});
+
+	test('a legacy autosave with nothing in it is not treated as a finished beer', () => {
+		const empty = migrateStored({ name: 'Untouched', fermentables: [], hops: [] });
+		expect(empty.recipe.fermentables).toHaveLength(0);
+	});
+});

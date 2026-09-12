@@ -1,7 +1,7 @@
 import type { Recipe, StoredRecipe } from '$lib/brewing/types';
 import { emptyRecipe, newId, salts } from '$lib/brewing/recipes';
 import { EMPTY_SALTS } from '$lib/brewing/water';
-import { STORE_META, STORE_RECIPES, idb, storageAvailable } from './db';
+import { STORE_META, STORE_RECIPES, idb, storageAvailable } from './db.svelte';
 
 export const SCHEMA_VERSION = 1;
 const AUTOSAVE_KEY = 'active-brew';
@@ -184,8 +184,13 @@ export async function renameRecipe(stored: StoredRecipe, name: string): Promise<
 /* Autosave and challenge progress                                            */
 /* -------------------------------------------------------------------------- */
 
-/** The working brew: the recipe plus how far the brew day has actually got. */
-export type Session = { recipe: Recipe; brewedTo: number };
+/**
+ * The working brew: the recipe, how far the brew day has actually got, and
+ * which stage the user was looking at. All three are needed — restoring a
+ * finished beer onto stage one is how you make someone think the app brewed it
+ * behind their back.
+ */
+export type Session = { recipe: Recipe; brewedTo: number; stage?: string };
 
 export async function loadAutosave(): Promise<Session | undefined> {
 	if (!storageAvailable()) return undefined;
@@ -196,20 +201,25 @@ export async function loadAutosave(): Promise<Session | undefined> {
 		// Autosaves written before brew-day progress existed are bare recipes.
 		const isSession = 'recipe' in record;
 		const recipe = normaliseRecipe(isSession ? record.recipe : record);
-		const brewedTo =
+		const stored =
 			isSession && typeof record.brewedTo === 'number' && Number.isFinite(record.brewedTo)
 				? record.brewedTo
-				: 8;
-		return { recipe, brewedTo };
+				: // An autosave written before brew-day progress existed is a bare recipe.
+					// Treat it as brewed only if it actually contains a beer.
+					recipe.fermentables.length > 0
+					? 8
+					: -1;
+		const brewedTo = Math.max(-1, Math.min(8, stored));
+		return { recipe, brewedTo, stage: typeof record.stage === 'string' ? record.stage : undefined };
 	} catch {
 		return undefined;
 	}
 }
 
-export async function saveAutosave(recipe: Recipe, brewedTo: number): Promise<void> {
+export async function saveAutosave(recipe: Recipe, brewedTo: number, stage: string): Promise<void> {
 	if (!storageAvailable()) return;
 	try {
-		await idb.put(STORE_META, { recipe: structuredClone(recipe), brewedTo }, AUTOSAVE_KEY);
+		await idb.put(STORE_META, { recipe: structuredClone(recipe), brewedTo, stage }, AUTOSAVE_KEY);
 	} catch {
 		// Autosave is a convenience, never a requirement.
 	}

@@ -5,6 +5,7 @@
 	import { brew } from '$lib/state/brew.svelte';
 	import { prefs } from '$lib/state/prefs.svelte';
 	import { loadAutosave, saveAutosave } from '$lib/persist/recipes';
+	import { storageUnavailable } from '$lib/persist/db.svelte';
 	import { decodeRecipe } from '$lib/persist/share';
 
 	let { children } = $props();
@@ -26,7 +27,7 @@
 		void (async () => {
 			if (!(await loadSharedFragment())) {
 				const saved = await loadAutosave();
-				if (saved) brew.load(saved.recipe, undefined, saved.brewedTo);
+				if (saved) brew.resume(saved.recipe, saved.brewedTo, saved.stage);
 			}
 			await brew.hydrateProgress();
 			brew.hydrated = true;
@@ -45,7 +46,8 @@
 		if (!brew.hydrated || !brew.started) return;
 		const snapshot = $state.snapshot(brew.recipe);
 		const brewedTo = brew.brewedTo;
-		const timer = setTimeout(() => void saveAutosave(snapshot, brewedTo), 600);
+		const stage = brew.stage;
+		const timer = setTimeout(() => void saveAutosave(snapshot, brewedTo, stage), 600);
 		return () => clearTimeout(timer);
 	});
 </script>
@@ -67,5 +69,15 @@
 
 <div class="flex min-h-dvh flex-col">
 	<AppHeader />
+
+	{#if storageUnavailable()}
+		<p
+			class="no-print border-b border-warn/40 bg-warn/10 px-4 py-2 text-center text-xs text-warn"
+			role="status"
+		>
+			This browser is not letting BrewLab store anything, so nothing will be saved between visits.
+			Everything else works — export a recipe if you want to keep it.
+		</p>
+	{/if}
 	{@render children()}
 </div>

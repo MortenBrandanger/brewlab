@@ -89,6 +89,7 @@
 	);
 
 	const nextUp = $derived(STAGES[brew.brewedTo + 1]);
+	const finished = $derived(brew.brewedTo >= STAGES.length - 1);
 </script>
 
 <div class="flex flex-col gap-5 p-4">
@@ -145,6 +146,16 @@
 			<span class="text-muted">Up next: {nextUp.action.toLowerCase()}.</span>
 			That is what lets the model tell you {nextUp.reveals}.
 		</p>
+	{:else if finished}
+		<div class="border-t border-line pt-4">
+			<p class="prose-measure text-xs text-subtle">
+				This brew is finished. Keep changing it to see what each decision does, or empty the kettle
+				and start again.
+			</p>
+			<button type="button" class="btn btn-ghost mt-2 w-full" onclick={() => brew.startFresh()}>
+				Start a new brew day
+			</button>
+		</div>
 	{/if}
 
 	{#if axes.length}

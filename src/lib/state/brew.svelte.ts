@@ -86,6 +86,20 @@ class BrewStore {
 		return next?.id;
 	}
 
+	/**
+	 * Pick up exactly where the last session left off, including which stage was
+	 * open. Landing a finished beer on stage one reads as if the app brewed it
+	 * for you.
+	 */
+	resume(recipe: Recipe, brewedTo: number, stage?: string) {
+		this.recipe = structuredClone(recipe);
+		this.stored = undefined;
+		this.brewedTo = Math.max(-1, Math.min(STAGES.length - 1, brewedTo));
+		const known = STAGES.find((s) => s.id === stage);
+		this.stage = known?.id ?? STAGES[Math.max(0, Math.min(STAGES.length - 1, this.brewedTo))].id;
+		this.started = true;
+	}
+
 	load(recipe: Recipe, stored?: StoredRecipe, brewedTo = STAGES.length - 1) {
 		this.recipe = structuredClone(recipe);
 		this.stored = stored;
