@@ -107,9 +107,9 @@
 		</div>
 
 		<div class="absolute inset-x-0 bottom-0 flex text-[0.625rem] text-subtle" aria-hidden="true">
-			<span style="width:{BOIL_END}%">Boil · {boilTimeMin} min → flameout</span>
-			<span style="width:{WHIRLPOOL_END - BOIL_END}%">Whirlpool</span>
-			<span class="text-end" style="width:{100 - WHIRLPOOL_END}%">Dry hop</span>
+			<span style="width:{BOIL_END}%">In the kettle · {boilTimeMin} min of boiling</span>
+			<span style="width:{WHIRLPOOL_END - BOIL_END}%">After the flame</span>
+			<span class="text-end" style="width:{100 - WHIRLPOOL_END}%">In the fermenter</span>
 		</div>
 	</div>
 

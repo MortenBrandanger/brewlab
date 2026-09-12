@@ -74,7 +74,13 @@
 							>
 								{stage.name}
 							</h1>
-							<p class="prose-measure mt-2 text-sm text-muted">{stage.lead}</p>
+							<p class="prose-measure mt-2 text-sm text-muted">{stage.what}</p>
+							{#if stage.decide}
+								<p class="prose-measure mt-2 text-sm">
+									<span class="field-label inline">You decide</span>
+									<span class="text-fg"> {stage.decide}.</span>
+								</p>
+							{/if}
 						</div>
 						<BreweryScene
 							stage={brew.stage}

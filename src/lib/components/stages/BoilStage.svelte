@@ -7,10 +7,29 @@
 	import { brew } from '$lib/state/brew.svelte';
 	import type { HopUse } from '$lib/brewing/types';
 
+	/**
+	 * Hops go in at three different moments, and only the first two happen during
+	 * this stage at all. Saying so is the difference between a schedule that makes
+	 * sense and three unexplained lists.
+	 */
 	const USE_LABEL: Record<HopUse, string> = {
-		boil: 'Boil',
-		whirlpool: 'Whirlpool',
-		dryHop: 'Dry hop'
+		boil: 'In the kettle',
+		whirlpool: 'After the flame',
+		dryHop: 'Later, in the fermenter'
+	};
+
+	const USE_WHEN: Record<HopUse, string> = {
+		boil: 'While the wort is boiling. Heat and time turn hop resin into bitterness, so this is where almost all of it comes from — and where aroma is destroyed.',
+		whirlpool:
+			'The flame is out but the wort is still hot, so it steeps rather than boils. Flavour and aroma survive; bitterness barely builds.',
+		dryHop:
+			'Days after this stage, in the fermenter, with no heat at all. Pure aroma: dry hops add no measured IBU, though they do add a perceived bite.'
+	};
+
+	const USE_ADD: Record<HopUse, string> = {
+		boil: 'Add a kettle hop',
+		whirlpool: 'Add a whirlpool hop',
+		dryHop: 'Add a dry hop'
 	};
 
 	const ibuByAddition = $derived(
@@ -81,39 +100,52 @@
 		/>
 	</div>
 
-	<HopTimeline hops={brew.recipe.hops} boilTimeMin={brew.recipe.boilTimeMin} {ibuByAddition} />
+	<section>
+		<h3 class="field-label mb-2">The hop schedule, from kettle to fermenter</h3>
+		<HopTimeline hops={brew.recipe.hops} boilTimeMin={brew.recipe.boilTimeMin} {ibuByAddition} />
+	</section>
 
-	<p class="tnum text-sm text-muted">
-		<span class="font-medium text-fg">{Math.round(brew.result.metrics.ibu)} IBU</span> · BU:GU {brew.result.metrics.buGu.toFixed(
-			2
-		)}
-		{#if descriptors.length}
-			· aroma reads as {descriptors.join(', ')}
-		{/if}
-	</p>
+	<div>
+		<p class="tnum text-sm text-muted">
+			<span class="font-medium text-fg">{Math.round(brew.result.metrics.ibu)} IBU</span>
+			· BU:GU {brew.result.metrics.buGu.toFixed(2)}
+			{#if descriptors.length}
+				· aroma reads as {descriptors.join(', ')}
+			{/if}
+		</p>
+		<p class="prose-measure mt-1 text-xs text-subtle">
+			IBU counts the bitter compounds the boil created. BU:GU weighs that against how much sugar is
+			in the wort, which is the better guide: the same bitterness feels sharp in a small beer and
+			mild in a big one. Most balanced beers land between 0.4 and 0.8.
+		</p>
+	</div>
 
 	{#each grouped as group (group.use)}
 		<section>
 			<div class="flex items-center justify-between gap-3">
-				<h3 class="field-label">{USE_LABEL[group.use]}</h3>
+				<div class="min-w-[12rem] flex-1">
+					<h3 class="field-label">{USE_LABEL[group.use]}</h3>
+					<p class="prose-measure mt-1 text-xs text-muted">{USE_WHEN[group.use]}</p>
+				</div>
 				<button
 					type="button"
 					class="btn btn-ghost h-8 text-xs"
 					onclick={() => (picking = picking === group.use ? undefined : group.use)}
 					aria-expanded={picking === group.use}
 				>
-					Add {USE_LABEL[group.use].toLowerCase()} hop
+					{USE_ADD[group.use]}
 				</button>
 			</div>
 
 			{#if group.additions.length === 0}
 				<p class="mt-2 text-xs text-subtle">
 					{#if group.use === 'boil'}
-						Nothing in the boil. Bitterness comes from here and almost nowhere else.
+						Nothing in the kettle yet. Without a bittering charge the beer will taste like sweet
+						wort.
 					{:else if group.use === 'whirlpool'}
-						No whirlpool addition. This is where flavour and aroma survive the kettle.
+						No whirlpool addition yet.
 					{:else}
-						No dry hops. These add aroma and perceived bite without any measured IBU.
+						No dry hops planned yet.
 					{/if}
 				</p>
 			{:else}
@@ -139,7 +171,7 @@
 											type="button"
 											class="btn btn-quiet h-9 w-9 !px-0"
 											onclick={() => remove(addition.id)}
-											aria-label="Remove {hop.name} from the {USE_LABEL[group.use].toLowerCase()}"
+											aria-label="Remove {hop.name}, {USE_LABEL[group.use].toLowerCase()}"
 										>
 											<svg viewBox="0 0 16 16" class="h-4 w-4" aria-hidden="true">
 												<path

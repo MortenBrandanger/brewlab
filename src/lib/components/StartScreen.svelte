@@ -4,6 +4,7 @@
 	import { EXAMPLES } from '$lib/brewing/recipes';
 	import { simulate } from '$lib/brewing/simulate';
 	import { brew } from '$lib/state/brew.svelte';
+	import { STAGES } from '$lib/state/stages';
 
 	/** A handful of starting points, not the whole library. */
 	const featured = ['house-pale-ale', 'west-coast-ipa', 'dry-stout', 'czech-lager'];
@@ -21,9 +22,22 @@
 <div class="mx-auto flex w-full max-w-[52rem] flex-1 flex-col justify-center px-3 py-10 sm:px-5">
 	<h1 class="font-display text-xl">Brew a beer</h1>
 	<p class="prose-measure mt-2 text-sm text-muted">
-		Nine stages, from treating the water to pouring the glass. Every choice you make changes the
-		beer, and the simulator will tell you exactly which choice did what.
+		Beer is made in four moves. You pull sugar out of grain by steeping it in hot water. You boil
+		that sweet liquid with hops, which makes it bitter and stops it spoiling. You cool it and add
+		yeast, which eats the sugar and turns it into alcohol. Then you carbonate it and wait.
+		Everything else is detail — and the detail is where the beer actually comes from.
 	</p>
+
+	<ol class="mt-5 flex flex-wrap items-center gap-x-1.5 gap-y-2 text-xs">
+		{#each STAGES as stage, index (stage.id)}
+			<li class="flex items-center gap-1.5">
+				<span class="chip">{stage.name}</span>
+				{#if index < STAGES.length - 1}
+					<span class="text-subtle" aria-hidden="true">→</span>
+				{/if}
+			</li>
+		{/each}
+	</ol>
 
 	<div class="mt-6 grid gap-3 sm:grid-cols-[1.2fr_1fr]">
 		<button

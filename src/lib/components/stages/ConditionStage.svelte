@@ -74,7 +74,7 @@
 			{ at: 2.4, label: 'most beer' },
 			{ at: 3.2, label: 'saison' }
 		]}
-		why="Carbonation is a flavour control, not a formality. It carries aroma out of the glass, sharpens bitterness and makes a beer feel lighter than its gravity suggests."
+		why="A volume of CO₂ means the beer holds its own volume again in dissolved gas. Carbonation is a flavour control, not a formality: it carries aroma out of the glass, sharpens bitterness and makes a beer feel lighter than its gravity suggests."
 		deepDive="Beer already holds dissolved CO₂ when fermentation finishes, and how much depends on the temperature it finished at — warmer beer holds less. Priming sugar makes up the difference, at roughly 2 grams of dextrose per litre for every extra volume. Overshoot and you get gushers, or bottles that fail: standard crown-capped bottles are not rated much beyond three volumes."
 	/>
 

@@ -74,6 +74,11 @@
 </script>
 
 <div class="flex flex-col gap-5">
+	<p class="prose-measure text-xs text-muted">
+		EBC is the colour scale brewers use, measured on the malt and on the finished beer. Roughly: 4
+		is pale straw, 12 gold, 25 amber, 60 brown and anything past 200 is black.
+	</p>
+
 	{#if brew.recipe.fermentables.length === 0}
 		<section class="rounded-lg border border-dashed border-line-strong p-5">
 			<h3 class="font-display text-sm font-semibold">The tun is empty</h3>

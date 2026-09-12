@@ -142,8 +142,8 @@
 
 	{#if nextUp}
 		<p class="prose-measure border-t border-line pt-4 text-xs text-subtle">
-			<span class="text-muted">Next: {nextUp.name}.</span>
-			Once you {nextUp.action.toLowerCase()}, the model can tell you {nextUp.reveals}.
+			<span class="text-muted">Up next: {nextUp.action.toLowerCase()}.</span>
+			That is what lets the model tell you {nextUp.reveals}.
 		</p>
 	{/if}
 
