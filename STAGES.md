@@ -27,9 +27,42 @@ Nothing is claimed about the beer before it is true.
    zero figure is never shown; the stage says what is missing instead.
 5. **Every trade word is introduced where it first appears.** tun, sparge, wort,
    grist, mash-out, runnings, cold break, dextrins, whirlpool, DMS.
-6. **The shape of a stage follows the kind of decision it asks for, not the
-   shape of the stage next to it.** One pick from a short list is a row of
-   cards. Building something out of parts is a list of parts.
+6. **The shape follows the kind of decision, not the shape of the screen next
+   door.** One pick from a short list is a row of cards. Building something out
+   of parts is a list of parts. Copying a neighbour's form without asking what
+   kind of question it answers is how the grain stage ended up leading with
+   presets when choosing your own malts is the point of it.
+7. **Every card is named for what the beer does, not for the mechanism.** "Step
+   mash — beta then alpha, more fermentable than either alone" told a reader
+   with no brewing behind them nothing at all. "Crisp and dry" does.
+
+## The shape
+
+**One question per screen.** There are nineteen, and if brewing turns out to
+have more, there are more. Nine stages came from the brief rather than from
+brewing, and every stage that held more than one decision read as a pile — the
+water stage was the only one anybody ever found clear, and it is the only one
+that ever asked a single question.
+
+A screen is one of two things, never both:
+
+- **Pick one.** A row of cards with names in plain words, and where an expert
+  route exists it is one more card in the same row — never a lesser affordance
+  beside them. Water, mash, chill, packaging.
+- **Build a list.** Because a grist and a hop schedule genuinely are lists.
+  Grain, kettle hops, dry hops.
+
+Never a wizard inside a screen. That was tried and it fragmented the journey
+instead of making one.
+
+**The nine stages survive as grouping**, because they remain the unit the engine
+works in: the grain is milled or it is not, and there is no gravity before the
+mash. Answering the last question of a stage carries that stage out, which is
+why the button reads "Next" inside a stage and "Mill the grain" at the end of
+one. The physical act stays where it belongs.
+
+**The side panel is the vessel and what is in it** — what you have so far.
+Numbers fold away behind one line; they are not the answer to that question.
 
 ## The nine stages
 
