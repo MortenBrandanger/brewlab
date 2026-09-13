@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ScoreDial from '../ScoreDial.svelte';
+	import RepeatabilityPanel from '../RepeatabilityPanel.svelte';
 	import FigureValue from '../FigureValue.svelte';
 	import SensoryProfile from '../SensoryProfile.svelte';
 	import FindingList from '../FindingList.svelte';
@@ -163,6 +164,8 @@
 				Overall {result.scores.overall} out of 100, {scoreBand(result.scores.overall)}.
 			</p>
 		{/if}
+
+		<RepeatabilityPanel />
 
 		<!-- Numbers -->
 		<section>
