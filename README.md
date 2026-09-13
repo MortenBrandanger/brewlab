@@ -1,5 +1,7 @@
 # BrewLab
 
+**[brewexplained.com](https://brewexplained.com)**
+
 A beer-brewing simulator that runs entirely in the browser. You build a recipe from water
 to glass and the model tells you what it will taste like — and, more importantly, exactly
 why.
@@ -89,6 +91,10 @@ are documented there. The process navigator, stage panels and the persistent "Yo
 monitor all read from one `$derived` simulation, so every control moves the whole beer at
 once.
 
-## Licence
+## Licence and contributions
 
-Private project. No licence granted.
+MIT. Use it, fork it, take the engine and put it somewhere else.
+
+Published to be read and used, not maintained collaboratively — issues are
+closed and pull requests are not reviewed. If you want something changed, fork
+it; that is what the licence is for.
