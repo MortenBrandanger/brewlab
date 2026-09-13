@@ -6,13 +6,13 @@
 	 * top of one, and what the choice does to the strike water and the mash pH.
 	 */
 	import SliderField from '../SliderField.svelte';
-	import { SALTS, WATER_PROFILES, WATER_PROFILE_BY_ID } from '$lib/brewing/water';
+	import { SALTS, WATER_PROFILES, computeWater } from '$lib/brewing/water';
+	import { salts } from '$lib/brewing/recipes';
 	import { strikeTempC } from '$lib/brewing/calculations';
 	import { brew } from '$lib/state/brew.svelte';
 	import { prefs } from '$lib/state/prefs.svelte';
 
 	const water = $derived(brew.context?.water);
-	const profile = $derived(WATER_PROFILE_BY_ID.get(brew.recipe.water.profileId));
 
 	/** What each source water is for, in one line a beginner can act on. */
 	const SUITS: Record<string, string> = {
@@ -35,7 +35,6 @@
 	);
 	let buildingOwn = $state(false);
 	const custom = $derived(buildingOwn || hasAdditions);
-	const chosen = $derived(brew.recipe.water.profileId !== '');
 
 	function treatItMyself() {
 		// Salts are added to a base water, so building your own still needs one.
@@ -55,6 +54,39 @@
 	const hasGrist = $derived(brew.recipe.fermentables.length > 0);
 
 	/**
+	 * What each water would do to the mash you have actually built.
+	 *
+	 * The pH is the single thing the water choice is really for, and it used to
+	 * appear in a box below the cards, describing only the one already selected.
+	 * A reader could not use it to choose. Worked out per card it becomes the
+	 * reason to pick one: this water lands your mash in the window and that one
+	 * does not.
+	 */
+	const perProfile = $derived.by(() => {
+		const out: Record<string, { mashPh: number; lean: string }> = {};
+		if (!hasGrist) return out;
+		for (const option of WATER_PROFILES) {
+			const result = computeWater(
+				{ profileId: option.id, salts: salts(), lacticAcidMl: 0 },
+				brew.recipe.fermentables,
+				totalWaterL,
+				brew.recipe.mash.thicknessLPerKg
+			);
+			out[option.id] = { mashPh: result.mashPh, lean: leanOf(result.final) };
+		}
+		return out;
+	});
+
+	/** Which way a water leans, in three words rather than a ratio. */
+	function leanOf(final: { sulfate: number; chloride: number }): string {
+		const { sulfate, chloride } = final;
+		if (sulfate + chloride < 40) return 'pushes nothing either way';
+		if (sulfate > chloride * 1.5) return 'leans dry and sharp';
+		if (chloride > sulfate * 1.5) return 'leans full and round';
+		return 'balanced between sharp and round';
+	}
+
+	/**
 	 * How hot to heat it, and how much.
 	 *
 	 * Neither is a free choice. The temperature follows from the mash rest and
@@ -71,19 +103,6 @@
 		firstRest ? strikeTempC(firstRest.tempC, brew.recipe.mash.thicknessLPerKg) : undefined
 	);
 	const totalWaterL = $derived(brew.context?.totalWaterL ?? brew.recipe.preBoilVolumeL);
-
-	/** Which way this water leans, in words rather than a ratio. */
-	const lean = $derived.by(() => {
-		if (!water) return '';
-		const { sulfate, chloride } = water.final;
-		// A ratio between two near-zero numbers says nothing useful.
-		if (sulfate + chloride < 40) {
-			return 'Almost no minerals at all: nothing pushes the beer either way. Exactly what a delicate pale lager wants, and what a hoppy beer will find hollow.';
-		}
-		if (sulfate > chloride * 1.5) return 'Leans dry and sharp — bitterness will feel pointed.';
-		if (chloride > sulfate * 1.5) return 'Leans full and round — malt will come forward.';
-		return 'Balanced between sharp and round.';
-	});
 
 	const ions = $derived(
 		water
@@ -104,6 +123,7 @@
 		<ul class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
 			{#each WATER_PROFILES as option (option.id)}
 				{@const selected = !custom && option.id === brew.recipe.water.profileId}
+				{@const effect = perProfile[option.id]}
 				<li>
 					<button
 						type="button"
@@ -118,6 +138,18 @@
 						<span class="mt-0.5 block text-xs {selected ? 'text-fg' : 'text-subtle'}">
 							{SUITS[option.id] ?? option.description}
 						</span>
+						{#if effect}
+							<span class="mt-1.5 block text-xs {selected ? 'text-fg' : 'text-muted'}">
+								{effect.lean.charAt(0).toUpperCase() + effect.lean.slice(1)} ·
+								<span
+									class="tnum"
+									class:text-warn={!selected && (effect.mashPh > 5.6 || effect.mashPh < 5.2)}
+									class:text-warn-bright={selected && (effect.mashPh > 5.6 || effect.mashPh < 5.2)}
+								>
+									mash pH {effect.mashPh.toFixed(2)}
+								</span>
+							</span>
+						{/if}
 					</button>
 				</li>
 			{/each}
@@ -197,35 +229,29 @@
 	{/if}
 
 	<!--
-		One block for everything that follows from the choice, rather than three
-		paragraphs stacked under the cards. They all answer the same question:
-		what did picking this water just give me.
+		What is left once the cards carry their own consequence: the instruction
+		for the act itself. It is the same figure whichever water you picked —
+		it follows from the batch size and the mash — so it cannot live in a card,
+		and the pH for your own blend cannot either, because only this screen
+		knows what you put in it.
 	-->
-	<section class="rounded-lg bg-surface p-4 ring-1 ring-line">
+	{#if strike !== undefined && firstRest}
 		<p class="prose-measure text-sm text-muted">
-			{#if custom}{profile?.name ?? 'Custom'} water with your own additions.{/if}
-			{lean}
-			{#if strike !== undefined && firstRest}
-				<span class="tnum text-fg">
-					About {totalWaterL.toFixed(0)} litres, heated to {strike.toFixed(0)} °C
-				</span>
-				— {(strike - firstRest.tempC).toFixed(0)} degrees above your {firstRest.tempC} °C mash rest, because
-				the cold grain will pull it down.
+			Fill the pot with
+			<span class="tnum text-fg"
+				>about {totalWaterL.toFixed(0)} litres and heat it to {strike.toFixed(0)} °C</span
+			>
+			— {(strike - firstRest.tempC).toFixed(0)} degrees above the {firstRest.tempC} °C you will mash at,
+			because the cold grain will pull it down the moment it goes in.
+			{#if custom && hasGrist && water}
+				Your own blend lands the mash at
+				<span
+					class="tnum font-medium"
+					class:text-warn={water.mashPh > 5.6 || water.mashPh < 5.2}
+					class:text-hop={water.mashPh <= 5.6 && water.mashPh >= 5.2}
+					>pH {water.mashPh.toFixed(2)}</span
+				>.
 			{/if}
 		</p>
-
-		{#if chosen && hasGrist && water}
-			<p class="prose-measure mt-2 text-sm">
-				<span class="text-subtle">Estimated mash pH</span>
-				<span class="tnum font-medium"> {water.mashPh.toFixed(2)}</span>
-				<span class={water.mashPh > 5.6 || water.mashPh < 5.2 ? 'text-warn' : 'text-hop'}>
-					{water.mashPh > 5.6
-						? ' — above the 5.2–5.6 window'
-						: water.mashPh < 5.2
-							? ' — below the 5.2–5.6 window'
-							: ' — inside the 5.2–5.6 window'}
-				</span>
-			</p>
-		{/if}
-	</section>
+	{/if}
 </div>

@@ -42,6 +42,12 @@
 	--color-danger-text: oklch(0.76 0.14 25);
 	--color-danger-dim: oklch(0.42 0.1 25);
 	--color-warn: oklch(0.78 0.15 68);
+	/*
+	 * Warn on a copper selected card. The ordinary warn measures 3.43:1 against
+	 * --color-copper-dim, which fails for small text; this is the same hue lifted
+	 * until it passes.
+	 */
+	--color-warn-bright: oklch(0.91 0.12 74);
 
 	--color-transparent: transparent;
 	--color-current: currentColor;
@@ -334,6 +340,7 @@ input[type='range']::-moz-range-thumb {
 		--color-danger-text: #8e2420;
 		--color-danger-dim: #efd2d0;
 		--color-warn: #855108;
+		--color-warn-bright: #6b4106;
 	}
 
 	body {
