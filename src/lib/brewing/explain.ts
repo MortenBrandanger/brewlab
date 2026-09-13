@@ -1,7 +1,6 @@
 import type { AgePoint, Finding, Improvement, KeyDecision, Scores, StyleMatch } from './types';
 import { clamp } from './calculations';
 import { describeIntensity } from './sensory';
-import { scoreBand } from './scoring';
 import type { EngineContext } from './context';
 
 /* -------------------------------------------------------------------------- */
@@ -396,11 +395,17 @@ export function verdict(
 	styles: StyleMatch[],
 	findings: Finding[]
 ): { headline: string; summary: string } {
-	const band = scoreBand(scores.overall);
 	const closest = styles[0];
+	/*
+	 * Any severity, not just the loud ones. This line used to consider only
+	 * severe and warning findings, so a beer carrying a caution was told "no
+	 * significant faults were found" directly above a tasting note describing
+	 * butterscotch on the nose.
+	 */
 	const worst =
-		findings.find((f) => f.severity === 'severe') ?? findings.find((f) => f.severity === 'warning');
-	const s = ctx.sensory;
+		findings.find((f) => f.severity === 'severe') ??
+		findings.find((f) => f.severity === 'warning') ??
+		findings.find((f) => f.severity === 'caution');
 
 	const headline =
 		scores.overall >= 85
@@ -413,12 +418,13 @@ export function verdict(
 						? 'Flawed but instructive'
 						: 'This one is a lesson, not a beer';
 
+	/*
+	 * Deliberately short. The sensory read-out that used to live here —
+	 * "moderate bitterness over medium body" — is the tasting note's job now,
+	 * and it did it better; what is left is the two things the note does not
+	 * say: what this resembles, and what is holding it back.
+	 */
 	const parts: string[] = [];
-	parts.push(
-		`The model rates this ${band}: ${describeIntensity(s.bitterness)} bitterness over ${describeIntensity(
-			s.body
-		)} body, finishing at ${ctx.attenuation.fg.toFixed(3)} and ${ctx.attenuation.abv.toFixed(1)}% ABV.`
-	);
 	if (closest && closest.match >= 55) {
 		parts.push(`It reads as ${closest.name} at a ${closest.match}% match.`);
 	} else if (closest) {
@@ -429,7 +435,7 @@ export function verdict(
 	if (worst) {
 		parts.push(`The main thing holding it back: ${worst.title.toLowerCase()}.`);
 	} else {
-		parts.push('No significant faults were found.');
+		parts.push('Nothing in the fault model has anything to say about it.');
 	}
 
 	return { headline, summary: parts.join(' ') };

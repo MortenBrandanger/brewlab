@@ -7,7 +7,8 @@
 	import ShowTheModel from '../ShowTheModel.svelte';
 	import AgeCurve from '../AgeCurve.svelte';
 	import BeerGlass from '../BeerGlass.svelte';
-	import { appearanceOf, describeAppearance } from '$lib/brewing/appearance';
+	import LearningNote from '../LearningNote.svelte';
+	import { describeAppearance } from '$lib/brewing/appearance';
 	import { scoreBand } from '$lib/brewing/scoring';
 	import { brew } from '$lib/state/brew.svelte';
 	import { STAGES, type StageId } from '$lib/state/stages';
@@ -15,11 +16,15 @@
 	let { onadjust }: { onadjust: (stage: StageId) => void } = $props();
 
 	const result = $derived(brew.result);
-	const appearance = $derived(
-		brew.context
-			? appearanceOf(brew.context, result.metrics.srm)
-			: { srm: result.metrics.srm, haze: 0.2, head: 0.5, carbonation: 0.6 }
-	);
+	const appearance = $derived(result.appearance);
+	const note = $derived(result.tasting);
+
+	/** What the taster would say if you offered them a second glass. */
+	const ANOTHER = {
+		yes: { word: 'Yes', colour: 'text-hop' },
+		maybe: { word: 'Maybe', colour: 'text-warn-bright' },
+		no: { word: 'No', colour: 'text-danger-text' }
+	} as const;
 
 	/** There is nothing to taste until the beer has been made. */
 	const pourable = $derived(brew.knows('flavour'));
@@ -136,9 +141,11 @@
 						? result.verdict.summary
 						: 'Everything is done. Pour a glass and the model will say what it thinks, and why.'}
 				</p>
-				<p class="prose-measure mt-2 text-sm text-subtle">
-					{describeAppearance(appearance, result.metrics.ebc)}
-				</p>
+				{#if !judged}
+					<p class="prose-measure mt-2 text-sm text-subtle">
+						{describeAppearance(appearance, result.metrics.ebc)}
+					</p>
+				{/if}
 				{#if result.validation.length}
 					<ul class="mt-3 flex flex-col gap-1">
 						{#each result.validation as message (message)}
@@ -163,6 +170,41 @@
 			<p class="sr-only">
 				Overall {result.scores.overall} out of 100, {scoreBand(result.scores.overall)}.
 			</p>
+		{/if}
+
+		{#if judged}
+			<!--
+				The report is otherwise the model describing itself: thirteen meters, ten
+				technical values, a list of faults. None of that answers "what did you
+				make". This does, in the order a person actually meets a beer.
+			-->
+			<section>
+				<h3 class="field-label mb-3">Somebody drinks it</h3>
+				<div class="rounded-lg bg-surface p-5 ring-1 ring-line">
+					<dl class="flex flex-col gap-3">
+						{#each note.passages as passage (passage.phase)}
+							<div class="grid gap-0.5 sm:grid-cols-[7.5rem_1fr] sm:gap-5">
+								<dt class="text-xs text-subtle sm:pt-0.5 sm:text-end">{passage.phase}</dt>
+								<dd class="prose-measure text-sm">{passage.text}</dd>
+							</div>
+						{/each}
+					</dl>
+					<div class="mt-5 border-t border-line pt-4 sm:ps-[9.5rem]">
+						<p class="text-xs text-subtle">
+							Another one?
+							<span class="font-medium {ANOTHER[note.another].colour}"
+								>{ANOTHER[note.another].word}</span
+							>
+						</p>
+						<p class="prose-measure mt-1 font-display text-base">{note.closing}</p>
+					</div>
+				</div>
+				<LearningNote
+					why="No language model wrote this. Every clause is a threshold on something the simulation computed — the hops it names are the ones you added late, the fault it cannot un-smell is the one in the list below, and the reason it stays quiet about an axis is that it would not have noticed."
+					deepDive="This is the one panel that can say less than the meters do, and that is the point of it. A sensory meter at 1.2 out of 10 still draws a bar; a taster at 1.2 says nothing at all, and the silence carries information a bar cannot. It is also allowed to disagree with the score: a beer can pass every technical check and still be dull, and the closing line is built from enjoyment against technical quality rather than from the overall number, because the interesting beers are the ones where those two part company."
+					title="Where the words come from"
+				/>
+			</section>
 		{/if}
 
 		<RepeatabilityPanel />

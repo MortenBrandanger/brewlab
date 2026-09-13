@@ -7,6 +7,27 @@ import type { EngineContext } from './context';
  * Every finding carries a stable code so tests, the report and the improvement
  * list can refer to the same thing. Impacts are points on the 0–100 scores.
  */
+/**
+ * The point at which each off-flavour stops being a number and becomes
+ * something a person would notice in the glass.
+ *
+ * Exported because the taster has to agree with the fault list. The first
+ * version of the taster carried its own thresholds, and a milk stout came out
+ * of the model with butterscotch in the tasting note and "no significant
+ * faults were found" one paragraph above it. Two sets of numbers for one
+ * question is one set too many.
+ */
+export const FAULT_THRESHOLD = {
+	dms: 3.5,
+	astringency: 4,
+	fusel: 3.5,
+	diacetyl: 3.5,
+	oxidation: 5,
+	infection: 5,
+	/** Vegetal character from over-long or over-large dry hopping. */
+	grassy: 4
+} as const;
+
 export function computeFindings(ctx: EngineContext): Finding[] {
 	const findings: Finding[] = [];
 	const { recipe, yeast, gravity, mash, water, ibu, attenuation, hopLoad, sensory, risks } = ctx;
@@ -345,7 +366,7 @@ export function computeFindings(ctx: EngineContext): Finding[] {
 			fields: ['preBoilVolumeL', 'batchVolumeL']
 		});
 	}
-	if (risks.dms > 3.5) {
+	if (risks.dms > FAULT_THRESHOLD.dms) {
 		add({
 			code: 'DMS_RISK',
 			severity: risks.dms > 6 ? 'warning' : 'caution',
@@ -377,7 +398,7 @@ export function computeFindings(ctx: EngineContext): Finding[] {
 			fields: ['chill.pitchTempC']
 		});
 	}
-	if (risks.astringency > 4) {
+	if (risks.astringency > FAULT_THRESHOLD.astringency) {
 		add({
 			code: 'ASTRINGENCY_RISK',
 			severity: risks.astringency > 6.5 ? 'warning' : 'caution',
@@ -414,7 +435,7 @@ export function computeFindings(ctx: EngineContext): Finding[] {
 			fields: ['fermentation.steps']
 		});
 	}
-	if (risks.fusel > 3.5) {
+	if (risks.fusel > FAULT_THRESHOLD.fusel) {
 		add({
 			code: 'FUSEL_RISK',
 			severity: risks.fusel > 6 ? 'severe' : 'warning',
@@ -428,7 +449,7 @@ export function computeFindings(ctx: EngineContext): Finding[] {
 			fields: ['fermentation.steps', 'chill.pitchTempC']
 		});
 	}
-	if (risks.diacetyl > 3.5) {
+	if (risks.diacetyl > FAULT_THRESHOLD.diacetyl) {
 		add({
 			code: 'DIACETYL_RISK',
 			severity: risks.diacetyl > 6 ? 'warning' : 'caution',
@@ -495,7 +516,7 @@ export function computeFindings(ctx: EngineContext): Finding[] {
 
 	/* ------------------------------------------------- Packaging and ageing */
 
-	if (risks.oxidation > 5) {
+	if (risks.oxidation > FAULT_THRESHOLD.oxidation) {
 		add({
 			code: 'OXIDATION_RISK',
 			severity: risks.oxidation > 7 ? 'warning' : 'caution',
@@ -509,7 +530,7 @@ export function computeFindings(ctx: EngineContext): Finding[] {
 			fields: ['chill.transferQuality', 'conditioning']
 		});
 	}
-	if (risks.infection > 5) {
+	if (risks.infection > FAULT_THRESHOLD.infection) {
 		add({
 			code: 'INFECTION_RISK',
 			severity: risks.infection > 7 ? 'warning' : 'caution',

@@ -18,6 +18,8 @@ import { computeFindings } from './faults';
 import { computeScores } from './scoring';
 import { classify, closestStyles, hopCharacterOf, styleConformity } from './classify';
 import { ageCurve, improvements, keyDecisions, verdict } from './explain';
+import { appearanceOf } from './appearance';
+import { tastingNote } from './taster';
 import type { EngineContext } from './context';
 
 /** Litres of water each kilogram of grain keeps for itself. */
@@ -187,6 +189,7 @@ export function simulate(recipe: Recipe): SimulationResult {
 		: undefined;
 
 	const baseQuality = Math.round(scores.overall);
+	const appearance = appearanceOf(ctx, metrics.srm);
 
 	return {
 		metrics,
@@ -198,6 +201,8 @@ export function simulate(recipe: Recipe): SimulationResult {
 		improvements: improvements(ctx, findings),
 		ageCurve: ageCurve(ctx, baseQuality),
 		verdict: verdict(ctx, scores, styles, findings),
+		tasting: tastingNote(ctx, scores, appearance),
+		appearance,
 		validation,
 		targetStyle
 	};

@@ -5,6 +5,10 @@
  * the same engine runs in tests, in the browser and (in principle) anywhere else.
  */
 
+// Type-only, so the cycle back to those modules is erased at build time.
+import type { Appearance } from './appearance';
+import type { TastingNote } from './taster';
+
 /* -------------------------------------------------------------------------- */
 /* Units                                                                      */
 /* -------------------------------------------------------------------------- */
@@ -200,6 +204,16 @@ export type Yeast = {
 	souring: number;
 	/** Alcohol tolerance, ABV fraction. */
 	alcoholTolerance: number;
+	/**
+	 * What the strain's esters actually smell of — quiet expression first, loud
+	 * second. Esters do not merely get stronger as a fermentation runs warm,
+	 * they change character, and a taster who says "pear drops and marmalade"
+	 * where the model says 6.1 is saying the same thing in a language a person
+	 * can smell.
+	 */
+	esterNotes: [string, string];
+	/** What its phenols smell of, for the strains that make any. */
+	phenolNotes?: string;
 	blurb: string;
 	note: string;
 };
@@ -439,6 +453,10 @@ export type SimulationResult = {
 	ageCurve: AgePoint[];
 	/** Human verdict headline. */
 	verdict: { headline: string; summary: string };
+	/** How the beer looks, smells and drinks, in the order you meet it. */
+	tasting: TastingNote;
+	/** How it looks in the glass, shared by the taster and the illustration. */
+	appearance: Appearance;
 	/** Non-fatal validation problems; the simulation still returns safe numbers. */
 	validation: string[];
 	/** Style conformity, only when the recipe has a target style. */

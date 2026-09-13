@@ -787,6 +787,7 @@ export const YEASTS: Yeast[] = [
 		tempSensitivity: 0.5,
 		souring: 0,
 		alcoholTolerance: 0.11,
+		esterNotes: ['a clean, almost neutral fruitiness', 'a light note of pear'],
 		blurb: 'Neutral and dependable. Lets malt and hops speak for themselves.',
 		note: 'The default choice for American pale ales and IPAs. Its neutrality is the point: almost nothing it produces distracts from the hops.'
 	},
@@ -804,6 +805,7 @@ export const YEASTS: Yeast[] = [
 		tempSensitivity: 0.8,
 		souring: 0,
 		alcoholTolerance: 0.1,
+		esterNotes: ['a soft orchard-fruit note', 'pear drops and orange marmalade'],
 		blurb: 'Fruity, malty and quick to drop bright.',
 		note: 'Low attenuation leaves body and sweetness behind, which is exactly what a bitter needs. High flocculation can stall if the beer is left cold and undisturbed.'
 	},
@@ -821,6 +823,7 @@ export const YEASTS: Yeast[] = [
 		tempSensitivity: 0.6,
 		souring: 0,
 		alcoholTolerance: 0.11,
+		esterNotes: ['a faint dark-fruit note', 'plum and a touch of raisin'],
 		blurb: 'Slightly fruity with a dry, mineral finish.',
 		note: 'Built for stout: it tolerates roast bitterness and finishes crisply without stripping the malt.'
 	},
@@ -838,6 +841,7 @@ export const YEASTS: Yeast[] = [
 		tempSensitivity: 0.9,
 		souring: 0,
 		alcoholTolerance: 0.11,
+		esterNotes: ['a quiet stone-fruit note', 'peach and apricot'],
 		blurb: 'Stone-fruit esters and a permanent soft haze.',
 		note: 'Low flocculation keeps yeast in suspension, which is part of why hazy IPAs stay hazy. Its esters are chosen to echo tropical hop aroma rather than compete with it.'
 	},
@@ -855,6 +859,8 @@ export const YEASTS: Yeast[] = [
 		tempSensitivity: 1.1,
 		souring: 0,
 		alcoholTolerance: 0.13,
+		esterNotes: ['a gentle banana note', 'banana, pear and something candied'],
+		phenolNotes: 'clove and a dusting of pepper',
 		blurb: 'Banana, pear and a warm peppery lift.',
 		note: 'Traditionally allowed to free-rise during fermentation. That rising temperature is what builds the ester ladder of a dubbel or tripel.'
 	},
@@ -872,6 +878,8 @@ export const YEASTS: Yeast[] = [
 		tempSensitivity: 0.85,
 		souring: 0.5,
 		alcoholTolerance: 0.13,
+		esterNotes: ['a light note of citrus peel', 'pear, citrus peel and a spirity lift'],
+		phenolNotes: 'white pepper',
 		blurb: 'Ferments almost everything. Peppery, citric and bone dry.',
 		note: 'Famous for stalling around 1.030 and then finishing if kept warm. Saison strains genuinely prefer heat, so the usual warning about hot fermentation applies much later than normal.'
 	},
@@ -889,6 +897,8 @@ export const YEASTS: Yeast[] = [
 		tempSensitivity: 1.3,
 		souring: 0,
 		alcoholTolerance: 0.1,
+		esterNotes: ['a quiet banana note', 'banana and bubblegum'],
+		phenolNotes: 'clove, with vanilla behind',
 		blurb: 'Banana and clove, dialled by temperature.',
 		note: 'Cooler fermentation favours clove-like phenols, warmer favours banana esters. Few strains give the brewer this much direct control over flavour.'
 	},
@@ -906,6 +916,7 @@ export const YEASTS: Yeast[] = [
 		tempSensitivity: 0.9,
 		souring: 0,
 		alcoholTolerance: 0.11,
+		esterNotes: ['almost nothing — a whisper of white wine', 'pear, and a faint sulphur edge'],
 		blurb: 'An ale that wants to be a lager: subtle fruit, crisp finish.',
 		note: 'Fermented cool and then lagered, it produces a beer most drinkers would guess was bottom-fermented.'
 	},
@@ -923,6 +934,7 @@ export const YEASTS: Yeast[] = [
 		tempSensitivity: 1.2,
 		souring: 0,
 		alcoholTolerance: 0.1,
+		esterNotes: ['nothing fruity at all', 'a green-apple note that has no business being there'],
 		blurb: 'Malty, soft and slow. Leaves a little sweetness behind.',
 		note: 'Lager strains work slowly and produce diacetyl on the way. A warm rest at the end of fermentation is how brewers clean it up.'
 	},
@@ -940,6 +952,7 @@ export const YEASTS: Yeast[] = [
 		tempSensitivity: 1.2,
 		souring: 0,
 		alcoholTolerance: 0.11,
+		esterNotes: ['nothing fruity at all', 'a green-apple note that has no business being there'],
 		blurb: 'Crisp, dry and almost invisible.',
 		note: 'The most unforgiving yeast in this list: with nothing to hide behind, every process flaw shows up in the glass.'
 	},
@@ -957,6 +970,7 @@ export const YEASTS: Yeast[] = [
 		tempSensitivity: 0.7,
 		souring: 0,
 		alcoholTolerance: 0.11,
+		esterNotes: ['a clean, faintly fruity note', 'pear and melon'],
 		blurb: 'A lager strain that tolerates ale temperatures.',
 		note: 'Used for steam beer. It gives lager-like cleanliness without refrigeration, at the cost of a slight woody fruitiness.'
 	},
@@ -974,6 +988,7 @@ export const YEASTS: Yeast[] = [
 		tempSensitivity: 0.35,
 		souring: 0,
 		alcoholTolerance: 0.14,
+		esterNotes: ['a soft citrus note', 'orange peel, mango and tropical fruit'],
 		blurb: 'Norwegian farmhouse yeast: orange peel, and astonishingly fast.',
 		note: 'Kveik breaks the usual rule that hot fermentation means fusel alcohol. At 35 °C it can finish a beer in two days and still taste clean.'
 	},
@@ -991,6 +1006,8 @@ export const YEASTS: Yeast[] = [
 		tempSensitivity: 0.7,
 		souring: 2,
 		alcoholTolerance: 0.12,
+		esterNotes: ['a dry, faintly earthy note', 'pineapple, hay and horse blanket'],
+		phenolNotes: 'barnyard',
 		blurb: 'Pineapple, hay and barnyard funk. Very dry.',
 		note: 'Brettanomyces slowly consumes sugars other yeasts leave behind, so these beers keep drying out for months in the bottle.'
 	},
@@ -1008,6 +1025,7 @@ export const YEASTS: Yeast[] = [
 		tempSensitivity: 0.6,
 		souring: 6,
 		alcoholTolerance: 0.12,
+		esterNotes: ['a clean lactic tang', 'lemon, green apple and a lactic sharpness'],
 		blurb: 'Lactic bacteria alongside yeast: clean tartness and depth.',
 		note: 'Lactobacillus is inhibited by hops, so soured beers are traditionally brewed with very low bitterness. High IBU and a sour culture fight each other.'
 	}
