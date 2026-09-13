@@ -102,6 +102,9 @@
 
 	/** Where a step sits on the enzyme map, 40–80 °C. */
 	const position = (tempC: number) => ((Math.min(80, Math.max(40, tempC)) - 40) / 40) * 100;
+
+	/** Percentage of the fermentable-plus-dextrin extract, for the bar. */
+	const b = (v: number, total: number) => (total > 0 ? (v / total) * 100 : 0);
 </script>
 
 <div class="flex flex-col gap-5">
@@ -307,21 +310,19 @@
 			<h3 class="field-label mb-2">What this mash does</h3>
 			<dl class="grid grid-cols-2 gap-3 sm:grid-cols-4">
 				<div>
-					<dt class="text-xs text-subtle">Effective temperature</dt>
+					<dt class="text-xs text-subtle">Held at</dt>
 					<dd class="tnum text-sm font-medium">{mash.effectiveTempC} °C</dd>
 				</div>
 				<div>
-					<dt class="text-xs text-subtle">Conversion time</dt>
-					<dd class="tnum text-sm font-medium">{mash.conversionMinutes} min</dd>
+					<dt class="text-xs text-subtle">Starch converted</dt>
+					<dd class="tnum text-sm font-medium">
+						{Math.round(mash.kinetics.conversion * 100)}%
+					</dd>
 				</div>
 				<div>
-					<dt class="text-xs text-subtle">Fermentability</dt>
-					<dd class="text-sm font-medium">
-						{mash.fermentabilityFactor > 1.03
-							? 'Drier than usual'
-							: mash.fermentabilityFactor < 0.97
-								? 'Fuller than usual'
-								: 'Middle of the road'}
+					<dt class="text-xs text-subtle">The yeast can eat</dt>
+					<dd class="tnum text-sm font-medium">
+						{Math.round(mash.kinetics.attenuationLimit * 100)}% of it
 					</dd>
 				</div>
 				<div>
@@ -331,6 +332,36 @@
 					</dd>
 				</div>
 			</dl>
+
+			<!--
+				The sugars the schedule actually made. This is not a lookup: the model
+				integrates both amylases minute by minute, so an unusual schedule
+				gets a real answer rather than the nearest published case.
+			-->
+			{#if mash.kinetics.conversion > 0.2}
+				{@const k = mash.kinetics.spectrum}
+				{@const total = k.glucose + k.maltose + k.maltotriose + k.dextrins}
+				<div class="mt-3">
+					<p class="field-label mb-1.5">What the sugar ended up as</p>
+					<div class="flex h-5 overflow-hidden rounded-md ring-1 ring-line" aria-hidden="true">
+						{#each [{ v: k.glucose, c: 'var(--color-hop)', fg: 'var(--color-ink)', l: 'glucose' }, { v: k.maltose, c: 'var(--color-amber)', fg: 'var(--color-ink)', l: 'maltose' }, { v: k.maltotriose, c: 'var(--color-copper)', fg: 'var(--color-ink)', l: 'maltotriose' }, { v: k.dextrins, c: 'var(--color-ui-active)', fg: 'var(--color-fg)', l: 'dextrins' }] as band (band.l)}
+							{#if total > 0 && b(band.v, total) > 1.5}
+								<div
+									class="flex items-center justify-center text-[0.625rem]"
+									style="width:{b(band.v, total)}%; background:{band.c}; color:{band.fg}"
+								>
+									{Math.round(b(band.v, total))}%
+								</div>
+							{/if}
+						{/each}
+					</div>
+					<p class="prose-measure mt-1.5 text-xs text-muted">
+						Glucose, maltose and maltotriose are what the yeast can take. The dextrins are chains
+						with branches neither enzyme can cut, and they go into the glass untouched as body and a
+						trace of sweetness.
+					</p>
+				</div>
+			{/if}
 			{#if mash.notes.length}
 				<ul class="mt-2 flex flex-col gap-1">
 					{#each mash.notes as note (note)}

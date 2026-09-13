@@ -71,6 +71,13 @@ export type Fermentable = {
 	/** Whether the malt carries enough diastatic power to convert itself (and others). */
 	diastatic: boolean;
 	/**
+	 * Diastatic power in degrees Lintner: how much starch-converting enzyme this
+	 * malt brings per unit weight. Roughly 0 for anything kilned or roasted hard
+	 * enough to destroy the enzymes; 35 is the rule-of-thumb floor for a grist to
+	 * convert itself.
+	 */
+	diastaticPowerLintner: number;
+	/**
 	 * Multiplier on apparent attenuation contributed by this fermentable's share.
 	 * 1 = neutral, >1 = drier, <1 = more residual sweetness.
 	 */

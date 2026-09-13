@@ -144,7 +144,7 @@ const czechLager = (): Recipe => ({
 	boilTimeMin: 90,
 	efficiencyPct: 72,
 	water: { profileId: 'soft-pilsner', salts: salts({ calciumChloride: 2 }), lacticAcidMl: 3 },
-	fermentables: [ferm('pilsner', 4.3), ferm('munich-light', 0.4), ferm('crystal-light', 0.15)],
+	fermentables: [ferm('pilsner', 4.1), ferm('munich-light', 0.45), ferm('crystal-light', 0.15)],
 	mash: {
 		steps: [step('beta', 63, 30), step('alpha', 72, 30), step('mashout', 76, 10)],
 		thicknessLPerKg: 2.8

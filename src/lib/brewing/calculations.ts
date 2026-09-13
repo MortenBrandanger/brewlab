@@ -1,4 +1,5 @@
 import type { Gravity, HopAddition, Litres, MashSetup, PitchRate, Recipe, Yeast } from './types';
+import { simulateMash, type MashKinetics } from './mashKinetics';
 import { getFermentable, getHop } from './ingredients';
 
 /* -------------------------------------------------------------------------- */
@@ -140,6 +141,11 @@ export function moreySrm(mcu: number): number {
 export type MashProfile = {
 	/** Time-weighted average temperature of the steps that actually convert starch. */
 	effectiveTempC: number;
+	/**
+	 * What the schedule actually produced, integrated minute by minute rather
+	 * than read off a band of temperatures. See `mashKinetics.ts`.
+	 */
+	kinetics: MashKinetics;
 	conversionMinutes: number;
 	hasProteinRest: boolean;
 	hasBetaRest: boolean;
@@ -168,7 +174,17 @@ function alphaActivity(tempC: number): number {
 	return clamp(1 - Math.abs(tempC - 70) / 10, 0, 1);
 }
 
-export function computeMashProfile(mash: MashSetup): MashProfile {
+export type MashInputs = {
+	/**
+	 * Diastatic power of the grist in °Lintner. A pale-malt grist is around 60;
+	 * below about 35 there is not enough enzyme to convert the starch present.
+	 */
+	diastaticPowerLintner?: number;
+	/** Mash pH. Both amylases work best near 5.4. */
+	mashPh?: number;
+};
+
+export function computeMashProfile(mash: MashSetup, inputs: MashInputs = {}): MashProfile {
 	const steps = mash.steps.filter((s) => s.minutes > 0);
 	const conversionSteps = steps.filter((s) => s.tempC >= 58 && s.tempC <= 74);
 	const conversionMinutes = conversionSteps.reduce((sum, s) => sum + s.minutes, 0);
@@ -193,44 +209,52 @@ export function computeMashProfile(mash: MashSetup): MashProfile {
 
 	const notes: string[] = [];
 
-	// Fermentability follows the effective conversion temperature. Each degree
-	// below 66 °C leaves more simple sugar behind for the yeast.
-	let fermentabilityFactor = clamp(1 + (66 - weightedTemp) * 0.018, 0.85, 1.15);
-	if (hasBetaRest && hasAlphaRest) {
-		fermentabilityFactor *= 1.03;
+	/*
+	 * Everything below comes out of the integration rather than out of a band.
+	 *
+	 * `attenuationLimit` is what this schedule could ferment down to; 0.80 is
+	 * what an ordinary single infusion at 66 °C reaches, so that is the point
+	 * the factor is expressed against. The consequence is that an unusual
+	 * schedule gets a real answer instead of the nearest published case: a long
+	 * alpha rest after a beta rest, for instance, costs fermentability, because
+	 * by the time alpha is making fresh chain ends there is no beta left alive
+	 * to clip maltose off them.
+	 */
+	const kinetics = simulateMash({
+		steps,
+		thicknessLPerKg: mash.thicknessLPerKg,
+		mashPh: inputs.mashPh ?? 5.4,
+		diastaticPowerLintner: inputs.diastaticPowerLintner ?? 60
+	});
+
+	const fermentabilityFactor = clamp(kinetics.attenuationLimit / 0.8, 0.7, 1.2);
+	let efficiencyFactor = clamp(0.35 + kinetics.conversion * 0.65, 0.35, 1);
+
+	if (kinetics.conversion < 0.97 && conversionMinutes > 0) {
 		notes.push(
-			'A dedicated beta rest followed by an alpha rest builds a more fermentable wort than a single infusion at the same average temperature.'
+			`Conversion reached ${Math.round(kinetics.conversion * 100)}%, so some starch never became sugar.`
+		);
+	}
+	if (conversionMinutes === 0) {
+		notes.push('No step sits in the conversion range, so almost nothing converts.');
+	}
+	if (hasBetaRest && hasAlphaRest) {
+		notes.push(
+			'Beta-amylase clips maltose off chain ends and alpha-amylase makes more of those ends by cutting chains in the middle. A rest for each works the two in turn.'
 		);
 	}
 
-	// A mash that ends early has not finished converting.
-	let efficiencyFactor = 1;
-	if (conversionMinutes < 45 && conversionMinutes > 0) {
-		const shortfall = (45 - conversionMinutes) / 45;
-		efficiencyFactor -= shortfall * 0.25;
-		fermentabilityFactor *= 1 - shortfall * 0.08;
-		notes.push('Conversion was cut short, so some starch never became sugar.');
-	}
-	if (conversionMinutes === 0) {
-		efficiencyFactor = 0.35;
-		notes.push('No step sits in the conversion range, so almost nothing converts.');
-	}
-	if (weightedTemp > 73) {
-		efficiencyFactor *= 0.95;
-	}
-
-	// Mash thickness: 2.5–3.5 L/kg is comfortable in every direction.
+	/*
+	 * Thickness is no longer a nudge applied afterwards: it shields the enzymes
+	 * inside the integration, which is how it works in a real tun. What is left
+	 * here is the part the model does not cover, which is handling.
+	 */
 	const thickness = clamp(mash.thicknessLPerKg, 1.2, 6);
 	if (thickness < 2.2) {
 		efficiencyFactor *= 0.96;
-		fermentabilityFactor *= 0.99;
 		notes.push(
-			'A very thick mash protects beta-amylase but makes the mash harder to stir and rinse.'
+			'A very thick mash protects the enzymes from the heat but is harder to stir and to rinse.'
 		);
-	} else if (thickness > 4.2) {
-		efficiencyFactor *= 0.98;
-		fermentabilityFactor *= 1.01;
-		notes.push('A thin mash converts a little more completely and slightly more fermentably.');
 	}
 
 	let bodyFactor = clamp(1 + (weightedTemp - 66) * 0.035, 0.8, 1.25);
@@ -251,6 +275,7 @@ export function computeMashProfile(mash: MashSetup): MashProfile {
 
 	return {
 		effectiveTempC: Math.round(weightedTemp * 10) / 10,
+		kinetics,
 		conversionMinutes,
 		hasProteinRest,
 		hasBetaRest,

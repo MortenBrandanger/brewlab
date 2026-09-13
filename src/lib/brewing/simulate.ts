@@ -1,5 +1,5 @@
-import type { Metrics, Recipe, SimulationResult } from './types';
-import { getYeast, YEASTS } from './ingredients';
+import type { Metrics, Recipe, SimulationResult, FermentableAddition } from './types';
+import { getFermentable, getYeast, YEASTS } from './ingredients';
 import {
 	averageFermentationTemp,
 	clamp,
@@ -87,7 +87,14 @@ export function simulate(recipe: Recipe): SimulationResult {
 
 	/* ------------------------------------------------------------- The engine */
 
-	const mash = computeMashProfile(safeRecipe.mash);
+	/*
+	 * The mash is integrated with the grist's real enzyme load, so a
+	 * pilsner-heavy bill converts faster than a Munich one and a grist of
+	 * crystal and roast converts hardly at all.
+	 */
+	const mash = computeMashProfile(safeRecipe.mash, {
+		diastaticPowerLintner: gristDiastaticPower(safeRecipe.fermentables)
+	});
 	const gravity = computeGravity(safeRecipe, mash);
 
 	const grainKg = gravity.grist.grainKg;
@@ -211,7 +218,9 @@ export function buildContext(recipe: Recipe): EngineContext | undefined {
 	 * real choice, so falling back here shows correct numbers rather than none.
 	 */
 	const yeast = getYeast(recipe.fermentation.yeastId) ?? YEASTS[0];
-	const mash = computeMashProfile(recipe.mash);
+	const mash = computeMashProfile(recipe.mash, {
+		diastaticPowerLintner: gristDiastaticPower(recipe.fermentables)
+	});
 	const gravity = computeGravity(recipe, mash);
 	const totalWaterL = recipe.preBoilVolumeL + gravity.grist.grainKg * GRAIN_ABSORPTION_L_PER_KG;
 	const water = computeWater(
@@ -264,7 +273,9 @@ export function buildContext(recipe: Recipe): EngineContext | undefined {
 
 /** SRM colour for the live glass, exposed for convenience. */
 export function recipeSrm(recipe: Recipe): number {
-	const mash = computeMashProfile(recipe.mash);
+	const mash = computeMashProfile(recipe.mash, {
+		diastaticPowerLintner: gristDiastaticPower(recipe.fermentables)
+	});
 	const gravity = computeGravity(recipe, mash);
 	return moreySrm(gravity.grist.colourMcu);
 }
@@ -276,4 +287,26 @@ function round3(n: number): number {
 }
 function round1(n: number): number {
 	return Math.round(n * 10) / 10;
+}
+
+/**
+ * Diastatic power of a grist in °Lintner, weighted by weight.
+ *
+ * Enzymes come from the malt, so a bill that is mostly crystal and roast has
+ * almost none however much of it there is. Sugars are left out of the average
+ * entirely: they dilute the enzyme concentration in the tun but bring no
+ * starch of their own that needs converting.
+ */
+export function gristDiastaticPower(fermentables: FermentableAddition[]): number {
+	let weighted = 0;
+	let kg = 0;
+	for (const addition of fermentables) {
+		const f = getFermentable(addition.fermentableId);
+		if (!f || f.category === 'sugar') continue;
+		const w = Math.max(0, addition.weightKg);
+		if (w <= 0) continue;
+		weighted += f.diastaticPowerLintner * w;
+		kg += w;
+	}
+	return kg > 0 ? weighted / kg : 0;
 }
