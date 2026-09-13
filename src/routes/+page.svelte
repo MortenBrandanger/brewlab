@@ -82,34 +82,6 @@
 									<span class="text-fg"> {stage.decide}.</span>
 								</p>
 							{/if}
-							<!--
-								The science sits behind a disclosure rather than above the
-								controls. Expanding should add depth to a lean page, not more
-								text to a page that already had plenty.
-							-->
-							{#if stage.what && prefs.showWhy}
-								<details class="group mt-2">
-									<summary
-										class="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-sm py-1 text-sm font-medium text-copper-text hover:underline"
-									>
-										<svg
-											viewBox="0 0 16 16"
-											class="h-3.5 w-3.5 transition-transform group-open:rotate-90"
-											aria-hidden="true"
-										>
-											<path
-												d="M6 3.5 L11 8 L6 12.5"
-												fill="none"
-												stroke="currentColor"
-												stroke-width="2"
-												stroke-linecap="round"
-											/>
-										</svg>
-										Why it matters
-									</summary>
-									<p class="prose-measure mt-1.5 text-sm text-muted">{stage.what}</p>
-								</details>
-							{/if}
 						</div>
 						<BreweryScene
 							stage={brew.stage}
@@ -140,6 +112,30 @@
 						<TasteStage onadjust={go} />
 					{/if}
 				</section>
+
+				{#if stage.what && prefs.showWhy}
+					<details class="group">
+						<summary
+							class="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-sm py-1 text-sm font-medium text-copper-text hover:underline"
+						>
+							<svg
+								viewBox="0 0 16 16"
+								class="h-3.5 w-3.5 transition-transform group-open:rotate-90"
+								aria-hidden="true"
+							>
+								<path
+									d="M6 3.5 L11 8 L6 12.5"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+								/>
+							</svg>
+							Why {stage.name.toLowerCase()} matters
+						</summary>
+						<p class="prose-measure mt-1.5 text-sm text-muted">{stage.what}</p>
+					</details>
+				{/if}
 
 				<StageAction stage={brew.stage} ongo={go} />
 

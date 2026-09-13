@@ -125,14 +125,6 @@
 				</button>
 			</li>
 		</ul>
-
-		<p class="prose-measure mt-3 text-sm text-muted">
-			{#if custom}
-				{profile?.name ?? 'Custom'} water with your own additions. {lean}
-			{:else}
-				{lean}
-			{/if}
-		</p>
 	</section>
 
 	{#if custom}
@@ -191,30 +183,36 @@
 		</section>
 	{/if}
 
-	{#if strike !== undefined && firstRest}
-		<p class="prose-measure text-sm">
-			<span class="tnum font-medium">
-				About {totalWaterL.toFixed(0)} litres, heated to
-				<span class="text-copper-text">{strike.toFixed(0)} °C</span>
-			</span>
-			<span class="text-muted">
+	<!--
+		One block for everything that follows from the choice, rather than three
+		paragraphs stacked under the cards. They all answer the same question:
+		what did picking this water just give me.
+	-->
+	<section class="rounded-lg bg-surface p-4 ring-1 ring-line">
+		<p class="prose-measure text-sm text-muted">
+			{#if custom}{profile?.name ?? 'Custom'} water with your own additions.{/if}
+			{lean}
+			{#if strike !== undefined && firstRest}
+				<span class="tnum text-fg">
+					About {totalWaterL.toFixed(0)} litres, heated to {strike.toFixed(0)} °C
+				</span>
 				— {(strike - firstRest.tempC).toFixed(0)} degrees above your {firstRest.tempC} °C mash rest, because
 				the cold grain will pull it down.
-			</span>
+			{/if}
 		</p>
-	{/if}
 
-	{#if hasGrist && water}
-		<p class="prose-measure text-sm">
-			<span class="text-subtle">Estimated mash pH</span>
-			<span class="tnum font-medium"> {water.mashPh.toFixed(2)}</span>
-			<span class={water.mashPh > 5.6 || water.mashPh < 5.2 ? 'text-warn' : 'text-hop'}>
-				{water.mashPh > 5.6
-					? ' — above the 5.2–5.6 window'
-					: water.mashPh < 5.2
-						? ' — below the 5.2–5.6 window'
-						: ' — inside the 5.2–5.6 window'}
-			</span>
-		</p>
-	{/if}
+		{#if hasGrist && water}
+			<p class="prose-measure mt-2 text-sm">
+				<span class="text-subtle">Estimated mash pH</span>
+				<span class="tnum font-medium"> {water.mashPh.toFixed(2)}</span>
+				<span class={water.mashPh > 5.6 || water.mashPh < 5.2 ? 'text-warn' : 'text-hop'}>
+					{water.mashPh > 5.6
+						? ' — above the 5.2–5.6 window'
+						: water.mashPh < 5.2
+							? ' — below the 5.2–5.6 window'
+							: ' — inside the 5.2–5.6 window'}
+				</span>
+			</p>
+		{/if}
+	</section>
 </div>
