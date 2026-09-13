@@ -459,6 +459,20 @@ function closing(
 		-Infinity
 	);
 	const clean = worstFault < 0;
+	/*
+	 * A beer can be clean, in style, and have nothing in it. When the nose found
+	 * nothing and the middle found nothing, the taster has just written three
+	 * paragraphs about an absence, and closing with "a good pint" would make a
+	 * liar of it — so emptiness overrides a respectable enjoyment score.
+	 */
+	const quiet =
+		s.hopAroma < 1.5 &&
+		s.fruitEsters < 1.5 &&
+		s.roast < 2.5 &&
+		s.caramel < 2.5 &&
+		s.hopFlavour < 3 &&
+		s.acidity < 3 &&
+		s.bitterness < 4;
 
 	if (technical < 45) {
 		return {
@@ -467,7 +481,7 @@ function closing(
 				'I would not finish this glass. Whatever was intended, something went wrong on the way, and it is in every mouthful.'
 		};
 	}
-	if (clean && technical >= 72 && enjoyment < 50) {
+	if (clean && technical >= 62 && (quiet || enjoyment < 50)) {
 		return {
 			another: 'maybe',
 			closing:

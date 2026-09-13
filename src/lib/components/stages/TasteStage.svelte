@@ -145,6 +145,18 @@
 					<p class="prose-measure mt-2 text-sm text-subtle">
 						{describeAppearance(appearance, result.metrics.ebc)}
 					</p>
+					<!--
+						The sentence above says to pour a glass, so the thing that pours it
+						belongs here rather than at the foot of a very long report. The
+						footer carries the same act for anyone arriving from the keyboard.
+					-->
+					<button
+						type="button"
+						class="btn btn-primary mt-4 h-11 px-5"
+						onclick={() => brew.commit('taste')}
+					>
+						Pour a glass
+					</button>
 				{/if}
 				{#if result.validation.length}
 					<ul class="mt-3 flex flex-col gap-1">

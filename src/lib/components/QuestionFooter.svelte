@@ -19,7 +19,13 @@
 	const blocked = $derived(endsStage ? brew.blockedBecause(question.stage) : undefined);
 	const stageDone = $derived(brew.isDone(question.stage));
 	const nextQuestion = $derived(QUESTIONS[brew.at + 1]);
-	const last = $derived(brew.at === QUESTIONS.length - 1);
+	/*
+	 * The last question still has an act to carry out — you pour the glass —
+	 * and hiding the button on it left a brew made from scratch one click short
+	 * of its own verdict, permanently. Only a stage that is already done has
+	 * nothing left to press.
+	 */
+	const last = $derived(brew.at === QUESTIONS.length - 1 && stageDone);
 
 	function go() {
 		if (endsStage && !stageDone) {
