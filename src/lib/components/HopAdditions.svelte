@@ -23,12 +23,17 @@
 		dryHop: 'Dry hops'
 	};
 
-	const USE_WHEN: Record<HopUse, string> = {
-		boil: 'While the wort is boiling. Heat and time turn hop resin into bitterness, so this is where almost all of it comes from — and where aroma is destroyed.',
+	/**
+	 * Said once, above the list. As a `why` on each addition's slider it appeared
+	 * in full under every hop — four identical lines per row, and a reader with
+	 * two hops read the same paragraph twice.
+	 */
+	const AMOUNT_WHY: Record<HopUse, string> = {
+		boil: 'These all go into the same pot and end up in the same beer — what differs is when. The same hop is three different ingredients depending on its timing: an hour of boiling gives bitterness and no smell, because the aroma has boiled away; twenty minutes gives flavour; the last few minutes give aroma. That is why a recipe usually has two or three charges at different times rather than one. Weight scales bitterness roughly in step, so a 20-litre batch takes about 20 g for a lager, 60 g for a pale ale and 150 g for an IPA at the start of a boil.',
 		whirlpool:
-			'The flame is out but the wort is still hot, so it steeps rather than boils. Flavour and aroma survive; bitterness barely builds.',
+			'Into the same wort as everything else, but off the heat, so these buy aroma rather than bitterness. Weights run heavier than a bittering charge for the same effect.',
 		dryHop:
-			'Optional. Loose hops dropped into the fermenter partway through, cold. Pure aroma: dry hops add no measured IBU, though they do add a perceived bite.'
+			'Pure aroma, and it saturates: past roughly 8 g per litre more hops stop buying more smell and start tasting of grass.'
 	};
 
 	const USE_ADD: Record<HopUse, string> = {
@@ -54,7 +59,7 @@
 	);
 
 	function add(hopId: string) {
-		brew.recipe.hops.push(newHopAddition(use, hopId));
+		brew.recipe.hops.push(newHopAddition(use, hopId, additions.length));
 		picking = false;
 	}
 
@@ -63,10 +68,16 @@
 	}
 </script>
 
+<!--
+	No heading and no "what this group is for" note: the question on the screen
+	above is exactly that, and having both put the same two sentences a hundred
+	pixels apart.
+-->
 <div class="flex items-center justify-between gap-3">
 	<div class="min-w-[12rem] flex-1">
-		<h3 class="field-label">{USE_LABEL[use]}</h3>
-		<p class="prose-measure mt-1 text-xs text-muted">{USE_WHEN[use]}</p>
+		{#if additions.length > 0}
+			<p class="prose-measure text-xs text-muted">{AMOUNT_WHY[use]}</p>
+		{/if}
 	</div>
 	<button
 		type="button"
@@ -136,10 +147,14 @@
 								{ at: 60, label: 'pale ale' },
 								{ at: 150, label: 'IPA' }
 							]}
-							why="Bitterness rises roughly in step with the grams, so doubling the weight roughly doubles it. The marks are what a 20-litre batch of each beer takes at the start of a boil. Hops added late, or after the flame is out, add far less bitterness for the same weight, so those go heavier."
 							id="g-{addition.id}"
 						/>
 						{#if addition.use === 'boil'}
+							<!--
+								The marks are the whole lesson of this control: the same hop is a
+								different ingredient at sixty minutes and at five, and each
+								addition sits wherever you put it.
+							-->
 							<SliderField
 								label="Minutes left in the boil"
 								bind:value={addition.time}
@@ -147,6 +162,11 @@
 								max={brew.recipe.boilTimeMin}
 								step={1}
 								unit=" min"
+								marks={[
+									{ at: 0, label: 'aroma' },
+									{ at: 20, label: 'flavour' },
+									{ at: Math.min(60, brew.recipe.boilTimeMin), label: 'bitterness' }
+								]}
 								id="t-{addition.id}"
 							/>
 						{:else if addition.use === 'whirlpool'}

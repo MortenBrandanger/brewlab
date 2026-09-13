@@ -76,8 +76,21 @@ export const salts = (partial: Partial<SaltAdditions> = {}): SaltAdditions => ({
 	...partial
 });
 
-export function newHopAddition(use: HopUse, hopId: string): HopAddition {
-	if (use === 'boil') return boilHop(hopId, 20, 15);
+/**
+ * @param existing how many additions this group already has.
+ *
+ * Kettle hops are staggered on purpose. Every new one used to land at fifteen
+ * minutes, so a reader adding a second hop saw two identical rows and had no
+ * reason to think the timing could differ at all — which is the one thing this
+ * screen exists to teach. The first goes in at the start of the boil for
+ * bitterness, the next late for flavour, the next later still for aroma.
+ */
+export function newHopAddition(use: HopUse, hopId: string, existing = 0): HopAddition {
+	if (use === 'boil') {
+		const minutes = [60, 15, 5, 0][Math.min(existing, 3)];
+		const grams = existing === 0 ? 20 : 30;
+		return boilHop(hopId, grams, minutes);
+	}
 	if (use === 'whirlpool') return whirlpoolHop(hopId, 30, 20, 80);
 	return dryHop(hopId, 40, 3, 5);
 }
