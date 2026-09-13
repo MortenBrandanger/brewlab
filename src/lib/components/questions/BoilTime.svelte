@@ -6,9 +6,23 @@
 	import LearningNote from '../LearningNote.svelte';
 	import { brew } from '$lib/state/brew.svelte';
 	import { DEFAULTS } from '$lib/brewing/recipes';
+	import { collectVolumeL, rigFor } from '$lib/brewing/rigs';
 
 	/** An unusual boil length is a deliberate choice, so it survives a revisit. */
 	let customBoil = $state(![30, 60, 90].includes(brew.recipe.boilTimeMin));
+
+	/*
+	 * A longer boil evaporates more, so the volume you had to collect changes
+	 * with it. The run-off screen is behind you by now and cannot ask again.
+	 */
+	function setBoil(minutes: number) {
+		brew.recipe.boilTimeMin = minutes;
+		brew.recipe.preBoilVolumeL = collectVolumeL(
+			rigFor(brew.recipe.efficiencyPct),
+			brew.recipe.batchVolumeL,
+			minutes
+		);
+	}
 </script>
 
 <div>
@@ -27,7 +41,7 @@
 					: 'btn-ghost'}"
 				aria-pressed={brew.recipe.boilTimeMin === preset && !customBoil}
 				onclick={() => {
-					brew.recipe.boilTimeMin = preset;
+					setBoil(preset);
 					customBoil = false;
 				}}
 			>
@@ -48,7 +62,7 @@
 		<div class="mt-2 max-w-sm">
 			<SliderField
 				label="Boil time"
-				bind:value={brew.recipe.boilTimeMin}
+				bind:value={() => brew.recipe.boilTimeMin, setBoil}
 				defaultValue={DEFAULTS.boilTimeMin}
 				min={0}
 				max={180}

@@ -38,7 +38,7 @@
 	<MashFinish />
 {:else if id === 'batch-size'}
 	<BatchSize />
-{:else if id === 'sparge-stop'}
+{:else if id === 'sparge-rig'}
 	<SpargeStop />
 {:else if id === 'boil-time'}
 	<BoilTime />

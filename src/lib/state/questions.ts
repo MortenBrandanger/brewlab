@@ -51,10 +51,10 @@ export const QUESTIONS: Question[] = [
 		hint: 'The grain is resting under a lid and nothing needs you for an hour. So decide how much beer you are actually making, because everything from here is measured against it — how much water you rinse through the grain, how much boils away, how much yeast goes in.'
 	},
 	{
-		id: 'sparge-stop',
+		id: 'sparge-rig',
 		stage: 'sparge',
-		ask: 'When do you stop collecting?',
-		hint: 'The hour is up. You open the tap at the bottom of the tun and the sweet liquid — wort — runs out into the kettle, while you trickle fresh hot water over the grain to rinse the last of the sugar out of it. That rinsing is what sparging means. You stop when the kettle holds enough, and it has to be more than your batch size, because the boil will take some of it away as steam.'
+		ask: 'What are you brewing on?',
+		hint: 'The hour is up, and what happens next depends on the kit in front of you. You open the tap at the bottom of the tun and the sweet liquid — wort — runs out into the kettle, and then you rinse the grain with fresh hot water to wash out the sugar still clinging to it. That rinsing is what sparging means, and how thoroughly your setup does it is the difference between getting most of the sugar and leaving a good deal of it in the mash. It also decides how much you collect, because the boil takes some of it away as steam.'
 	},
 	{
 		id: 'boil-time',
