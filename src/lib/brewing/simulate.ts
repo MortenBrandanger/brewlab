@@ -120,8 +120,8 @@ export function simulate(recipe: Recipe): SimulationResult {
 		gravity.grist,
 		mash,
 		safeRecipe.fermentation.pitchRate,
-		avgFermentTempC,
-		totalFermentDays
+		fermentSteps,
+		safeRecipe.fermentation.coldCrash
 	);
 
 	const boilOffFraction =
@@ -243,8 +243,8 @@ export function buildContext(recipe: Recipe): EngineContext | undefined {
 		gravity.grist,
 		mash,
 		recipe.fermentation.pitchRate,
-		avgFermentTempC,
-		totalFermentDays
+		recipe.fermentation.steps,
+		recipe.fermentation.coldCrash
 	);
 	const boilOffFraction = clamp(
 		(recipe.preBoilVolumeL - recipe.batchVolumeL) / Math.max(1, recipe.preBoilVolumeL),

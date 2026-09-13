@@ -13,6 +13,7 @@
 	 * anyway: you pitch at or just below where you mean to ferment.
 	 */
 	import SliderField from '../SliderField.svelte';
+	import FermentationCurve from '../FermentationCurve.svelte';
 	import SegmentedControl from '../SegmentedControl.svelte';
 	import FermentationGraph from '../FermentationGraph.svelte';
 	import Meter from '../Meter.svelte';
@@ -151,6 +152,16 @@
 				<span class="font-medium">{attenuation.fg.toFixed(3)}</span> and
 				<span class="font-medium">{attenuation.abv.toFixed(1)}% ABV</span>.
 			</p>
+
+			<!--
+				Every point on this line is an hour of the simulation, not a curve
+				drawn between a start and a finish. A stall flattens early because it
+				flattened early.
+			-->
+			<div class="mb-3">
+				<FermentationCurve kinetics={attenuation.kinetics} />
+			</div>
+
 			<div class="flex flex-col gap-1.5">
 				<Meter
 					label="Hot alcohol"

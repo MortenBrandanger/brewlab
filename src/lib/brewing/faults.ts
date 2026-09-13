@@ -466,12 +466,18 @@ export function computeFindings(ctx: EngineContext): Finding[] {
 			fields: ['fermentation.pitchRate']
 		});
 	}
-	if (attenuation.abv / 100 > yeast.alcoholTolerance) {
+	/*
+	 * The simulation never lets a yeast ferment past its own tolerance — it
+	 * cannot, and the rate falls to nothing as it approaches — so the symptom is
+	 * not a high ABV. It is a beer that stopped with sugar still in it. That is
+	 * what the fermentation reports, and that is what this now asks.
+	 */
+	if (attenuation.kinetics.stalled === 'alcohol') {
 		add({
 			code: 'ALCOHOL_TOLERANCE_EXCEEDED',
 			severity: 'warning',
-			title: `${attenuation.abv.toFixed(1)}% ABV is past this strain's tolerance`,
-			explanation: `${yeast.name} is reliable up to roughly ${(yeast.alcoholTolerance * 100).toFixed(0)}% ABV. Past that, fermentation stalls with sugar still in the beer, and the yeast that survives is stressed enough to throw off-flavours while it does it.`,
+			title: `Stalled at ${attenuation.abv.toFixed(1)}% ABV, this strain's limit`,
+			explanation: `${yeast.name} is reliable up to roughly ${(yeast.alcoholTolerance * 100).toFixed(0)}% ABV. This wort carried more sugar than that, so the yeast slowed to a stop with the rest of it still in the beer — which is why it finished at ${attenuation.fg.toFixed(3)} and tastes sweet rather than strong.`,
 			impact: { technical: -10 },
 			fields: ['fermentation.yeastId', 'fermentables']
 		});

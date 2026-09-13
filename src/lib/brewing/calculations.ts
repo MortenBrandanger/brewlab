@@ -1,5 +1,6 @@
 import type { Gravity, HopAddition, Litres, MashSetup, PitchRate, Recipe, Yeast } from './types';
-import { simulateMash, type MashKinetics } from './mashKinetics';
+import { simulateMash, type MashKinetics, type SugarSpectrum } from './mashKinetics';
+import { simulateFermentation, type FermentationKinetics } from './fermentationKinetics';
 import { getFermentable, getHop } from './ingredients';
 
 /* -------------------------------------------------------------------------- */
@@ -432,6 +433,8 @@ export function computeIbu(recipe: Recipe, boilGravity: Gravity): IbuResult {
 export type AttenuationResult = {
 	/** Apparent attenuation as a fraction. */
 	apparent: number;
+	/** The fermentation itself, hour by hour. See `fermentationKinetics.ts`. */
+	kinetics: FermentationKinetics;
 	fg: Gravity;
 	abv: number;
 	/** Multipliers applied to the yeast's nominal attenuation, for explanations. */
@@ -468,69 +471,96 @@ export function computeAttenuation(
 	grist: Grist,
 	mash: MashProfile,
 	pitchRate: PitchRate,
-	avgTempC: number,
-	totalFermentationDays: number
+	steps: { tempC: number; days: number }[],
+	coldCrash: boolean
 ): AttenuationResult {
 	const ogPoints = Math.max(0, sgToPoints(og));
 
-	const factors: { label: string; factor: number }[] = [];
-	let attenuation = yeast.attenuation;
-
-	const mashFactor = mash.fermentabilityFactor;
-	attenuation *= mashFactor;
-	factors.push({ label: `Mash at ${mash.effectiveTempC} °C`, factor: mashFactor });
-
-	// Grist fermentability already accounts for crystal malt and lactose.
+	/*
+	 * The mash decided what sugars are in the wort; this decides how many of
+	 * them the yeast gets through. Crystal malt and lactose bring sugar no yeast
+	 * can touch, and that lives in the grist's own fermentability, so the
+	 * spectrum is bent by it here rather than corrected for twice.
+	 */
 	const gristFactor = clamp(grist.fermentability, 0.5, 1.25);
-	attenuation *= gristFactor;
-	factors.push({ label: 'Grist composition', factor: gristFactor });
+	const spectrum = bendSpectrum(mash.kinetics.spectrum, gristFactor);
 
-	const pitch = pitchRateFactor(pitchRate);
-	attenuation *= pitch;
-	if (pitch !== 1) factors.push({ label: 'Pitch rate', factor: pitch });
+	const kinetics = simulateFermentation({
+		ogPoints,
+		spectrum,
+		yeast,
+		pitchRate,
+		steps,
+		coldCrash
+	});
 
-	const health = fermentationHealthFactor(yeast, avgTempC);
-	attenuation *= health;
-	if (health !== 1)
-		factors.push({ label: `Fermentation at ${Math.round(avgTempC)} °C`, factor: health });
-
-	// Short fermentations simply do not finish. The curve is generous up to the
-	// point where most of the work is done, then falls away quickly.
-	const daysNeeded = yeast.kind === 'lager' ? 14 : 7;
-	let timeFactor = 1;
-	if (totalFermentationDays < daysNeeded) {
-		timeFactor = clamp(0.55 + (totalFermentationDays / daysNeeded) * 0.45, 0.4, 1);
-		factors.push({ label: 'Fermentation length', factor: timeFactor });
-	}
-	attenuation *= timeFactor;
-
-	// Alcohol stress: once the expected ABV nears the strain's tolerance the
-	// last few gravity points get much harder to reach.
-	const potentialAbv = (ogPoints * attenuation * 0.001 * 131.25) / 1;
-	let stressFactor = 1;
-	if (potentialAbv / 100 > yeast.alcoholTolerance * 0.85) {
-		const over = potentialAbv / 100 / yeast.alcoholTolerance;
-		stressFactor = clamp(1 - (over - 0.85) * 0.5, 0.7, 1);
-		factors.push({ label: 'Alcohol tolerance', factor: stressFactor });
-	}
-	attenuation *= stressFactor;
-
-	// Compress the top end: the last few points of attenuation are always harder
-	// to win than the model's multipliers suggest.
-	const compressed = attenuation > 0.85 ? 0.85 + (attenuation - 0.85) * 0.55 : attenuation;
-	const apparent = clamp(compressed, 0.15, 0.96);
+	const apparent = clamp(kinetics.apparent, 0.15, 0.96);
 	const fgPoints = ogPoints * (1 - apparent);
 	const fg = pointsToSg(fgPoints);
 	const abv = clamp((og - fg) * 131.25, 0, 30);
 
-	const stalled = timeFactor < 0.85 || health < 0.85 || stressFactor < 0.9;
+	/*
+	 * The report explains a beer by listing what moved its attenuation, so the
+	 * list stays — but every entry is now measured out of the simulation rather
+	 * than being an input to it.
+	 */
+	const factors: { label: string; factor: number }[] = [
+		{
+			label: `Mash at ${mash.effectiveTempC} °C`,
+			factor: round3(mash.kinetics.attenuationLimit / 0.83)
+		},
+		{ label: 'Grist composition', factor: round3(gristFactor) }
+	];
+	if (pitchRate !== 'standard') {
+		factors.push({
+			label: 'Pitch rate',
+			factor: round3(1 - (kinetics.growthFactor - 2.9) * 0.012)
+		});
+	}
+	if (kinetics.stalled) {
+		factors.push({ label: STALL_LABEL[kinetics.stalled], factor: round3(apparent / 0.8) });
+	}
 
 	return {
 		apparent,
+		kinetics,
 		fg,
 		abv,
 		factors,
-		stalled
+		stalled: kinetics.stalled !== false
+	};
+}
+
+const STALL_LABEL: Record<Exclude<FermentationKinetics['stalled'], false>, string> = {
+	cold: 'Stopped by the cold',
+	flocculated: 'Yeast dropped out early',
+	alcohol: 'Alcohol tolerance reached',
+	time: 'Fermentation cut short'
+};
+
+function round3(n: number): number {
+	return Math.round(n * 1000) / 1000;
+}
+
+/**
+ * Move the extract crystal malt and lactose contribute out of the fermentable
+ * sugars and into the dextrin share, so the fermentation meets it as the
+ * unfermentable sugar it really is.
+ */
+function bendSpectrum(spectrum: SugarSpectrum, gristFactor: number): SugarSpectrum {
+	if (gristFactor >= 1) return spectrum;
+	const shift = 1 - gristFactor;
+	const moved = {
+		glucose: spectrum.glucose * shift,
+		maltose: spectrum.maltose * shift,
+		maltotriose: spectrum.maltotriose * shift
+	};
+	return {
+		starch: spectrum.starch,
+		glucose: spectrum.glucose - moved.glucose,
+		maltose: spectrum.maltose - moved.maltose,
+		maltotriose: spectrum.maltotriose - moved.maltotriose,
+		dextrins: spectrum.dextrins + moved.glucose + moved.maltose + moved.maltotriose
 	};
 }
 

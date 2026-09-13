@@ -249,7 +249,7 @@ const imperialStout = (): Recipe => ({
 	efficiencyPct: 62,
 	water: { profileId: 'dark-alkaline', salts: salts({ calciumChloride: 3 }), lacticAcidMl: 2 },
 	fermentables: [
-		ferm('maris-otter', 7),
+		ferm('maris-otter', 8.2),
 		ferm('munich-dark', 0.8),
 		ferm('crystal-medium', 0.5),
 		ferm('chocolate', 0.5),

@@ -28,12 +28,16 @@
 	const peak = $derived(bestBefore(curve));
 </script>
 
+<!-- preserveAspectRatio: the box stretches to the container rather than
+     being letterboxed inside it, so the curve uses the full width. -->
 <figure class="m-0">
 	<svg
 		viewBox="0 0 {W} {H}"
+		preserveAspectRatio="none"
 		class="h-28 w-full"
 		role="img"
-		aria-label="Predicted drinking quality out of 100, from packaging to one year, peaking at {peak.quality} around week {peak.week}."
+		aria-label="Predicted drinking quality
+		out of 100, from packaging to one year, peaking at {peak.quality} around week {peak.week}."
 	>
 		<defs>
 			<linearGradient id={fillId} x1="0" y1="0" x2="0" y2="1">

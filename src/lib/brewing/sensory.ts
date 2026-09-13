@@ -229,41 +229,29 @@ export function computeHopLoad(recipe: Recipe): HopLoad {
 export function computeRisks(
 	ctx: Omit<EngineContext, 'sensory' | 'risks'>
 ): EngineContext['risks'] {
-	const { recipe, yeast, attenuation, hopLoad, avgFermentTempC, peakFermentTempC } = ctx;
-	const abv = attenuation.abv;
+	const { recipe, yeast, attenuation, hopLoad, peakFermentTempC } = ctx;
 
-	// Fusel alcohols: hot fermentation on a strong wort, worse when underpitched.
-	const overIdeal = Math.max(0, peakFermentTempC - yeast.tempIdealC);
+	/*
+	 * Fusel alcohols and diacetyl both come straight out of the fermentation
+	 * now. They used to be two formulas here, each with its own temperature
+	 * term, its own pitch-rate penalty and its own gravity term — three separate
+	 * guesses at one thing. The one thing is that yeast makes both while it is
+	 * growing, so a warm start, a big wort or too small a pitch raises them
+	 * together, and the simulation already knows how much growing it did.
+	 *
+	 * Fermenting above the strain's range is the one part not inside the
+	 * simulation, because it is stress rather than growth, so it stays here.
+	 */
 	const overMax = Math.max(0, peakFermentTempC - yeast.tempMaxC);
-	const pitchPenalty =
-		recipe.fermentation.pitchRate === 'under'
-			? 1.6
-			: recipe.fermentation.pitchRate === 'over'
-				? 0.85
-				: 1;
-	const strength = clamp((abv - 5) / 6, 0, 1.6);
-	const fusel = clamp(
-		(overIdeal * 0.28 * yeast.tempSensitivity + overMax * 0.7) * pitchPenalty * (1 + strength),
-		0,
-		10
-	);
+	const fusel = clamp(attenuation.kinetics.fusels + overMax * 0.7, 0, 10);
 
-	// Diacetyl: lager strains, cold and rushed fermentation, no warm rest.
-	const lagerFactor = yeast.kind === 'lager' ? 1.8 : 1;
-	const days = ctx.totalFermentDays;
-	const needed = yeast.kind === 'lager' ? 16 : 9;
-	const shortfall = clamp((needed - days) / needed, 0, 1);
-	const hasRest = recipe.fermentation.steps.some(
-		(s, i) => i > 0 && s.tempC >= recipe.fermentation.steps[0].tempC + 3 && s.days >= 2
-	);
-	const coldFinish = clamp((yeast.tempMinC - avgFermentTempC) / 6, 0, 1);
-	const diacetyl = clamp(
-		(shortfall * 5.5 + coldFinish * 3 + (recipe.fermentation.pitchRate === 'under' ? 1.5 : 0)) *
-			lagerFactor *
-			(hasRest ? 0.45 : 1),
-		0,
-		10
-	);
+	/*
+	 * Diacetyl is spilled during growth and taken back up afterwards by yeast
+	 * still in suspension, so the simulation produces it directly. What it
+	 * cannot know is that a lager drinker notices it at a far lower level, with
+	 * no esters or hops to hide behind.
+	 */
+	const diacetyl = clamp(attenuation.kinetics.diacetyl * (yeast.kind === 'lager' ? 1.6 : 1), 0, 10);
 
 	// Oxidation: careless transfer, long warm conditioning, heavy dry hopping.
 	const transfer = recipe.chill.transferQuality;
@@ -324,12 +312,10 @@ export function hopFadeFactor(days: number, tempC: number): number {
 }
 
 export function computeSensory(ctx: Omit<EngineContext, 'sensory'>): SensoryVector {
-	const { recipe, yeast, gravity, mash, water, ibu, attenuation, hopLoad, avgFermentTempC, risks } =
-		ctx;
+	const { recipe, yeast, mash, water, ibu, attenuation, hopLoad, avgFermentTempC, risks } = ctx;
 	const vector = gristFlavour(recipe).vector;
 
 	const fgPoints = Math.max(0, sgToPoints(attenuation.fg));
-	const ogPoints = Math.max(0, sgToPoints(gravity.og));
 	const abv = attenuation.abv;
 	const sulfate = water.final.sulfate;
 	const chloride = water.final.chloride;
@@ -375,15 +361,8 @@ export function computeSensory(ctx: Omit<EngineContext, 'sensory'>): SensoryVect
 
 	/* Yeast character ------------------------------------------------------ */
 	const tempDelta = avgFermentTempC - yeast.tempIdealC;
-	const esterTemp = 1 + tempDelta * yeast.tempSensitivity * 0.055;
-	const esterGravity = 1 + clamp((ogPoints - 50) / 100, -0.2, 0.6);
-	const esterPitch =
-		recipe.fermentation.pitchRate === 'under'
-			? 1.25
-			: recipe.fermentation.pitchRate === 'over'
-				? 0.88
-				: 1;
-	vector.fruitEsters = clamp(yeast.esterBase * esterTemp * esterGravity * esterPitch, 0, 10);
+	// Esters, like the fusels, are what the yeast made while it was growing.
+	vector.fruitEsters = clamp(ctx.attenuation.kinetics.esters, 0, 10);
 
 	// Biotransformation: dry hopping into active fermentation lifts fruitiness.
 	if (hopLoad.dryHopDuringFermentation) {
