@@ -15,7 +15,6 @@
 	import KettleHops from './questions/KettleHops.svelte';
 	import FlameoutHops from './questions/FlameoutHops.svelte';
 	import ChillMethod from './questions/ChillMethod.svelte';
-	import PitchTemp from './questions/PitchTemp.svelte';
 	import Transfer from './questions/Transfer.svelte';
 	import YeastChoice from './questions/YeastChoice.svelte';
 	import FermentSchedule from './questions/FermentSchedule.svelte';
@@ -49,8 +48,6 @@
 	<FlameoutHops />
 {:else if id === 'chill-method'}
 	<ChillMethod />
-{:else if id === 'pitch-temp'}
-	<PitchTemp />
 {:else if id === 'transfer'}
 	<Transfer />
 {:else if id === 'yeast'}

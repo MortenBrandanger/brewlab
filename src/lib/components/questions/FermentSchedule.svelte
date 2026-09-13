@@ -4,6 +4,13 @@
 	 *
 	 * The pitch rate and the temperature schedule, with the graph they draw and
 	 * what the two of them together are likely to do to the beer.
+	 *
+	 * The pitching temperature belongs here too, although it physically happens
+	 * one stage earlier. It used to be its own question on the chill stage, where
+	 * the screen had to admit "you have not chosen a yeast yet, so its range is
+	 * not marked" — you were being asked to pick a temperature for a strain you
+	 * had not met. It is the same decision as the fermentation temperature
+	 * anyway: you pitch at or just below where you mean to ferment.
 	 */
 	import SliderField from '../SliderField.svelte';
 	import SegmentedControl from '../SegmentedControl.svelte';
@@ -32,6 +39,21 @@
 
 <div class="flex flex-col gap-6">
 	<div class="grid gap-x-6 gap-y-4 sm:grid-cols-2">
+		<SliderField
+			label="Pitch it in at"
+			bind:value={brew.recipe.chill.pitchTempC}
+			defaultValue={DEFAULTS.chill.pitchTempC}
+			min={2}
+			max={40}
+			step={1}
+			unit=" °C"
+			marks={[
+				{ at: yeast.tempMinC, label: `${yeast.tempMinC}` },
+				{ at: yeast.tempIdealC, label: 'ideal' },
+				{ at: yeast.tempMaxC, label: `${yeast.tempMaxC}` }
+			]}
+			why="What you chilled the wort down to before the yeast went in. {yeast.name} works between {yeast.tempMinC} and {yeast.tempMaxC} °C; pitch at or just below where you mean to hold it, because the first twelve hours set the fruit and spice of the whole batch and there is no taking them back."
+		/>
 		<SegmentedControl
 			label="Pitch rate"
 			bind:value={brew.recipe.fermentation.pitchRate}

@@ -81,11 +81,6 @@ export const QUESTIONS: Question[] = [
 		hint: 'From boiling to the temperature yeast can live at. Every minute in between is a minute something else could take hold.'
 	},
 	{
-		id: 'pitch-temp',
-		stage: 'chill',
-		ask: 'How cold before the yeast goes in?'
-	},
-	{
 		id: 'transfer',
 		stage: 'chill',
 		ask: 'How carefully does it go into the fermenter?',
@@ -101,7 +96,7 @@ export const QUESTIONS: Question[] = [
 		id: 'ferment-schedule',
 		stage: 'ferment',
 		ask: 'How warm, and for how long?',
-		hint: 'Cool keeps the yeast quiet and the beer clean. Warm brings out fruit and spice, and past a point, a harsh taste of solvent.'
+		hint: 'Cool keeps the yeast quiet and the beer clean. Warm brings out fruit and spice, and past a point, a harsh taste of solvent. This is also what you chilled down to — you pitch at or just below where you mean to ferment.'
 	},
 	{
 		id: 'dry-hops',
