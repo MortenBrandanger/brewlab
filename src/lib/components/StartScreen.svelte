@@ -5,6 +5,10 @@
 	import { simulate } from '$lib/brewing/simulate';
 	import { brew } from '$lib/state/brew.svelte';
 	import { STAGES } from '$lib/state/stages';
+	import StyleChoice from './StyleChoice.svelte';
+
+	/** The brew day starts with a question, not with a kettle. */
+	let asking = $state(false);
 
 	/** A handful of starting points, not the whole library. */
 	const featured = ['house-pale-ale', 'west-coast-ipa', 'dry-stout', 'czech-lager'];
@@ -39,52 +43,58 @@
 		{/each}
 	</ol>
 
-	<div class="mt-6 grid gap-3 sm:grid-cols-[1.2fr_1fr]">
-		<button
-			type="button"
-			class="panel flex flex-col items-start gap-2 p-5 text-start ring-1 ring-copper-dim transition-colors hover:bg-ui"
-			onclick={() => brew.startFresh()}
-		>
-			<span class="font-display text-lg">Start a brew day</span>
-			<span class="prose-measure text-sm text-muted">
-				An empty kettle and a tank of water. You choose the grain, the hops and the yeast, and
-				nothing is decided until you decide it.
-			</span>
-			<span class="btn btn-primary mt-auto">Start from scratch</span>
-		</button>
+	{#if asking}
+		<section class="panel mt-6 p-5">
+			<StyleChoice onchoose={(styleId) => brew.startFresh(styleId)} />
+		</section>
+	{:else}
+		<div class="mt-6 grid gap-3 sm:grid-cols-[1.2fr_1fr]">
+			<button
+				type="button"
+				class="panel flex flex-col items-start gap-2 p-5 text-start ring-1 ring-copper-dim transition-colors hover:bg-ui"
+				onclick={() => (asking = true)}
+			>
+				<span class="font-display text-lg">Start a brew day</span>
+				<span class="prose-measure text-sm text-muted">
+					An empty kettle and a tank of water. You choose the grain, the hops and the yeast, and
+					nothing is decided until you decide it.
+				</span>
+				<span class="btn btn-primary mt-auto">Start from scratch</span>
+			</button>
 
-		<div class="panel flex flex-col p-5">
-			<span class="font-display text-lg">Or open a finished recipe</span>
-			<span class="prose-measure mt-2 text-sm text-muted">
-				A complete, brewed beer you can pull apart. Good for seeing what a change does.
-			</span>
-			<ul class="mt-3 flex flex-col gap-1">
-				{#each picks as pick (pick.example.id)}
-					<li>
-						<button
-							type="button"
-							class="flex w-full items-center gap-2.5 rounded-md p-2 text-start transition-colors hover:bg-ui-hover"
-							onclick={() => {
-								brew.load(pick.recipe);
-								brew.setStage('taste');
-							}}
-						>
-							<span
-								class="h-5 w-5 shrink-0 rounded-full ring-1 ring-line-strong"
-								style="background:{srmToCss(pick.result.metrics.srm)}"
-								aria-hidden="true"
-							></span>
-							<span class="min-w-0 flex-1 text-sm">{pick.example.name}</span>
-							<span class="tnum text-xs text-subtle">
-								{pick.result.metrics.abv.toFixed(1)}% · {Math.round(pick.result.metrics.ibu)} IBU
-							</span>
-						</button>
-					</li>
-				{/each}
-			</ul>
-			<a class="btn btn-quiet mt-2 self-start" href={resolve('/recipes')}>All recipes</a>
+			<div class="panel flex flex-col p-5">
+				<span class="font-display text-lg">Or open a finished recipe</span>
+				<span class="prose-measure mt-2 text-sm text-muted">
+					A complete, brewed beer you can pull apart. Good for seeing what a change does.
+				</span>
+				<ul class="mt-3 flex flex-col gap-1">
+					{#each picks as pick (pick.example.id)}
+						<li>
+							<button
+								type="button"
+								class="flex w-full items-center gap-2.5 rounded-md p-2 text-start transition-colors hover:bg-ui-hover"
+								onclick={() => {
+									brew.load(pick.recipe);
+									brew.setStage('taste');
+								}}
+							>
+								<span
+									class="h-5 w-5 shrink-0 rounded-full ring-1 ring-line-strong"
+									style="background:{srmToCss(pick.result.metrics.srm)}"
+									aria-hidden="true"
+								></span>
+								<span class="min-w-0 flex-1 text-sm">{pick.example.name}</span>
+								<span class="tnum text-xs text-subtle">
+									{pick.result.metrics.abv.toFixed(1)}% · {Math.round(pick.result.metrics.ibu)} IBU
+								</span>
+							</button>
+						</li>
+					{/each}
+				</ul>
+				<a class="btn btn-quiet mt-2 self-start" href={resolve('/recipes')}>All recipes</a>
+			</div>
 		</div>
-	</div>
+	{/if}
 
 	<p class="mt-5 text-sm text-muted">
 		Prefer a goal to work towards? <a

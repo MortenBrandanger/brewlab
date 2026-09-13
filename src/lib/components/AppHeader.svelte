@@ -85,7 +85,7 @@
 					prefs.persist();
 				}}
 			>
-				{prefs.showWhy ? 'Hide' : 'Show'} explanations
+				{prefs.showWhy ? 'Hide' : 'Show'} deep dives
 			</button>
 			<button
 				type="button"

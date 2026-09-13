@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Vessel from './Vessel.svelte';
 	import Meter from './Meter.svelte';
+	import FigureValue from './FigureValue.svelte';
 	import { appearanceOf } from '$lib/brewing/appearance';
 	import { SENSORY_LABELS } from '$lib/brewing/sensory';
 	import { getFermentable, getHop, getYeast } from '$lib/brewing/ingredients';
@@ -44,21 +45,61 @@
 			.slice(0, 6)
 	);
 
-	/** Only the numbers that exist at this point in the brew day. */
+	/**
+	 * Only the numbers that exist at this point in the brew day.
+	 *
+	 * Each carries its full name and a figure id, because this panel is on every
+	 * screen and a column of seven bare abbreviations taught nobody anything —
+	 * one reader said they tuned it out entirely, which defeats the point of it.
+	 */
 	const metrics = $derived(
 		[
-			{ label: 'Mash pH', value: result.metrics.mashPh.toFixed(2), reveal: 'potential' as Reveal },
-			{ label: 'EBC', value: String(Math.round(result.metrics.ebc)), reveal: 'colour' as Reveal },
-			{ label: 'OG', value: result.metrics.og.toFixed(3), reveal: 'gravity' as Reveal },
 			{
-				label: 'IBU',
-				value: String(Math.round(result.metrics.ibu)),
+				label: 'Mash pH',
+				figure: 'mash-ph',
+				raw: result.metrics.mashPh,
+				value: result.metrics.mashPh.toFixed(2),
+				reveal: 'potential' as Reveal
+			},
+			{
+				label: 'Colour',
+				figure: 'ebc',
+				raw: result.metrics.ebc,
+				value: `${Math.round(result.metrics.ebc)} EBC`,
+				reveal: 'colour' as Reveal
+			},
+			{
+				label: 'Starting sugar',
+				figure: 'og',
+				raw: result.metrics.og,
+				value: result.metrics.og.toFixed(3),
+				reveal: 'gravity' as Reveal
+			},
+			{
+				label: 'Bitterness',
+				figure: 'ibu',
+				raw: result.metrics.ibu,
+				value: `${Math.round(result.metrics.ibu)} IBU`,
 				reveal: 'bitterness' as Reveal
 			},
-			{ label: 'FG', value: result.metrics.fg.toFixed(3), reveal: 'alcohol' as Reveal },
-			{ label: 'ABV', value: `${result.metrics.abv.toFixed(1)}%`, reveal: 'alcohol' as Reveal },
 			{
-				label: 'CO₂',
+				label: 'Sugar left',
+				figure: 'fg',
+				raw: result.metrics.fg,
+				value: result.metrics.fg.toFixed(3),
+				reveal: 'alcohol' as Reveal
+			},
+			{
+				label: 'Alcohol',
+				figure: 'abv',
+				raw: result.metrics.abv,
+				value: `${result.metrics.abv.toFixed(1)}%`,
+				reveal: 'alcohol' as Reveal
+			},
+			{
+				label: 'Fizz',
+				figure: 'co2-volumes',
+				raw: result.metrics.co2Volumes,
 				value: `${result.metrics.co2Volumes.toFixed(1)} vol`,
 				reveal: 'flavour' as Reveal
 			}
@@ -178,11 +219,18 @@
 	</section>
 
 	{#if metrics.length}
-		<dl class="grid grid-cols-3 gap-x-3 gap-y-3 border-t border-line pt-4">
+		<dl class="relative grid grid-cols-3 gap-x-3 gap-y-3 border-t border-line pt-4">
 			{#each metrics as metric (metric.label)}
-				<div>
+				<div class="min-w-0">
 					<dt class="text-xs text-subtle">{metric.label}</dt>
-					<dd class="tnum text-sm font-medium text-fg">{metric.value}</dd>
+					<dd class="text-sm">
+						<FigureValue
+							id={metric.figure}
+							value={metric.raw}
+							display={metric.value}
+							label={metric.label}
+						/>
+					</dd>
 				</div>
 			{/each}
 		</dl>

@@ -27,13 +27,26 @@
 	);
 </script>
 
-<div class="grid grid-cols-[7.5rem_1fr_2.75rem] items-center gap-x-3 gap-y-1" title={hint}>
-	<span class="text-xs text-muted">{label}</span>
-	<div class="h-2 rounded-full bg-ui-active" aria-hidden="true">
-		<div
-			class="h-full rounded-full transition-[width] duration-200 ease-out"
-			style="width:{pct}%; background:{fill}"
-		></div>
+<!--
+	The denominator is printed. A bare "6.4" on an invisible scale told the reader
+	nothing, and the hint that would have explained the label ("Diacetyl" =
+	"butter or butterscotch left behind") used to live in a `title`, where a
+	phone never shows it. Both are visible now.
+-->
+<div>
+	<div class="grid grid-cols-[7.5rem_1fr_3.5rem] items-center gap-x-3">
+		<span class="text-xs text-muted">{label}</span>
+		<div class="h-2 rounded-full bg-ui-active" aria-hidden="true">
+			<div
+				class="h-full rounded-full transition-[width] duration-200 ease-out"
+				style="width:{pct}%; background:{fill}"
+			></div>
+		</div>
+		<span class="tnum text-right text-xs text-fg">
+			{format(value)}<span class="text-subtle">/{Number.isInteger(max) ? max : format(max)}</span>
+		</span>
 	</div>
-	<span class="tnum text-right text-xs text-fg">{format(value)}</span>
+	{#if hint}
+		<p class="prose-measure mt-0.5 ps-0 text-xs text-subtle sm:ps-[8.25rem]">{hint}</p>
+	{/if}
 </div>

@@ -7,7 +7,6 @@
 	import { YEASTS, getYeast } from '$lib/brewing/ingredients';
 	import { DEFAULTS, fermStep } from '$lib/brewing/recipes';
 	import { brew } from '$lib/state/brew.svelte';
-	import { prefs } from '$lib/state/prefs.svelte';
 
 	const chosenYeast = $derived(getYeast(brew.recipe.fermentation.yeastId));
 	const yeast = $derived(chosenYeast ?? YEASTS[0]);
@@ -39,13 +38,12 @@
 <div class="flex flex-col gap-6">
 	<section>
 		<h3 class="field-label mb-1">Yeast</h3>
-		{#if prefs.showWhy}
-			<p class="prose-measure mb-3 text-xs text-muted">
-				The percentage is attenuation: how much of the sugar that strain will eat, and so how dry
-				the beer finishes. Flocculation is how readily the yeast clumps together and sinks when it
-				is done, which decides how clear the beer ends up.
-			</p>
-		{/if}
+		<p class="prose-measure mb-3 text-xs text-muted">
+			The percentage is attenuation: how much of the sugar that strain will eat, and so how dry the
+			beer finishes. Flocculation is how readily the yeast clumps together and sinks when it is
+			done, which decides how clear the beer ends up.
+		</p>
+
 		<div class="flex flex-col gap-3">
 			{#each byKind as group (group.kind)}
 				<div>
@@ -130,7 +128,7 @@
 				<li class="rounded-lg bg-surface p-3 ring-1 ring-line">
 					<div class="flex flex-wrap items-end gap-x-4 gap-y-2">
 						<div class="w-32">
-							<label class="field-label mb-1" for="label-{fstep.id}">Stage</label>
+							<label class="field-label mb-1" for="label-{fstep.id}">What to call it</label>
 							<input id="label-{fstep.id}" class="input" bind:value={fstep.label} />
 						</div>
 						<div class="min-w-[10rem] flex-1">
@@ -141,6 +139,11 @@
 								max={40}
 								step={1}
 								unit=" °C"
+								marks={[
+									{ at: yeast.tempMinC, label: String(yeast.tempMinC) },
+									{ at: yeast.tempMaxC, label: String(yeast.tempMaxC) }
+								]}
+								why="The most consequential number in the brew. Cool keeps the yeast quiet and the beer clean; warm brings out fruit and spice. Past the strain's range — the two marks, {yeast.tempMinC}–{yeast.tempMaxC} °C for {yeast.name} — it makes harsh alcohols that taste of solvent and never age out."
 								id="ft-{fstep.id}"
 							/>
 						</div>
@@ -151,6 +154,12 @@
 								min={0}
 								max={60}
 								step={1}
+								unit={fstep.days === 1 ? ' day' : ' days'}
+								marks={[
+									{ at: 14, label: 'most ales' },
+									{ at: 28, label: 'lagers' }
+								]}
+								why="How long it sits at that temperature. Most ales are finished inside two weeks and lagers take three or four. Leaving it longer costs nothing; stopping early leaves sugar unfermented and a buttery taste the yeast had not finished clearing up."
 								id="fd-{fstep.id}"
 							/>
 						</div>

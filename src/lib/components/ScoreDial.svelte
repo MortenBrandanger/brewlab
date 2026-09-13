@@ -48,7 +48,7 @@
 			class:text-lg={size === 'lg'}
 			class:text-base={size !== 'lg'}
 		>
-			{value}
+			{value}<span class="text-xs font-normal text-subtle">/100</span>
 		</span>
 	</div>
 	<span class="text-center text-xs text-muted">{label}</span>

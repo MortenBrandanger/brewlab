@@ -1,12 +1,12 @@
 <script lang="ts">
 	import SliderField from '../SliderField.svelte';
+	import FigureValue from '../FigureValue.svelte';
 	import LearningNote from '../LearningNote.svelte';
 	import HopTimeline from '../HopTimeline.svelte';
 	import { HOPS, getHop } from '$lib/brewing/ingredients';
 	import { newHopAddition } from '$lib/brewing/recipes';
 	import { brew } from '$lib/state/brew.svelte';
 	import { DEFAULTS } from '$lib/brewing/recipes';
-	import { prefs } from '$lib/state/prefs.svelte';
 	import type { HopUse } from '$lib/brewing/types';
 
 	/**
@@ -128,21 +128,42 @@
 		<HopTimeline hops={brew.recipe.hops} boilTimeMin={brew.recipe.boilTimeMin} {ibuByAddition} />
 	</section>
 
-	<div>
-		<p class="tnum text-sm text-muted">
-			<span class="font-medium text-fg">{Math.round(brew.result.metrics.ibu)} IBU</span>
-			· BU:GU {brew.result.metrics.buGu.toFixed(2)}
+	<div class="relative">
+		<dl class="flex flex-wrap items-baseline gap-x-6 gap-y-2 text-sm">
+			<div>
+				<dt class="text-xs text-subtle">Bitterness</dt>
+				<dd>
+					<FigureValue
+						id="ibu"
+						value={brew.result.metrics.ibu}
+						display="{Math.round(brew.result.metrics.ibu)} IBU"
+						label="Bitterness"
+					/>
+				</dd>
+			</div>
+			<div>
+				<dt class="text-xs text-subtle">Bitterness against sugar</dt>
+				<dd>
+					<FigureValue
+						id="bu-gu"
+						value={brew.result.metrics.buGu}
+						display={brew.result.metrics.buGu.toFixed(2)}
+						label="Bitterness against sugar"
+					/>
+				</dd>
+			</div>
 			{#if descriptors.length}
-				· aroma reads as {descriptors.join(', ')}
+				<div>
+					<dt class="text-xs text-subtle">Aroma</dt>
+					<dd class="text-sm font-medium text-fg">{descriptors.join(', ')}</dd>
+				</div>
 			{/if}
+		</dl>
+		<p class="prose-measure mt-2 text-xs text-subtle">
+			The second figure is the better guide of the two: the same bitterness feels sharp in a small
+			beer and mild in a big one, so it weighs one against the other. Most balanced beers land
+			between 0.4 and 0.8.
 		</p>
-		{#if prefs.showWhy}
-			<p class="prose-measure mt-1 text-xs text-subtle">
-				IBU counts the bitter compounds the boil created. BU:GU weighs that against how much sugar
-				is in the wort, which is the better guide: the same bitterness feels sharp in a small beer
-				and mild in a big one. Most balanced beers land between 0.4 and 0.8.
-			</p>
-		{/if}
 	</div>
 
 	{#each grouped as group (group.use)}
@@ -218,6 +239,12 @@
 										max={300}
 										step={5}
 										unit=" g"
+										marks={[
+											{ at: 20, label: 'lager' },
+											{ at: 60, label: 'pale ale' },
+											{ at: 150, label: 'IPA' }
+										]}
+										why="Bitterness rises roughly in step with the grams, so doubling the weight roughly doubles it. The marks are what a 20-litre batch of each beer takes at the start of a boil. Hops added late, or after the flame is out, add far less bitterness for the same weight, so those go heavier."
 										id="g-{addition.id}"
 									/>
 									{#if addition.use === 'boil'}
@@ -247,6 +274,11 @@
 											max={100}
 											step={1}
 											unit=" °C"
+											marks={[
+												{ at: 70, label: 'aroma only' },
+												{ at: 90, label: 'some bitterness' }
+											]}
+											why="How far you let the kettle cool before these go in. Hotter keeps extracting bitterness and drives more aroma off; cooler is almost pure aroma. Most brewers wait for 75–85 °C."
 											id="wt-{addition.id}"
 										/>
 									{:else}
@@ -265,6 +297,9 @@
 											min={0}
 											max={21}
 											step={1}
+											unit=" of fermentation"
+											marks={[{ at: 5, label: 'usual' }]}
+											why="Which day of fermentation these go in. Most brewers wait until the vigorous bubbling has died down, around day three to five, because the escaping gas carries the aroma straight back out again."
 											id="d-{addition.id}"
 										/>
 									{/if}

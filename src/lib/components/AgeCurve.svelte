@@ -10,9 +10,13 @@
 	const W = 300;
 	const H = 110;
 	const maxWeek = $derived(curve.at(-1)?.week ?? 52);
-	const values = $derived(curve.map((p) => p.quality));
-	const low = $derived(Math.max(0, Math.min(...values) - 6));
-	const high = $derived(Math.min(100, Math.max(...values) + 6));
+	/*
+	 * A fixed axis, not one fitted to the data. Auto-ranging drew a beer that
+	 * drifts two points and one that collapses forty with the same dramatic
+	 * slope, so the chart said nothing about how much ageing actually costs.
+	 */
+	const low = 0;
+	const high = 100;
 
 	const x = (week: number) => (week / maxWeek) * W;
 	const y = (quality: number) => H - ((quality - low) / Math.max(1, high - low)) * H;
@@ -29,7 +33,7 @@
 		viewBox="0 0 {W} {H}"
 		class="h-28 w-full"
 		role="img"
-		aria-label="Predicted drinking quality from packaging to one year, peaking around week {peak.week}."
+		aria-label="Predicted drinking quality out of 100, from packaging to one year, peaking at {peak.quality} around week {peak.week}."
 	>
 		<defs>
 			<linearGradient id={fillId} x1="0" y1="0" x2="0" y2="1">
@@ -48,9 +52,11 @@
 		/>
 		<circle cx={x(peak.week)} cy={y(peak.quality)} r="4" fill="var(--color-amber)" />
 	</svg>
-	<figcaption class="mt-1 flex items-baseline justify-between text-xs text-subtle">
+	<figcaption
+		class="mt-1 flex flex-wrap items-baseline justify-between gap-x-3 text-xs text-subtle"
+	>
 		<span>packaged</span>
-		<span class="text-muted">best around week {peak.week}</span>
+		<span class="text-muted">best around week {peak.week}, at {peak.quality}/100</span>
 		<span>1 year</span>
 	</figcaption>
 </figure>

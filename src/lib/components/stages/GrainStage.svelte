@@ -4,7 +4,6 @@
 	import { ebcToSrm } from '$lib/brewing/calculations';
 	import { ferm } from '$lib/brewing/recipes';
 	import { brew } from '$lib/state/brew.svelte';
-	import { prefs } from '$lib/state/prefs.svelte';
 	import type { FermentableCategory } from '$lib/brewing/types';
 
 	const CATEGORY_LABEL: Record<FermentableCategory, string> = {
@@ -141,14 +140,13 @@
 					{/if}
 				{/each}
 			</div>
-			{#if prefs.showWhy}
-				<!-- A glossary note belongs against the numbers it decodes, not floating
-				     at the top of the panel where it explains nothing yet. -->
-				<p class="prose-measure mt-1.5 text-xs text-muted">
-					EBC is the colour scale brewers use, measured on the malt and on the finished beer.
-					Roughly: 4 is pale straw, 12 gold, 25 amber, 60 brown and anything past 200 is black.
-				</p>
-			{/if}
+			<!-- A glossary note belongs against the numbers it decodes, not floating
+			     at the top of the panel where it explains nothing yet. -->
+			<p class="prose-measure mt-1.5 text-xs text-muted">
+				EBC is the colour scale brewers use, measured on the malt and on the finished beer. Roughly:
+				4 is pale straw, 12 gold, 25 amber, 60 brown and anything past 200 is black.
+			</p>
+
 			<p class="tnum mt-1.5 text-xs text-subtle">
 				{totalKg.toFixed(2)} kg of grist
 				{#if grist}
@@ -285,18 +283,22 @@
 
 	{#if brew.recipe.fermentables.length === 0}
 		<!-- A shortcut, at the weight of a shortcut. -->
-		<p class="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-xs text-subtle">
-			<span>Or start from a ready grist and change it:</span>
-			{#each STARTERS as starter, i (starter.name)}
-				<button
-					type="button"
-					class="rounded-sm text-copper-text hover:underline"
-					title={starter.note}
-					onclick={() => useStarter(starter.grist)}
-				>
-					{starter.name}{i < STARTERS.length - 1 ? ' ·' : ''}
-				</button>
-			{/each}
-		</p>
+		<div class="text-xs">
+			<p class="text-subtle">Or start from a ready grist and change it:</p>
+			<ul class="mt-1.5 flex flex-wrap gap-x-4 gap-y-1">
+				{#each STARTERS as starter (starter.name)}
+					<li>
+						<button
+							type="button"
+							class="rounded-sm text-start hover:underline"
+							onclick={() => useStarter(starter.grist)}
+						>
+							<span class="text-copper-text">{starter.name}</span>
+							<span class="text-subtle"> — {starter.note}</span>
+						</button>
+					</li>
+				{/each}
+			</ul>
+		</div>
 	{/if}
 </div>

@@ -4,7 +4,6 @@
 	import { strikeTempC } from '$lib/brewing/calculations';
 	import { brew } from '$lib/state/brew.svelte';
 	import { DEFAULTS } from '$lib/brewing/recipes';
-	import { prefs } from '$lib/state/prefs.svelte';
 	import type { MashStepKind } from '$lib/brewing/types';
 
 	const KIND_LABEL: Record<MashStepKind, string> = {
@@ -93,14 +92,13 @@
 
 	<section>
 		<h3 class="field-label mb-1">Where your rest sits</h3>
-		{#if prefs.showWhy}
-			<p class="prose-measure mb-2 text-xs text-muted">
-				Two enzymes in the malt compete, and temperature picks the winner. The cooler one,
-				beta-amylase, makes simple sugar the yeast can eat, so the beer finishes dry. The hotter
-				one, alpha-amylase, makes longer sugars the yeast cannot touch, so the beer finishes full
-				and sweet. Your rest sits somewhere between them.
-			</p>
-		{/if}
+		<p class="prose-measure mb-2 text-xs text-muted">
+			Two enzymes in the malt compete, and temperature picks the winner. The cooler one,
+			beta-amylase, makes simple sugar the yeast can eat, so the beer finishes dry. The hotter one,
+			alpha-amylase, makes longer sugars the yeast cannot touch, so the beer finishes full and
+			sweet. Your rest sits somewhere between them.
+		</p>
+
 		<div class="relative h-24 rounded-lg bg-surface ring-1 ring-line">
 			<div class="absolute inset-x-0 top-3 h-8" aria-hidden="true">
 				<div
@@ -165,6 +163,12 @@
 								max={80}
 								step={1}
 								unit=" °C"
+								marks={[
+									{ at: 63, label: 'dry' },
+									{ at: 67, label: 'balanced' },
+									{ at: 71, label: 'full' }
+								]}
+								why="The one decision this stage exists for. Around 63 °C the yeast can eat almost all the sugar, so the beer finishes thin and crisp. Around 71 °C much of it is left behind, so the beer finishes full and sweet. Below 58 or above 74 barely anything converts at all."
 								id="mash-t-{mashStep.id}"
 							/>
 						</div>
@@ -176,6 +180,12 @@
 								max={120}
 								step={5}
 								unit=" min"
+								marks={[
+									{ at: 45, label: '45' },
+									{ at: 60, label: 'usual' },
+									{ at: 90, label: '90' }
+								]}
+								why="An hour is standard because that is roughly how long the malt takes to give up its sugar. Cut it much below 45 minutes and you leave sugar in the grain, which shows up later as a weaker beer. Past 90 there is nothing left to gain."
 								id="mash-m-{mashStep.id}"
 							/>
 						</div>

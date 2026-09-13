@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ScoreDial from '../ScoreDial.svelte';
+	import FigureValue from '../FigureValue.svelte';
 	import SensoryProfile from '../SensoryProfile.svelte';
 	import FindingList from '../FindingList.svelte';
 	import ShowTheModel from '../ShowTheModel.svelte';
@@ -27,20 +28,68 @@
 	const strengths = $derived(result.findings.filter((f) => f.severity === 'info'));
 	const risks = $derived(result.findings.filter((f) => f.severity !== 'info'));
 
+	/**
+	 * Every figure here carries its glossary entry. This grid was ten numbers
+	 * deep and a reader with no brewing behind them could read exactly one of
+	 * them — the calories. Colour drops SRM: showing the same property twice in
+	 * two systems, neither explained, helped nobody.
+	 */
 	const technical = $derived([
-		{ label: 'Original gravity', value: result.metrics.og.toFixed(3) },
-		{ label: 'Final gravity', value: result.metrics.fg.toFixed(3) },
-		{ label: 'Alcohol', value: `${result.metrics.abv.toFixed(1)}%` },
-		{ label: 'Bitterness', value: `${Math.round(result.metrics.ibu)} IBU` },
+		{
+			label: 'Original gravity',
+			figure: 'og',
+			raw: result.metrics.og,
+			value: result.metrics.og.toFixed(3)
+		},
+		{
+			label: 'Final gravity',
+			figure: 'fg',
+			raw: result.metrics.fg,
+			value: result.metrics.fg.toFixed(3)
+		},
+		{
+			label: 'Alcohol',
+			figure: 'abv',
+			raw: result.metrics.abv,
+			value: `${result.metrics.abv.toFixed(1)}%`
+		},
+		{
+			label: 'Bitterness',
+			figure: 'ibu',
+			raw: result.metrics.ibu,
+			value: `${Math.round(result.metrics.ibu)} IBU`
+		},
 		{
 			label: 'Colour',
-			value: `${Math.round(result.metrics.ebc)} EBC / ${result.metrics.srm.toFixed(1)} SRM`
+			figure: 'ebc',
+			raw: result.metrics.ebc,
+			value: `${Math.round(result.metrics.ebc)} EBC`
 		},
-		{ label: 'Attenuation', value: `${Math.round(result.metrics.attenuation)}%` },
-		{ label: 'BU:GU', value: result.metrics.buGu.toFixed(2) },
-		{ label: 'Mash pH', value: result.metrics.mashPh.toFixed(2) },
-		{ label: 'Carbonation', value: `${result.metrics.co2Volumes.toFixed(1)} vol` },
-		{ label: 'Energy', value: `${result.metrics.kcalPer330} kcal / 330 ml` }
+		{
+			label: 'Attenuation',
+			figure: 'attenuation',
+			raw: result.metrics.attenuation,
+			value: `${Math.round(result.metrics.attenuation)}%`
+		},
+		{
+			label: 'Bitterness against sugar',
+			figure: 'bu-gu',
+			raw: result.metrics.buGu,
+			value: result.metrics.buGu.toFixed(2)
+		},
+		{
+			label: 'Mash pH',
+			figure: 'mash-ph',
+			raw: result.metrics.mashPh,
+			value: result.metrics.mashPh.toFixed(2)
+		},
+		{
+			label: 'Carbonation',
+			figure: 'co2-volumes',
+			raw: result.metrics.co2Volumes,
+			value: `${result.metrics.co2Volumes.toFixed(1)} vol`
+		},
+		{ label: 'Energy', figure: '', raw: 0, value: `${result.metrics.kcalPer330} kcal / 330 ml` }
 	]);
 </script>
 
@@ -118,11 +167,22 @@
 		<!-- Numbers -->
 		<section>
 			<h3 class="field-label mb-3">Technical values</h3>
-			<dl class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+			<dl class="relative grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
 				{#each technical as row (row.label)}
-					<div>
+					<div class="min-w-0">
 						<dt class="text-xs text-subtle">{row.label}</dt>
-						<dd class="tnum text-sm font-medium">{row.value}</dd>
+						<dd class="text-sm">
+							{#if row.figure}
+								<FigureValue
+									id={row.figure}
+									value={row.raw}
+									display={row.value}
+									label={row.label}
+								/>
+							{:else}
+								<span class="tnum font-medium text-fg">{row.value}</span>
+							{/if}
+						</dd>
 					</div>
 				{/each}
 			</dl>

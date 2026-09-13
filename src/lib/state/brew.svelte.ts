@@ -117,12 +117,20 @@ class BrewStore {
 	}
 
 	/** A blank brew day: water in the tank and nothing else. */
-	startFresh() {
+	/**
+	 * @param targetStyleId the beer being brewed towards, or undefined for a brew
+	 * with no target. It is asked before the first stage rather than left in a
+	 * header dropdown: every stage from the water onwards describes itself in
+	 * terms of the beer you are making, so without an answer none of them can.
+	 */
+	startFresh(targetStyleId?: string) {
 		this.recipe = emptyRecipe();
+		this.recipe.targetStyleId = targetStyleId;
 		this.stored = undefined;
 		this.brewedTo = -1;
 		this.stage = 'water';
 		this.started = true;
+		// leaveChallenge derives the mode from the target we just set.
 		this.leaveChallenge();
 	}
 

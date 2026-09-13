@@ -27,11 +27,20 @@
 			<label
 				class="flex-1 cursor-pointer rounded-sm px-2.5 py-1.5 text-center text-xs font-medium whitespace-nowrap transition-colors
 					{value === option.value ? 'bg-copper text-ink' : 'text-muted hover:bg-ui-hover hover:text-fg'}"
-				title={option.hint}
 			>
 				<input class="sr-only" type="radio" {name} value={option.value} bind:group={value} />
 				{option.label}
 			</label>
 		{/each}
 	</div>
+	<!--
+		The hints used to live in a `title`, which is invisible on touch and to
+		anyone who does not hover -- and for "Closed transfer" and "Light pitch"
+		it was the only explanation anywhere on the screen.
+	-->
+	{#if options.find((o) => o.value === value)?.hint}
+		<p class="prose-measure mt-1.5 text-xs text-muted">
+			{options.find((o) => o.value === value)?.hint}
+		</p>
+	{/if}
 </fieldset>
