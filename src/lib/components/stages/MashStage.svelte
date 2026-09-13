@@ -1,5 +1,15 @@
 <script lang="ts">
+	/**
+	 * The mash, as the three acts it is.
+	 *
+	 * A brewer put this third on the list of stages most in need of a sequence,
+	 * and named the reason: the panel showed a plan when the hour is a sequence
+	 * of moments. You set the schedule at the desk, you stand over the tun
+	 * stirring grain into water, and then you put the lid on and leave. Those are
+	 * three different rooms and three different half-hours.
+	 */
 	import SliderField from '../SliderField.svelte';
+	import StageSteps, { type Step } from '../StageSteps.svelte';
 	import { step } from '$lib/brewing/recipes';
 	import { strikeTempC } from '$lib/brewing/calculations';
 	import { brew } from '$lib/state/brew.svelte';
@@ -71,206 +81,258 @@
 
 	/** Where a step sits on the enzyme map, 40–80 °C. */
 	const position = (tempC: number) => ((Math.min(80, Math.max(40, tempC)) - 40) / 40) * 100;
+
+	const restLine = $derived(
+		brew.recipe.mash.steps.map((s) => `${s.tempC} °C for ${s.minutes} min`).join(', ')
+	);
+
+	const steps: Step[] = $derived([
+		{
+			id: 'plan',
+			title: 'Decide where the rest sits',
+			says: 'At the desk, before anything is hot. You are choosing one temperature and how long to hold it, and the map below shows what that choice does.',
+			summary: restLine
+		},
+		{
+			id: 'doughin',
+			title: 'Heat the water and stir the grain in',
+			says: 'Slosh hot water round the tun first and tip it out, so the vessel is not cold when the real water goes in. Then the grain goes in slowly while you stir the whole time, chasing the dry lumps into the corners with the paddle. Take a reading in two or three places, not one — the top of a mash can sit degrees above the bottom.',
+			summary:
+				grainKg > 0 && strike !== undefined
+					? `${mashWaterL.toFixed(1)} L at ${strike.toFixed(0)} °C onto ${grainKg.toFixed(2)} kg`
+					: 'nothing weighed out yet'
+		},
+		{
+			id: 'rest',
+			title: 'Lid on, and walk away',
+			says: 'A blanket over the tun and a timer set. It looks and smells like hot porridge. Nothing needs you for an hour — go and clean the mill — though it is worth a look at the halfway mark to see the temperature has not slid.',
+			summary: mash
+				? `${mash.conversionMinutes} min of conversion at ${mash.effectiveTempC} °C`
+				: ''
+		}
+	]);
 </script>
 
-<div class="flex flex-col gap-6">
-	<div>
-		<h3 class="field-label mb-2">Start from</h3>
-		<div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-			{#each PRESETS as preset (preset.id)}
-				<button
-					type="button"
-					class="rounded-lg bg-surface p-3 text-start ring-1 ring-line transition-colors hover:bg-ui-hover hover:ring-line-strong"
-					onclick={() => (brew.recipe.mash.steps = preset.steps())}
-				>
-					<span class="block text-sm font-medium">{preset.name}</span>
-					<span class="mt-0.5 block text-xs text-subtle">{preset.note}</span>
-				</button>
-			{/each}
-		</div>
-	</div>
-
-	<section>
-		<h3 class="field-label mb-1">Where your rest sits</h3>
-		<p class="prose-measure mb-2 text-xs text-muted">
-			Two enzymes in the malt compete, and temperature picks the winner. The cooler one,
-			beta-amylase, makes simple sugar the yeast can eat, so the beer finishes dry. The hotter one,
-			alpha-amylase, makes longer sugars the yeast cannot touch, so the beer finishes full and
-			sweet. Your rest sits somewhere between them.
-		</p>
-
-		<div class="relative h-24 rounded-lg bg-surface ring-1 ring-line">
-			<div class="absolute inset-x-0 top-3 h-8" aria-hidden="true">
-				<div
-					class="absolute inset-y-0 rounded-s-md bg-hop-dim/70"
-					style="left:{position(55)}%; width:{position(72) - position(55)}%"
-				></div>
-				<div
-					class="absolute inset-y-0 rounded-e-md bg-copper-dim/70"
-					style="left:{position(60)}%; width:{position(78) - position(60)}%; mix-blend-mode:screen"
-				></div>
-			</div>
-			<span class="absolute top-4 text-[0.625rem] text-fg" style="left:{position(58)}%"
-				>beta-amylase</span
-			>
-			<span class="absolute top-7 text-[0.625rem] text-fg" style="left:{position(69)}%"
-				>alpha-amylase</span
-			>
-
-			{#each brew.recipe.mash.steps as mashStep (mashStep.id)}
-				<div
-					class="absolute top-1 bottom-7 w-0.5 bg-amber"
-					style="left:{position(mashStep.tempC)}%"
-					aria-hidden="true"
-				></div>
-				<span
-					class="tnum absolute bottom-7 -translate-x-1/2 rounded-sm bg-amber px-1 text-[0.625rem] font-bold text-ink"
-					style="left:{position(mashStep.tempC)}%"
-					aria-hidden="true"
-				>
-					{mashStep.tempC}°
-				</span>
-			{/each}
-
-			<div
-				class="absolute inset-x-0 bottom-1 flex justify-between px-2 text-[0.625rem] text-subtle"
-				aria-hidden="true"
-			>
-				<span>40 °C</span><span>50</span><span>60</span><span>70</span><span>80 °C</span>
-			</div>
-		</div>
-		<p class="sr-only">
-			Mash steps: {brew.recipe.mash.steps
-				.map((s) => `${s.tempC} degrees for ${s.minutes} minutes`)
-				.join(', ')}.
-		</p>
-
-		<!-- The map draws these rests and these rests move the map. One section. -->
-		<div class="mt-4 flex items-center justify-between gap-3">
-			<p class="field-label">Your rests</p>
-			<button type="button" class="btn btn-ghost h-8 text-xs" onclick={addStep}>Add a rest</button>
-		</div>
-		<ul class="mt-2 flex flex-col gap-2">
-			{#each brew.recipe.mash.steps as mashStep, index (mashStep.id)}
-				<li class="rounded-lg bg-surface p-3 ring-1 ring-line">
-					<div class="flex flex-wrap items-end gap-x-4 gap-y-3">
-						<span class="chip">{KIND_LABEL[kindFor(mashStep.tempC)]}</span>
-						<div class="min-w-[11rem] flex-1">
-							<SliderField
-								label="Temperature"
-								bind:value={mashStep.tempC}
-								min={35}
-								max={80}
-								step={1}
-								unit=" °C"
-								marks={[
-									{ at: 63, label: 'dry' },
-									{ at: 67, label: 'balanced' },
-									{ at: 71, label: 'full' }
-								]}
-								why="The one decision this stage exists for. Around 63 °C the yeast can eat almost all the sugar, so the beer finishes thin and crisp. Around 71 °C much of it is left behind, so the beer finishes full and sweet. Below 58 or above 74 barely anything converts at all."
-								id="mash-t-{mashStep.id}"
-							/>
-						</div>
-						<div class="min-w-[9rem] flex-1">
-							<SliderField
-								label="Time"
-								bind:value={mashStep.minutes}
-								min={0}
-								max={120}
-								step={5}
-								unit=" min"
-								marks={[
-									{ at: 45, label: '45' },
-									{ at: 60, label: 'usual' },
-									{ at: 90, label: '90' }
-								]}
-								why="An hour is standard because that is roughly how long the malt takes to give up its sugar. Cut it much below 45 minutes and you leave sugar in the grain, which shows up later as a weaker beer. Past 90 there is nothing left to gain."
-								id="mash-m-{mashStep.id}"
-							/>
-						</div>
-						<button
-							type="button"
-							class="btn btn-quiet mb-1 h-9 w-9 !px-0"
-							onclick={() => removeStep(mashStep.id)}
-							aria-label="Remove step {index + 1}"
-						>
-							<svg viewBox="0 0 16 16" class="h-4 w-4" aria-hidden="true">
-								<path
-									d="M4 4 L12 12 M12 4 L4 12"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.8"
-									stroke-linecap="round"
-								/>
-							</svg>
-						</button>
+<StageSteps stage="mash" {steps}>
+	{#snippet content(id)}
+		{#if id === 'plan'}
+			<div class="flex flex-col gap-6">
+				<div>
+					<h3 class="field-label mb-2">Start from</h3>
+					<div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+						{#each PRESETS as preset (preset.id)}
+							<button
+								type="button"
+								class="rounded-lg bg-surface p-3 text-start ring-1 ring-line transition-colors hover:bg-ui-hover hover:ring-line-strong"
+								onclick={() => (brew.recipe.mash.steps = preset.steps())}
+							>
+								<span class="block text-sm font-medium">{preset.name}</span>
+								<span class="mt-0.5 block text-xs text-subtle">{preset.note}</span>
+							</button>
+						{/each}
 					</div>
-				</li>
-			{/each}
-		</ul>
-	</section>
+				</div>
 
-	<div>
-		<SliderField
-			label="Mash thickness"
-			bind:value={brew.recipe.mash.thicknessLPerKg}
-			defaultValue={DEFAULTS.mash.thicknessLPerKg}
-			min={1.5}
-			max={5}
-			step={0.1}
-			unit=" L/kg"
-			format={(n) => n.toFixed(1)}
-			marks={[
-				{ at: 2.5, label: '2.5' },
-				{ at: 3.5, label: '3.5' }
-			]}
-			why="How soupy the porridge is. Between 2.5 and 3.5 litres per kilogram is comfortable to stir. Thicker protects the enzymes from the heat; thinner converts a little more completely and slightly more fermentably."
-		/>
-		{#if grainKg > 0}
-			<p class="tnum mt-1 text-xs text-muted">
-				That is {mashWaterL.toFixed(1)} litres of water on {grainKg.toFixed(2)} kg of grain{#if strike !== undefined},
-					going in at {strike.toFixed(0)} °C{/if}.
-			</p>
-		{/if}
-	</div>
+				<section>
+					<h3 class="field-label mb-1">Where your rest sits</h3>
+					<p class="prose-measure mb-2 text-xs text-muted">
+						Two enzymes in the malt compete, and temperature picks the winner. The cooler one,
+						beta-amylase, makes simple sugar the yeast can eat, so the beer finishes dry. The hotter
+						one, alpha-amylase, makes longer sugars the yeast cannot touch, so the beer finishes
+						full and sweet. Your rest sits somewhere between them.
+					</p>
 
-	{#if mash}
-		<section class="rounded-lg bg-surface p-3 ring-1 ring-line">
-			<h3 class="field-label mb-2">What this mash does</h3>
-			<dl class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+					<div class="relative h-24 rounded-lg bg-surface ring-1 ring-line">
+						<div class="absolute inset-x-0 top-3 h-8" aria-hidden="true">
+							<div
+								class="absolute inset-y-0 rounded-s-md bg-hop-dim/70"
+								style="left:{position(55)}%; width:{position(72) - position(55)}%"
+							></div>
+							<div
+								class="absolute inset-y-0 rounded-e-md bg-copper-dim/70"
+								style="left:{position(60)}%; width:{position(78) -
+									position(60)}%; mix-blend-mode:screen"
+							></div>
+						</div>
+						<span class="absolute top-4 text-[0.625rem] text-fg" style="left:{position(58)}%"
+							>beta-amylase</span
+						>
+						<span class="absolute top-7 text-[0.625rem] text-fg" style="left:{position(69)}%"
+							>alpha-amylase</span
+						>
+
+						{#each brew.recipe.mash.steps as mashStep (mashStep.id)}
+							<div
+								class="absolute top-1 bottom-7 w-0.5 bg-amber"
+								style="left:{position(mashStep.tempC)}%"
+								aria-hidden="true"
+							></div>
+							<span
+								class="tnum absolute bottom-7 -translate-x-1/2 rounded-sm bg-amber px-1 text-[0.625rem] font-bold text-ink"
+								style="left:{position(mashStep.tempC)}%"
+								aria-hidden="true"
+							>
+								{mashStep.tempC}°
+							</span>
+						{/each}
+
+						<div
+							class="absolute inset-x-0 bottom-1 flex justify-between px-2 text-[0.625rem] text-subtle"
+							aria-hidden="true"
+						>
+							<span>40 °C</span><span>50</span><span>60</span><span>70</span><span>80 °C</span>
+						</div>
+					</div>
+					<p class="sr-only">
+						Mash steps: {brew.recipe.mash.steps
+							.map((s) => `${s.tempC} degrees for ${s.minutes} minutes`)
+							.join(', ')}.
+					</p>
+
+					<!-- The map draws these rests and these rests move the map. One section. -->
+					<div class="mt-4 flex items-center justify-between gap-3">
+						<p class="field-label">Your rests</p>
+						<button type="button" class="btn btn-ghost h-8 text-xs" onclick={addStep}
+							>Add a rest</button
+						>
+					</div>
+					<ul class="mt-2 flex flex-col gap-2">
+						{#each brew.recipe.mash.steps as mashStep, index (mashStep.id)}
+							<li class="rounded-lg bg-surface p-3 ring-1 ring-line">
+								<div class="flex flex-wrap items-end gap-x-4 gap-y-3">
+									<span class="chip">{KIND_LABEL[kindFor(mashStep.tempC)]}</span>
+									<div class="min-w-[11rem] flex-1">
+										<SliderField
+											label="Temperature"
+											bind:value={mashStep.tempC}
+											min={35}
+											max={80}
+											step={1}
+											unit=" °C"
+											marks={[
+												{ at: 63, label: 'dry' },
+												{ at: 67, label: 'balanced' },
+												{ at: 71, label: 'full' }
+											]}
+											why="The one decision this stage exists for. Around 63 °C the yeast can eat almost all the sugar, so the beer finishes thin and crisp. Around 71 °C much of it is left behind, so the beer finishes full and sweet. Below 58 or above 74 barely anything converts at all."
+											id="mash-t-{mashStep.id}"
+										/>
+									</div>
+									<div class="min-w-[9rem] flex-1">
+										<SliderField
+											label="Time"
+											bind:value={mashStep.minutes}
+											min={0}
+											max={120}
+											step={5}
+											unit=" min"
+											marks={[
+												{ at: 45, label: '45' },
+												{ at: 60, label: 'usual' },
+												{ at: 90, label: '90' }
+											]}
+											why="An hour is standard because that is roughly how long the malt takes to give up its sugar. Cut it much below 45 minutes and you leave sugar in the grain, which shows up later as a weaker beer. Past 90 there is nothing left to gain."
+											id="mash-m-{mashStep.id}"
+										/>
+									</div>
+									<button
+										type="button"
+										class="btn btn-quiet mb-1 h-9 w-9 !px-0"
+										onclick={() => removeStep(mashStep.id)}
+										aria-label="Remove step {index + 1}"
+									>
+										<svg viewBox="0 0 16 16" class="h-4 w-4" aria-hidden="true">
+											<path
+												d="M4 4 L12 12 M12 4 L4 12"
+												fill="none"
+												stroke="currentColor"
+												stroke-width="1.8"
+												stroke-linecap="round"
+											/>
+										</svg>
+									</button>
+								</div>
+							</li>
+						{/each}
+					</ul>
+				</section>
+			</div>
+		{:else if id === 'doughin'}
+			<div class="flex flex-col gap-4">
 				<div>
-					<dt class="text-xs text-subtle">Effective temperature</dt>
-					<dd class="tnum text-sm font-medium">{mash.effectiveTempC} °C</dd>
+					<SliderField
+						label="Mash thickness"
+						bind:value={brew.recipe.mash.thicknessLPerKg}
+						defaultValue={DEFAULTS.mash.thicknessLPerKg}
+						min={1.5}
+						max={5}
+						step={0.1}
+						unit=" L/kg"
+						format={(n) => n.toFixed(1)}
+						marks={[
+							{ at: 2.5, label: '2.5' },
+							{ at: 3.5, label: '3.5' }
+						]}
+						why="How soupy the porridge is. Between 2.5 and 3.5 litres per kilogram is comfortable to stir. Thicker protects the enzymes from the heat; thinner converts a little more completely and slightly more fermentably."
+					/>
+					{#if grainKg > 0}
+						<p class="tnum mt-1 text-xs text-muted">
+							That is {mashWaterL.toFixed(1)} litres of water on {grainKg.toFixed(2)} kg of grain{#if strike !== undefined},
+								going in at {strike.toFixed(0)} °C{/if}.
+						</p>
+					{/if}
 				</div>
-				<div>
-					<dt class="text-xs text-subtle">Conversion time</dt>
-					<dd class="tnum text-sm font-medium">{mash.conversionMinutes} min</dd>
-				</div>
-				<div>
-					<dt class="text-xs text-subtle">Fermentability</dt>
-					<dd class="text-sm font-medium">
-						{mash.fermentabilityFactor > 1.03
-							? 'Drier than usual'
-							: mash.fermentabilityFactor < 0.97
-								? 'Fuller than usual'
-								: 'Middle of the road'}
-					</dd>
-				</div>
-				<div>
-					<dt class="text-xs text-subtle">Body</dt>
-					<dd class="text-sm font-medium">
-						{mash.bodyFactor > 1.05 ? 'Boosted' : mash.bodyFactor < 0.95 ? 'Reduced' : 'Neutral'}
-					</dd>
-				</div>
-			</dl>
-			{#if mash.notes.length}
-				<ul class="mt-2 flex flex-col gap-1">
-					{#each mash.notes as note (note)}
-						<li class="prose-measure text-xs text-muted">{note}</li>
-					{/each}
-				</ul>
+				<p class="prose-measure text-xs text-subtle">
+					The water goes in hotter than the rest you are aiming for, because room-temperature grain
+					is cold and there is a lot of it: the moment you stir it in the temperature drops. A
+					thicker mash has less water to hold the heat, so it needs a bigger head start. The
+					simulator assumes you land on your number — in a real tun you will miss by a degree or
+					two, and a splash of boiling water or a jug of cold fixes it.
+				</p>
+			</div>
+		{:else}
+			{#if mash}
+				<section class="rounded-lg bg-surface p-3 ring-1 ring-line">
+					<h3 class="field-label mb-2">What this mash does</h3>
+					<dl class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+						<div>
+							<dt class="text-xs text-subtle">Effective temperature</dt>
+							<dd class="tnum text-sm font-medium">{mash.effectiveTempC} °C</dd>
+						</div>
+						<div>
+							<dt class="text-xs text-subtle">Conversion time</dt>
+							<dd class="tnum text-sm font-medium">{mash.conversionMinutes} min</dd>
+						</div>
+						<div>
+							<dt class="text-xs text-subtle">Fermentability</dt>
+							<dd class="text-sm font-medium">
+								{mash.fermentabilityFactor > 1.03
+									? 'Drier than usual'
+									: mash.fermentabilityFactor < 0.97
+										? 'Fuller than usual'
+										: 'Middle of the road'}
+							</dd>
+						</div>
+						<div>
+							<dt class="text-xs text-subtle">Body</dt>
+							<dd class="text-sm font-medium">
+								{mash.bodyFactor > 1.05
+									? 'Boosted'
+									: mash.bodyFactor < 0.95
+										? 'Reduced'
+										: 'Neutral'}
+							</dd>
+						</div>
+					</dl>
+					{#if mash.notes.length}
+						<ul class="mt-2 flex flex-col gap-1">
+							{#each mash.notes as note (note)}
+								<li class="prose-measure text-xs text-muted">{note}</li>
+							{/each}
+						</ul>
+					{/if}
+				</section>
 			{/if}
-		</section>
-	{/if}
-</div>
+		{/if}
+	{/snippet}
+</StageSteps>
