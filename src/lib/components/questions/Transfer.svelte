@@ -15,7 +15,6 @@
 	 * cards, where the choice is made, and the paragraph is gone.
 	 */
 	import { brew } from '$lib/state/brew.svelte';
-	import { DEFAULTS } from '$lib/brewing/recipes';
 	import type { ChillSetup } from '$lib/brewing/types';
 
 	const OPTIONS: { value: ChillSetup['transferQuality']; label: string; says: string }[] = [
@@ -51,12 +50,7 @@
 					aria-pressed={chosen === option.value}
 					onclick={() => (brew.recipe.chill.transferQuality = option.value)}
 				>
-					<span class="flex items-baseline justify-between gap-2">
-						<span class="text-sm font-medium">{option.label}</span>
-						{#if option.value === DEFAULTS.chill.transferQuality && chosen === option.value}
-							<span class="text-[0.625rem] tracking-wide text-subtle uppercase">default</span>
-						{/if}
-					</span>
+					<span class="block text-sm font-medium">{option.label}</span>
 					<span class="mt-1 block text-xs {chosen === option.value ? 'text-fg' : 'text-subtle'}">
 						{option.says}
 					</span>

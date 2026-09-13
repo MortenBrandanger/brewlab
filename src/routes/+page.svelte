@@ -1,5 +1,6 @@
 <script lang="ts">
 	import QuestionRail from '$lib/components/QuestionRail.svelte';
+	import WhyThis from '$lib/components/WhyThis.svelte';
 	import QuestionView from '$lib/components/QuestionView.svelte';
 	import QuestionFooter from '$lib/components/QuestionFooter.svelte';
 	import BeerMonitor from '$lib/components/BeerMonitor.svelte';
@@ -12,7 +13,6 @@
 	import { STAGE_BY_ID, type StageId } from '$lib/state/stages';
 	import { QUESTIONS, questionsForStage } from '$lib/state/questions';
 	import { brew } from '$lib/state/brew.svelte';
-	import { prefs } from '$lib/state/prefs.svelte';
 
 	const stage = $derived(STAGE_BY_ID.get(brew.stage)!);
 	const accent = $derived(
@@ -81,9 +81,15 @@
 							>
 								{question.ask}
 							</h1>
-							{#if question.hint}
-								<p class="prose-measure mt-2 text-sm text-muted">{question.hint}</p>
-							{/if}
+							<!--
+								The stage's "why" sits at the end of the line it elaborates, as a
+								question mark you press — the same affordance a figure uses. It
+								used to be a disclosure at the foot of the page, below the
+								controls and below the action.
+							-->
+							<p class="prose-measure relative mt-2 text-sm text-muted">
+								{question.hint ?? ''}<WhyThis stage={question.stage} />
+							</p>
 						</div>
 						<BreweryScene
 							stage={brew.stage}
@@ -96,33 +102,6 @@
 
 					<QuestionView id={question.id} onadjust={go} />
 				</section>
-
-				{#if stage.what && prefs.showWhy}
-					<details class="group">
-						<summary
-							class="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-sm py-1 text-sm font-medium text-copper-text hover:underline"
-						>
-							<svg
-								viewBox="0 0 16 16"
-								class="h-3.5 w-3.5 transition-transform group-open:rotate-90"
-								aria-hidden="true"
-							>
-								<path
-									d="M6 3.5 L11 8 L6 12.5"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-								/>
-							</svg>
-							Why {stage.name.toLowerCase()} matters
-						</summary>
-						<p class="prose-measure mt-1.5 text-sm text-muted">{stage.what}</p>
-						{#if stage.deepDive}
-							<p class="prose-measure mt-2.5 text-sm text-subtle">{stage.deepDive}</p>
-						{/if}
-					</details>
-				{/if}
 
 				<QuestionFooter onmoved={focusQuestion} />
 
