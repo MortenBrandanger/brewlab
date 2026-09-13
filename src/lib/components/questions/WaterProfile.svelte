@@ -15,13 +15,26 @@
 	const water = $derived(brew.context?.water);
 
 	/** What each source water is for, in one line a beginner can act on. */
+	/**
+	 * Three of these are real towns, and saying so is the best story brewing has:
+	 * the famous styles exist because of the water that came out of the ground
+	 * there. A tester who had never brewed asked why a place was a water type —
+	 * the answer is the card, so the card gives it.
+	 *
+	 * The other three are not towns and are not dressed up as any.
+	 */
 	const SUITS: Record<string, string> = {
-		'soft-pilsner': 'Czech and German lagers, delicate pale beers',
-		balanced: 'Almost anything. Start here if you are not sure',
-		'hop-forward': 'Pale ales and IPAs',
-		'malt-forward': 'Stouts, hazy IPAs, malty lagers',
-		'dark-alkaline': 'Stouts and porters only',
-		ro: 'Nothing on its own — a blank slate to build on'
+		'soft-pilsner':
+			'Almost no minerals at all. Pilsner was invented on this water and could not have been invented anywhere harder — anything else would bury the delicate malt and the floral hops.',
+		balanced:
+			'Moderate minerals, sulfate and chloride level with each other. Nowhere in particular: roughly what treated tap water looks like, and it will spoil nothing.',
+		'hop-forward':
+			'Hard well water, heavy with sulfate. Pale ale was invented here and the water is why: sulfate makes hop bitterness land sharp and dry.',
+		'malt-forward':
+			'Chloride rather than sulfate, which rounds the palate and pushes malt forward. Not a town — a profile brewers build on purpose for stouts, hazy IPAs and malty lagers.',
+		'dark-alkaline':
+			'Thick with chalk, and far too harsh for a pale beer. Roasted barley is acid enough to cancel it out, which is how Dublin ended up brewing stout.',
+		ro: 'Everything stripped out by a filter. Useless on its own — a blank slate you add exactly what you want to.'
 	};
 
 	/**

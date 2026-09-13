@@ -15,7 +15,7 @@ import { getFermentable } from './ingredients';
 export const WATER_PROFILES: WaterProfile[] = [
 	{
 		id: 'soft-pilsner',
-		name: 'Soft (Pilsen)',
+		name: 'Plzeň',
 		description: 'Almost distilled. Lets delicate malt and noble hops through untouched.',
 		calcium: 7,
 		magnesium: 2,
@@ -37,7 +37,7 @@ export const WATER_PROFILES: WaterProfile[] = [
 	},
 	{
 		id: 'hop-forward',
-		name: 'Hop-forward (Burton-ish)',
+		name: 'Burton-on-Trent',
 		description: 'Sulfate dominant. Sharpens bitterness and dries the finish.',
 		calcium: 110,
 		magnesium: 15,
@@ -48,7 +48,7 @@ export const WATER_PROFILES: WaterProfile[] = [
 	},
 	{
 		id: 'malt-forward',
-		name: 'Malt-forward',
+		name: 'Round and malty',
 		description: 'Chloride dominant. Rounds the palate and lifts malt sweetness.',
 		calcium: 90,
 		magnesium: 8,
@@ -59,7 +59,7 @@ export const WATER_PROFILES: WaterProfile[] = [
 	},
 	{
 		id: 'dark-alkaline',
-		name: 'Dark and alkaline (Dublin-ish)',
+		name: 'Dublin',
 		description: 'High bicarbonate. Only makes sense with a dark, acidic grist.',
 		calcium: 115,
 		magnesium: 5,
