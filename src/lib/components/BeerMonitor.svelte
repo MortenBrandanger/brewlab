@@ -7,6 +7,7 @@
 	import { getFermentable, getHop, getYeast } from '$lib/brewing/ingredients';
 	import { WATER_PROFILE_BY_ID } from '$lib/brewing/water';
 	import { brew } from '$lib/state/brew.svelte';
+	import { forecastAbv } from '$lib/brewing/forecast';
 	import { STAGES, stageForFields, stageIndex, type Reveal } from '$lib/state/stages';
 	import type { SensoryKey } from '$lib/brewing/types';
 
@@ -118,6 +119,13 @@
 	const closest = $derived(brew.knows('judgement') ? result.styles[0] : undefined);
 
 	/**
+	 * Where the beer is heading, as a range until the thing that would close it
+	 * has been decided. Hidden once the beer is poured, because by then the
+	 * report is the answer and a forecast of a finished thing is just noise.
+	 */
+	const forecast = $derived(brew.knows('judgement') ? undefined : forecastAbv(brew.recipe));
+
+	/**
 	 * What has physically gone into the brew so far. Once you are three stages
 	 * past the grain you can no longer see your own grist, so this is the one
 	 * place that keeps the whole build visible.
@@ -217,6 +225,22 @@
 			{/each}
 		</dl>
 	</section>
+
+	{#if forecast}
+		<section class="border-t border-line pt-4">
+			<h3 class="field-label mb-1">Heading for</h3>
+			{#if forecast.open}
+				<p class="tnum text-sm font-medium text-fg">
+					{forecast.low.toFixed(1)}–{forecast.high.toFixed(1)}% alcohol
+				</p>
+				<p class="prose-measure mt-0.5 text-xs text-subtle">
+					depending on {forecast.dependsOn}
+				</p>
+			{:else}
+				<p class="tnum text-sm font-medium text-fg">{forecast.low.toFixed(1)}% alcohol</p>
+			{/if}
+		</section>
+	{/if}
 
 	{#if nextUp}
 		<p class="prose-measure border-t border-line pt-4 text-xs text-subtle">
