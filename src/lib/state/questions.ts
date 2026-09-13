@@ -84,7 +84,7 @@ export const QUESTIONS: Question[] = [
 		id: 'transfer',
 		stage: 'chill',
 		ask: 'How carefully does it go into the fermenter?',
-		hint: 'Everything it touches from here has been sanitised. The beer has no heat defending it any more.'
+		hint: 'You siphon the cooled wort out of the kettle and into a clean bucket, leaving the sludge of spent hops and settled protein behind in the bottom. Everything it touches from here has been sanitised, because the beer has no heat defending it any more.'
 	},
 	{
 		id: 'yeast',
