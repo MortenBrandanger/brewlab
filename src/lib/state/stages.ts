@@ -41,8 +41,8 @@ export type StageMeta = {
 	 * what the stage sets, and the two were the same claim in two vocabularies.
 	 */
 	reveals?: string;
-	/** Blocks the action until this is true. */
-	requires?: 'fermentables' | 'conversion';
+	/** Blocks the action until this decision has been made. */
+	requires?: 'water' | 'fermentables' | 'conversion' | 'hops' | 'yeast';
 };
 
 /**
@@ -63,7 +63,8 @@ export const STAGES: StageMeta[] = [
 		what: 'The minerals in the water decide how bitterness and malt come across, and together with the grain they set the acidity of the mash. Mash pH matters more than any single ion: between 5.2 and 5.6 the enzymes work well, the husks keep their tannins to themselves, and the beer tastes bright rather than dull. Get it wrong and the beer tastes drying however good the recipe is. You cannot know it yet — it comes from the water and the grain together.',
 		accent: 'hop',
 		action: 'Fill and heat the water',
-		done: 'Water treated and heating.'
+		done: 'Water treated and heating.',
+		requires: 'water'
 	},
 	{
 		id: 'grain',
@@ -84,8 +85,8 @@ export const STAGES: StageMeta[] = [
 		id: 'mash',
 		name: 'Mash',
 		reality:
-			'You tip the crushed grain into the hot water, stir the lumps out, put the lid on and walk away for an hour. It looks and smells like hot porridge.',
-		what: "The enzymes break the malt's starch into sugar, and the sweet liquid that results is called wort — that is what the yeast will live on. Two enzymes compete for the job: beta-amylase makes simple, fermentable sugar and dies above about 70 °C, while alpha-amylase survives the heat but leaves long dextrins the yeast cannot use. The temperature you hold decides which of them does most of the work, and so how dry the beer finishes.",
+			'You tip the crushed grain into the hot water — in a mash tun, which is just an insulated vessel with a tap — stir the lumps out, put the lid on and walk away for an hour. It looks and smells like hot porridge.',
+		what: 'The enzymes break the malt into sugar, and the sweet liquid that results is called wort — that is what the yeast will live on. The temperature you hold decides how much of that sugar the yeast can actually eat, and so how dry or how full the beer finishes. The enzyme map on the stage is where you set it.',
 		deepDive:
 			'At 62 °C beta-amylase dominates and the wort is highly fermentable, so the beer finishes low and tastes thin and crisp. At 70 °C beta is gone within minutes and alpha leaves unfermentable dextrins behind, so the beer finishes high and tastes full and sweet. A step mash gets both: a rest near 63 °C for fermentability, then one near 71 °C to finish the conversion. The mash-out at 76 °C stops enzyme activity entirely and thins the wort so it runs off the grain bed more freely.',
 		decide: 'how dry or how full the finished beer will be',
@@ -99,10 +100,10 @@ export const STAGES: StageMeta[] = [
 		id: 'sparge',
 		name: 'Sparge',
 		reality:
-			'You open the tap at the bottom of the tun and let the liquid run into the kettle, trickling more hot water over the top of the grain as it drains. Half an hour of watching a hose. The spent grain goes on the compost.',
+			'You open the tap at the bottom of the tun and let the sweet liquid run into the kettle, trickling more hot water over the top of the grain as it drains. That rinsing is what sparging means. Half an hour of watching a hose, and the spent grain goes on the compost.',
 		what: 'Something like a third of your sugar is still clinging to the grain when the mash ends. How much of it you rinse out sets the gravity — but rinse too hard and you start pulling tannin out of the husks along with it.',
 		deepDive:
-			'The rule of thumb is to stop collecting when the runnings drop below about 1.010, and to keep sparge water under 76 °C. Both limits exist for the same reason: as sugar concentration falls and temperature rises, husk tannins become much more soluble. They do not taste bitter so much as drying and astringent, like over-brewed tea, and no amount of conditioning removes them.',
+			'The rule of thumb is to stop collecting when the runnings — the liquid coming off the tap — drop below about 1.010, and to keep sparge water under 76 °C. Both limits exist for the same reason: as sugar concentration falls and temperature rises, husk tannins become much more soluble. They do not taste bitter so much as drying and astringent, like over-brewed tea, and no amount of conditioning removes them.',
 		decide: 'how strong the beer ends up',
 		accent: 'copper',
 		action: 'Run off and sparge',
@@ -121,6 +122,7 @@ export const STAGES: StageMeta[] = [
 		accent: 'hop',
 		action: 'Boil the wort',
 		done: 'Boil finished. The hops are in.',
+		requires: 'hops',
 		reveals: 'bitterness, and the finished colour'
 	},
 	{
@@ -128,7 +130,7 @@ export const STAGES: StageMeta[] = [
 		name: 'Chill',
 		reality:
 			'You drop a coiled copper pipe into the kettle and run cold tap water through it, or stand the whole pot in a sink of ice. Twenty minutes later it is cool enough to put your hand in, and you siphon it into a clean bucket.',
-		what: 'Warm wort is sugar water with nothing defending it. Cooling fast closes the window for anything else to take hold, and it forms a sharp cold break that drops proteins out for a clearer beer. The temperature you pitch at then sets the flavour the yeast will make for the entire batch.',
+		what: 'Warm wort is sugar water with nothing defending it. Cooling fast closes the window for anything else to take hold, and it forms a sharp cold break: proteins clump together and fall out instead of hazing the beer. The temperature you pitch at then sets the flavour the yeast will make for the entire batch.',
 		deepDive:
 			'None of these are certainties. A slow chill does not guarantee an infection, and plenty of brewers have made excellent beer with a no-chill method by keeping everything sealed. What a slow chill does is widen the distribution: more chances for something to go wrong, and a longer time producing DMS in a pilsner-malt wort. Treat these bars as probability, not prophecy.',
 		decide: 'how much risk the beer carries into fermentation',
@@ -149,6 +151,7 @@ export const STAGES: StageMeta[] = [
 		accent: 'hop',
 		action: 'Pitch the yeast',
 		done: 'Fermentation finished.',
+		requires: 'yeast',
 		reveals: 'final gravity, alcohol, and everything the yeast made'
 	},
 	{

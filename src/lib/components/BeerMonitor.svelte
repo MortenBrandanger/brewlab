@@ -87,7 +87,9 @@
 		rows.push({
 			label: 'Water',
 			// The water you actually pour, not the beer that comes out at the end.
-			value: `${profile?.name ?? 'Custom'} · ${(brew.context?.totalWaterL ?? brew.recipe.preBoilVolumeL).toFixed(0)} L`
+			value: brew.recipe.water.profileId
+				? `${profile?.name ?? 'Custom'} · ${(brew.context?.totalWaterL ?? brew.recipe.preBoilVolumeL).toFixed(0)} L`
+				: 'Not chosen yet'
 		});
 
 		if (brew.knows('potential')) {

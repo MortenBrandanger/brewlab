@@ -3,6 +3,7 @@
 	import SegmentedControl from '../SegmentedControl.svelte';
 	import { getYeast } from '$lib/brewing/ingredients';
 	import { brew } from '$lib/state/brew.svelte';
+	import { DEFAULTS } from '$lib/brewing/recipes';
 
 	const yeast = $derived(getYeast(brew.recipe.fermentation.yeastId));
 	const risks = $derived(brew.context?.risks);
@@ -35,6 +36,7 @@
 		<SliderField
 			label="Time to pitching temperature"
 			bind:value={brew.recipe.chill.minutes}
+			defaultValue={DEFAULTS.chill.minutes}
 			min={5}
 			max={240}
 			step={5}
@@ -48,6 +50,7 @@
 		<SliderField
 			label="Pitching temperature"
 			bind:value={brew.recipe.chill.pitchTempC}
+			defaultValue={DEFAULTS.chill.pitchTempC}
 			min={2}
 			max={40}
 			step={1}
@@ -67,6 +70,7 @@
 	<SegmentedControl
 		label="Transfer to the fermenter"
 		bind:value={brew.recipe.chill.transferQuality}
+		defaultValue={DEFAULTS.chill.transferQuality}
 		options={[
 			{ value: 'careless', label: 'Splashed', hint: 'Poured from height, lid off, no care taken' },
 			{ value: 'normal', label: 'Ordinary care', hint: 'Siphoned gently, sanitised equipment' },

@@ -29,6 +29,14 @@
 	);
 	let buildingOwn = $state(false);
 	const custom = $derived(buildingOwn || hasAdditions);
+	const chosen = $derived(brew.recipe.water.profileId !== '');
+
+	function treatItMyself() {
+		// Salts are added to a base water, so building your own still needs one.
+		// Reverse osmosis is the blank slate; an existing choice is kept.
+		if (!brew.recipe.water.profileId) brew.recipe.water.profileId = 'ro';
+		buildingOwn = true;
+	}
 
 	function choosePreset(id: string) {
 		brew.recipe.water.profileId = id;
@@ -116,7 +124,7 @@
 						? 'bg-copper-dim ring-copper'
 						: 'bg-surface ring-line hover:bg-ui-hover hover:ring-line-strong'}"
 					aria-pressed={custom}
-					onclick={() => (buildingOwn = true)}
+					onclick={treatItMyself}
 				>
 					<span class="block text-sm font-medium">Treat it myself</span>
 					<span class="mt-0.5 block text-xs {custom ? 'text-fg' : 'text-subtle'}">
@@ -190,18 +198,23 @@
 	-->
 	<section class="rounded-lg bg-surface p-4 ring-1 ring-line">
 		<p class="prose-measure text-sm text-muted">
-			{#if custom}{profile?.name ?? 'Custom'} water with your own additions.{/if}
-			{lean}
-			{#if strike !== undefined && firstRest}
-				<span class="tnum text-fg">
-					About {totalWaterL.toFixed(0)} litres, heated to {strike.toFixed(0)} °C
-				</span>
-				— {(strike - firstRest.tempC).toFixed(0)} degrees above your {firstRest.tempC} °C mash rest, because
-				the cold grain will pull it down.
+			{#if !chosen}
+				Pick one of the waters above. Everything on this stage — how much to heat, how hot, and what
+				it will do to the mash — follows from that choice.
+			{:else}
+				{#if custom}{profile?.name ?? 'Custom'} water with your own additions.{/if}
+				{lean}
+				{#if strike !== undefined && firstRest}
+					<span class="tnum text-fg">
+						About {totalWaterL.toFixed(0)} litres, heated to {strike.toFixed(0)} °C
+					</span>
+					— {(strike - firstRest.tempC).toFixed(0)} degrees above your {firstRest.tempC} °C mash rest,
+					because the cold grain will pull it down.
+				{/if}
 			{/if}
 		</p>
 
-		{#if hasGrist && water}
+		{#if chosen && hasGrist && water}
 			<p class="prose-measure mt-2 text-sm">
 				<span class="text-subtle">Estimated mash pH</span>
 				<span class="tnum font-medium"> {water.mashPh.toFixed(2)}</span>

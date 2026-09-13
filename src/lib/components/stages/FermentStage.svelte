@@ -5,11 +5,12 @@
 	import FermentationGraph from '../FermentationGraph.svelte';
 	import Meter from '../Meter.svelte';
 	import { YEASTS, getYeast } from '$lib/brewing/ingredients';
-	import { fermStep } from '$lib/brewing/recipes';
+	import { DEFAULTS, fermStep } from '$lib/brewing/recipes';
 	import { brew } from '$lib/state/brew.svelte';
 	import { prefs } from '$lib/state/prefs.svelte';
 
-	const yeast = $derived(getYeast(brew.recipe.fermentation.yeastId) ?? YEASTS[0]);
+	const chosenYeast = $derived(getYeast(brew.recipe.fermentation.yeastId));
+	const yeast = $derived(chosenYeast ?? YEASTS[0]);
 	const risks = $derived(brew.context?.risks);
 	const attenuation = $derived(brew.context?.attenuation);
 
@@ -81,13 +82,16 @@
 				</div>
 			{/each}
 		</div>
-		<LearningNote why={yeast.note} />
+		{#if chosenYeast}
+			<LearningNote why={chosenYeast.note} />
+		{/if}
 	</section>
 
 	<div class="grid gap-x-6 gap-y-4 sm:grid-cols-2">
 		<SegmentedControl
 			label="Pitch rate"
 			bind:value={brew.recipe.fermentation.pitchRate}
+			defaultValue={DEFAULTS.fermentation.pitchRate}
 			options={[
 				{ value: 'under', label: 'Light', hint: 'One tired packet into a big wort' },
 				{ value: 'standard', label: 'Standard', hint: 'A healthy pitch for the gravity' },

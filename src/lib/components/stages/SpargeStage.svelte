@@ -2,17 +2,12 @@
 	import SliderField from '../SliderField.svelte';
 	import { GRAIN_ABSORPTION_L_PER_KG } from '$lib/brewing/simulate';
 	import { brew } from '$lib/state/brew.svelte';
-	import { prefs } from '$lib/state/prefs.svelte';
+	import { DEFAULTS } from '$lib/brewing/recipes';
 
 	const grainKg = $derived(brew.context?.gravity.grist.grainKg ?? 0);
 	const mashWaterL = $derived(grainKg * brew.recipe.mash.thicknessLPerKg);
 	const absorbedL = $derived(grainKg * GRAIN_ABSORPTION_L_PER_KG);
 	const spargeL = $derived(Math.max(0, brew.recipe.preBoilVolumeL - (mashWaterL - absorbedL)));
-	const boilOff = $derived(
-		brew.recipe.preBoilVolumeL > 0
-			? (brew.recipe.preBoilVolumeL - brew.recipe.batchVolumeL) / brew.recipe.preBoilVolumeL
-			: 0
-	);
 	const preBoilGravity = $derived(brew.context?.gravity.preBoilGravity ?? 1);
 	const efficiency = $derived(brew.context?.gravity.effectiveEfficiency ?? 0);
 </script>
@@ -22,6 +17,7 @@
 		<SliderField
 			label="Into the fermenter"
 			bind:value={brew.recipe.batchVolumeL}
+			defaultValue={DEFAULTS.batchVolumeL}
 			min={1}
 			max={60}
 			step={0.5}
@@ -32,6 +28,7 @@
 		<SliderField
 			label="Into the kettle"
 			bind:value={brew.recipe.preBoilVolumeL}
+			defaultValue={DEFAULTS.preBoilVolumeL}
 			min={1}
 			max={80}
 			step={0.5}
@@ -81,7 +78,9 @@
 			</div>
 			<div>
 				<dt class="text-xs text-subtle">Boiled away</dt>
-				<dd class="tnum text-sm font-medium">{Math.round(boilOff * 100)}%</dd>
+				<dd class="tnum text-sm font-medium">
+					{(brew.recipe.preBoilVolumeL - brew.recipe.batchVolumeL).toFixed(1)} L
+				</dd>
 			</div>
 		</dl>
 	</section>
@@ -90,6 +89,7 @@
 		<SliderField
 			label="Brewhouse efficiency"
 			bind:value={brew.recipe.efficiencyPct}
+			defaultValue={DEFAULTS.efficiencyPct}
 			min={40}
 			max={92}
 			step={1}
@@ -103,14 +103,16 @@
 			deepDiveTitle="More about efficiency"
 			deepDive="Efficiency is not a fixed property of your equipment. It falls as the grain bill grows, because a bigger bed holds more sugar-rich wort and the sparge dilutes what is left. It falls when the mash is cut short, because starch never converted. It falls when the grist is short of enzyme-carrying malt. Measure yours once at a normal gravity and treat that number as a starting point, not a constant."
 		/>
-		{#if prefs.advanced}
-			<div class="self-end rounded-lg bg-surface p-3 text-xs ring-1 ring-line">
-				<p class="text-subtle">Effective efficiency after adjustments</p>
-				<p class="tnum mt-0.5 text-sm font-medium">{Math.round(efficiency * 100)}%</p>
+		{#if Math.round(efficiency * 100) !== brew.recipe.efficiencyPct}
+			<p class="prose-measure self-end text-xs text-muted">
+				<span class="tnum text-fg"
+					>{brew.recipe.efficiencyPct}% on your system → {Math.round(efficiency * 100)}%</span
+				>
+				once this recipe is taken into account.
 				{#each brew.context?.gravity.efficiencyNotes ?? [] as note (note)}
-					<p class="prose-measure mt-1.5 text-muted">{note}</p>
+					{note}
 				{/each}
-			</div>
+			</p>
 		{/if}
 	</div>
 

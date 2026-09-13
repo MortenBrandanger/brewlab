@@ -67,6 +67,15 @@ class BrewStore {
 	blockedBecause(stage: StageId): string | undefined {
 		const meta = STAGES[stageIndex(stage)];
 		if (!meta?.requires) return undefined;
+		if (meta.requires === 'water' && !this.recipe.water.profileId) {
+			return 'Choose a water first. There is nothing in the pot to heat.';
+		}
+		if (meta.requires === 'hops' && this.recipe.hops.length === 0) {
+			return 'Add at least one hop first. An unhopped boil leaves sweet wort, not beer.';
+		}
+		if (meta.requires === 'yeast' && !this.recipe.fermentation.yeastId) {
+			return 'Choose a yeast first. Nothing ferments without it.';
+		}
 		if (meta.requires === 'fermentables' && this.recipe.fermentables.length === 0) {
 			return 'Add a malt first. There is nothing to mill.';
 		}

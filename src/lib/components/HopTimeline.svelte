@@ -113,12 +113,6 @@
 		</div>
 	</div>
 
-	{#if placed.length === 0}
-		<p class="mt-2 text-xs text-subtle">
-			No hops yet. Add a bittering charge to give the malt something to push against.
-		</p>
-	{/if}
-
 	<ul class="sr-only">
 		{#each placed as item (item.addition.id)}
 			<li>{item.hop!.name}, {item.addition.grams} grams, {hopAdditionSummary(item.addition)}.</li>

@@ -5,6 +5,7 @@
 	import { HOPS, getHop } from '$lib/brewing/ingredients';
 	import { newHopAddition } from '$lib/brewing/recipes';
 	import { brew } from '$lib/state/brew.svelte';
+	import { DEFAULTS } from '$lib/brewing/recipes';
 	import { prefs } from '$lib/state/prefs.svelte';
 	import type { HopUse } from '$lib/brewing/types';
 
@@ -71,7 +72,12 @@
 
 <div class="flex flex-col gap-6">
 	<div>
-		<span class="field-label mb-1.5">How long to boil</span>
+		<span class="field-label mb-1.5">
+			How long to boil
+			{#if brew.recipe.boilTimeMin === DEFAULTS.boilTimeMin && !customBoil}
+				<span class="ms-1.5 text-[0.625rem] tracking-wide text-subtle">default</span>
+			{/if}
+		</span>
 		<div class="flex flex-wrap items-center gap-1.5">
 			{#each [30, 60, 90] as preset (preset)}
 				<button
@@ -103,6 +109,7 @@
 				<SliderField
 					label="Boil time"
 					bind:value={brew.recipe.boilTimeMin}
+					defaultValue={DEFAULTS.boilTimeMin}
 					min={0}
 					max={180}
 					step={5}
@@ -161,9 +168,9 @@
 						Nothing in the kettle yet. Without a bittering charge the beer will taste like sweet
 						wort.
 					{:else if group.use === 'whirlpool'}
-						No whirlpool addition yet.
+						None. Optional.
 					{:else}
-						No dry hops planned yet.
+						None. Optional.
 					{/if}
 				</p>
 			{:else}

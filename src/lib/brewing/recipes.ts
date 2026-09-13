@@ -616,6 +616,16 @@ export function defaultRecipe(): Recipe {
 	return housePaleAle();
 }
 
+/**
+ * A brew day that has not started.
+ *
+ * The water and the yeast are deliberately unset. Shipping a recipe with a
+ * profile and a strain already chosen meant you could click from the first
+ * stage to the last without deciding anything, and still be handed a style
+ * match and a score -- the simulator brewed the beer and let you watch.
+ * Numbers like volume, efficiency and boil length keep their defaults: those
+ * are properties of a system rather than decisions about a beer.
+ */
 export function emptyRecipe(): Recipe {
 	return {
 		name: 'New brew',
@@ -623,12 +633,12 @@ export function emptyRecipe(): Recipe {
 		preBoilVolumeL: 26,
 		boilTimeMin: 60,
 		efficiencyPct: 72,
-		water: { profileId: 'balanced', salts: salts(), lacticAcidMl: 0 },
+		water: { profileId: '', salts: salts(), lacticAcidMl: 0 },
 		fermentables: [],
 		mash: { steps: [step('alpha', 66, 60), step('mashout', 76, 10)], thicknessLPerKg: 3 },
 		hops: [],
 		fermentation: {
-			yeastId: 'american-ale',
+			yeastId: '',
 			pitchRate: 'standard',
 			steps: [fermStep('Primary', 19, 14)],
 			coldCrash: true
@@ -637,3 +647,6 @@ export function emptyRecipe(): Recipe {
 		conditioning: { days: 14, tempC: 8, co2Volumes: 2.4 }
 	};
 }
+
+/** What a brand-new brew starts on, so a control can say it has not been touched. */
+export const DEFAULTS = emptyRecipe();

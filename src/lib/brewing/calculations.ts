@@ -244,7 +244,9 @@ export function computeMashProfile(mash: MashSetup): MashProfile {
 	}
 	if (hasMashOut) {
 		efficiencyFactor *= 1.02;
-		notes.push('The mash-out fixes the sugar profile and makes the wort run off more freely.');
+		notes.push(
+			'The mash-out — a short hot rest at the end — stops the enzymes, so the sugar profile is fixed from here, and it thins the wort so it runs off more freely.'
+		);
 	}
 
 	return {

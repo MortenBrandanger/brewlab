@@ -14,6 +14,12 @@
 		deepDiveTitle = 'Why this matters',
 		/** Marks shown under the track, e.g. the normal working range. */
 		marks = [] as { at: number; label: string }[],
+		/**
+		 * The value a brand-new brew starts on. While the slider still sits there
+		 * the reader has not decided anything, and saying so is the difference
+		 * between a setting you chose and one the simulator chose for you.
+		 */
+		defaultValue = undefined as number | undefined,
 		id = `slider-${Math.random().toString(36).slice(2, 9)}`
 	}: {
 		label: string;
@@ -27,16 +33,23 @@
 		deepDive?: string;
 		deepDiveTitle?: string;
 		marks?: { at: number; label: string }[];
+		defaultValue?: number;
 		id?: string;
 	} = $props();
 
 	const fill = $derived(((value - min) / (max - min)) * 100);
+	const untouched = $derived(defaultValue !== undefined && value === defaultValue);
 </script>
 
 <div class="py-1">
 	<div class="flex items-baseline justify-between gap-3">
 		<label class="field-label" for={id}>{label}</label>
-		<output class="tnum text-sm font-medium text-fg" for={id}>{format(value)}{unit}</output>
+		<span class="flex items-baseline gap-2">
+			{#if untouched}
+				<span class="text-[0.625rem] tracking-wide text-subtle uppercase">default</span>
+			{/if}
+			<output class="tnum text-sm font-medium text-fg" for={id}>{format(value)}{unit}</output>
+		</span>
 	</div>
 	<input {id} type="range" {min} {max} {step} bind:value style="--fill:{fill}" class="mt-0.5" />
 	{#if marks.length}

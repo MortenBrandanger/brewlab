@@ -2,6 +2,7 @@
 	import SliderField from '../SliderField.svelte';
 	import AgeCurve from '../AgeCurve.svelte';
 	import { brew } from '$lib/state/brew.svelte';
+	import { DEFAULTS } from '$lib/brewing/recipes';
 
 	const conditioning = $derived(brew.recipe.conditioning);
 
@@ -34,6 +35,7 @@
 		<SliderField
 			label="Conditioning time"
 			bind:value={brew.recipe.conditioning.days}
+			defaultValue={DEFAULTS.conditioning.days}
 			min={0}
 			max={365}
 			step={1}
@@ -48,6 +50,7 @@
 		<SliderField
 			label="Storage temperature"
 			bind:value={brew.recipe.conditioning.tempC}
+			defaultValue={DEFAULTS.conditioning.tempC}
 			min={-1}
 			max={25}
 			step={1}
@@ -63,6 +66,7 @@
 	<SliderField
 		label="Carbonation"
 		bind:value={brew.recipe.conditioning.co2Volumes}
+		defaultValue={DEFAULTS.conditioning.co2Volumes}
 		min={0.8}
 		max={4}
 		step={0.1}
