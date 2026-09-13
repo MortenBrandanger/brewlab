@@ -129,9 +129,28 @@ class BrewStore {
 		this.stored = undefined;
 		this.brewedTo = -1;
 		this.stage = 'water';
+		this.stepWithin = {};
 		this.started = true;
 		// leaveChallenge derives the mode from the target we just set.
 		this.leaveChallenge();
+	}
+
+	/**
+	 * How far through a stage's own sequence of acts the reader has walked.
+	 *
+	 * A stage is not one panel of controls but an ordered set of things you do:
+	 * plan the hops, bring it to a boil, flame out. This survives navigating away
+	 * and back, because losing your place mid-boil and starting the stage again
+	 * is exactly the kind of small insult that makes an app feel like a form.
+	 */
+	stepWithin = $state<Partial<Record<StageId, number>>>({});
+
+	stepFor(stage: StageId): number {
+		return this.stepWithin[stage] ?? 0;
+	}
+
+	setStep(stage: StageId, index: number) {
+		this.stepWithin = { ...this.stepWithin, [stage]: Math.max(0, index) };
 	}
 
 	/**
