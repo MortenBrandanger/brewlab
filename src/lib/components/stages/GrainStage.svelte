@@ -20,7 +20,7 @@
 		brew.recipe.fermentables.reduce((sum, f) => sum + Math.max(0, f.weightKg), 0)
 	);
 
-	let picking = $state(false);
+	let picking = $state(brew.recipe.fermentables.length === 0);
 	let pickerCategory = $state<FermentableCategory>('base');
 
 	/**
@@ -113,47 +113,17 @@
 <div class="flex flex-col gap-5">
 	{#if brew.recipe.fermentables.length === 0}
 		<!--
-			Four cards of the same kind, the way the water stage offers six waters
-			and "treat it myself" in one grid. Choosing your own malts is one of the
-			ways in, not a lesser afterthought under the real options -- a row of
-			cards beside a small ghost button reads as two unrelated mechanisms.
+			The grist is the beer, so picking malts IS this stage -- it opens with
+			the malts in front of you rather than behind a card or a button. The
+			ready grists stay as a shortcut, deliberately quiet: promoting them to
+			cards of their own made the stage's actual work look like the lesser
+			option. (Anyone who wants a finished beer to pull apart gets a better
+			version of that on the start screen.)
 		-->
-		<section class="rounded-lg border border-dashed border-line-strong p-5">
-			<h3 class="font-display text-sm font-semibold">Nothing weighed out yet</h3>
-			<p class="prose-measure mt-1 text-sm text-muted">
-				A beer needs something to ferment. Every weight stays yours to change afterwards.
-			</p>
-			<ul class="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-				{#each STARTERS as starter (starter.name)}
-					<li>
-						<button
-							type="button"
-							class="h-full w-full rounded-lg bg-surface p-3 text-start ring-1 ring-line transition-colors hover:bg-ui-hover hover:ring-line-strong"
-							onclick={() => useStarter(starter.grist)}
-						>
-							<span class="block text-sm font-medium">{starter.name}</span>
-							<span class="mt-0.5 block text-xs text-subtle">{starter.note}</span>
-						</button>
-					</li>
-				{/each}
-				<li>
-					<button
-						type="button"
-						class="h-full w-full rounded-lg p-3 text-start ring-1 {picking
-							? 'bg-copper-dim ring-copper'
-							: 'bg-surface ring-line hover:bg-ui-hover hover:ring-line-strong'}"
-						aria-expanded={picking}
-						aria-pressed={picking}
-						onclick={() => (picking = !picking)}
-					>
-						<span class="block text-sm font-medium">Pick the malts myself</span>
-						<span class="mt-0.5 block text-xs {picking ? 'text-fg' : 'text-subtle'}">
-							Start from an empty tun and add them one at a time.
-						</span>
-					</button>
-				</li>
-			</ul>
-		</section>
+		<p class="prose-measure text-sm text-muted">
+			A beer needs something to ferment. Pick your malts below — base malt first, since that is
+			where the sugar and the enzymes come from — and set the weights however you like.
+		</p>
 	{:else}
 		<!-- The grist at a glance: real colours, real proportions. -->
 		<div>
@@ -311,5 +281,22 @@
 				{/each}
 			</ul>
 		</section>
+	{/if}
+
+	{#if brew.recipe.fermentables.length === 0}
+		<!-- A shortcut, at the weight of a shortcut. -->
+		<p class="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-xs text-subtle">
+			<span>Or start from a ready grist and change it:</span>
+			{#each STARTERS as starter, i (starter.name)}
+				<button
+					type="button"
+					class="rounded-sm text-copper-text hover:underline"
+					title={starter.note}
+					onclick={() => useStarter(starter.grist)}
+				>
+					{starter.name}{i < STARTERS.length - 1 ? ' ·' : ''}
+				</button>
+			{/each}
+		</p>
 	{/if}
 </div>
