@@ -29,7 +29,7 @@
 	 * two hops read the same paragraph twice.
 	 */
 	const AMOUNT_WHY: Record<HopUse, string> = {
-		boil: 'These all go into the same pot and end up in the same beer — what differs is when. The same hop is three different ingredients depending on its timing: an hour of boiling gives bitterness and no smell, because the aroma has boiled away; twenty minutes gives flavour; the last few minutes give aroma. That is why a recipe usually has two or three charges at different times rather than one. Weight scales bitterness roughly in step, so a 20-litre batch takes about 20 g for a lager, 60 g for a pale ale and 150 g for an IPA at the start of a boil.',
+		boil: 'Weight scales bitterness roughly in step, so doubling the grams roughly doubles it. A 20-litre batch takes about 20 g for a lager, 60 g for a pale ale and 150 g for an IPA at the start of a boil; a charge going in late needs far more for the same effect.',
 		whirlpool:
 			'Into the same wort as everything else, but off the heat, so these buy aroma rather than bitterness. Weights run heavier than a bittering charge for the same effect.',
 		dryHop:

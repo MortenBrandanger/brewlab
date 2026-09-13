@@ -125,10 +125,6 @@
 			option. (Anyone who wants a finished beer to pull apart gets a better
 			version of that on the start screen.)
 		-->
-		<p class="prose-measure text-sm text-muted">
-			A beer needs something to ferment. Pick your malts below — base malt first, since that is
-			where the sugar and the enzymes come from — and set the weights however you like.
-		</p>
 	{:else}
 		<!-- The grist at a glance: real colours, real proportions. -->
 		<div>

@@ -23,12 +23,6 @@
 </script>
 
 <section>
-	<p class="prose-measure mb-3 text-xs text-muted">
-		The percentage is attenuation: how much of the sugar that strain will eat, and so how dry the
-		beer finishes. Flocculation is how readily the yeast clumps together and sinks when it is done,
-		which decides how clear the beer ends up.
-	</p>
-
 	<div class="flex flex-col gap-3">
 		{#each byKind as group (group.kind)}
 			<div>

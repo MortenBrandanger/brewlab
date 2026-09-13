@@ -203,19 +203,14 @@
 	-->
 	<section class="rounded-lg bg-surface p-4 ring-1 ring-line">
 		<p class="prose-measure text-sm text-muted">
-			{#if !chosen}
-				Pick one of the waters above. Everything on this stage — how much to heat, how hot, and what
-				it will do to the mash — follows from that choice.
-			{:else}
-				{#if custom}{profile?.name ?? 'Custom'} water with your own additions.{/if}
-				{lean}
-				{#if strike !== undefined && firstRest}
-					<span class="tnum text-fg">
-						About {totalWaterL.toFixed(0)} litres, heated to {strike.toFixed(0)} °C
-					</span>
-					— {(strike - firstRest.tempC).toFixed(0)} degrees above your {firstRest.tempC} °C mash rest,
-					because the cold grain will pull it down.
-				{/if}
+			{#if custom}{profile?.name ?? 'Custom'} water with your own additions.{/if}
+			{lean}
+			{#if strike !== undefined && firstRest}
+				<span class="tnum text-fg">
+					About {totalWaterL.toFixed(0)} litres, heated to {strike.toFixed(0)} °C
+				</span>
+				— {(strike - firstRest.tempC).toFixed(0)} degrees above your {firstRest.tempC} °C mash rest, because
+				the cold grain will pull it down.
 			{/if}
 		</p>
 

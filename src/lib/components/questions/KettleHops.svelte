@@ -57,11 +57,6 @@
 					</div>
 				{/if}
 			</dl>
-			<p class="prose-measure mt-2 text-xs text-subtle">
-				The second figure is the better guide of the two: the same bitterness feels sharp in a small
-				beer and mild in a big one, so it weighs one against the other. Most balanced beers land
-				between 0.4 and 0.8.
-			</p>
 		</div>
 	</div>
 </div>

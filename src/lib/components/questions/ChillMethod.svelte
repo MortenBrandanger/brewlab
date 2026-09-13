@@ -203,9 +203,5 @@
 				</li>
 			{/each}
 		</ul>
-		<p class="prose-measure mt-2 text-xs text-subtle">
-			Treat these as odds, not prophecy. A slow chill does not guarantee an infection — it widens
-			the range of what might happen.
-		</p>
 	</section>
 </div>
