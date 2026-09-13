@@ -63,7 +63,9 @@
 						>
 							{step.action}
 						</button>
-						<span class="text-xs text-subtle">— unlocks {step.reveals}</span>
+						{#if step.reveals}
+							<span class="text-xs text-subtle">— unlocks {step.reveals}</span>
+						{/if}
 					</li>
 				{/each}
 			</ol>

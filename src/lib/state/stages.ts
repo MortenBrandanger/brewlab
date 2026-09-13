@@ -25,12 +25,14 @@ export type StageMeta = {
 	accent: 'copper' | 'amber' | 'hop';
 	/** The brewing action that ends this stage and starts the next. */
 	action: string;
-	/** What that action is actually doing, in one line. */
-	actionHint: string;
 	/** Shown on the stage once it has been done. */
 	done: string;
-	/** What becomes knowable about the beer once this stage is done. */
-	reveals: string;
+	/**
+	 * What becomes knowable once this stage is done. Absent where the action
+	 * reveals nothing new — the water stage already shows what the water does
+	 * before you press anything.
+	 */
+	reveals?: string;
 	/** Blocks the action until this is true. */
 	requires?: 'fermentables' | 'conversion';
 };
@@ -53,9 +55,7 @@ export const STAGES: StageMeta[] = [
 		what: 'The minerals in the water decide how bitterness and malt come across, and together with the grain they set the acidity of the mash. Mash pH matters more than any single ion: between 5.2 and 5.6 the enzymes work well, the husks keep their tannins to themselves, and the beer tastes bright rather than dull. Get it wrong and the beer tastes drying however good the recipe is. You cannot know it yet — it comes from the water and the grain together.',
 		accent: 'hop',
 		action: 'Fill and heat the water',
-		actionHint: 'The pot goes on to heat, ready for the grain.',
-		done: 'Water treated and heating.',
-		reveals: 'how the minerals will shape the finished beer'
+		done: 'Water treated and heating.'
 	},
 	{
 		id: 'grain',
@@ -66,7 +66,6 @@ export const STAGES: StageMeta[] = [
 		decide: 'the backbone of the beer: its colour, its body and most of its flavour',
 		accent: 'amber',
 		action: 'Mill the grain',
-		actionHint: 'The grist is crushed and weighed, ready to mash.',
 		done: 'Grain milled and weighed.',
 		reveals: 'colour, the mash pH, and the gravity this grain could reach',
 		requires: 'fermentables'
@@ -80,7 +79,6 @@ export const STAGES: StageMeta[] = [
 		decide: 'how dry or how full the finished beer will be',
 		accent: 'copper',
 		action: 'Mash in',
-		actionHint: 'The grain goes into the liquor and the rest begins.',
 		done: 'Mashed in. The grain is resting.',
 		reveals: 'how fermentable the wort is, and how full the beer will feel',
 		requires: 'conversion'
@@ -94,7 +92,6 @@ export const STAGES: StageMeta[] = [
 		decide: 'how strong the beer ends up',
 		accent: 'copper',
 		action: 'Run off and sparge',
-		actionHint: 'The wort is drained and the grain rinsed into the kettle.',
 		done: 'Wort collected in the kettle.',
 		reveals: 'the original gravity'
 	},
@@ -107,7 +104,6 @@ export const STAGES: StageMeta[] = [
 		decide: 'how bitter it is, and how much of the hops you will smell',
 		accent: 'hop',
 		action: 'Boil the wort',
-		actionHint: 'The kettle comes up, the hops go in on schedule, and the flame goes out.',
 		done: 'Boil finished. The hops are in.',
 		reveals: 'bitterness, and the finished colour'
 	},
@@ -120,7 +116,6 @@ export const STAGES: StageMeta[] = [
 		decide: 'how much risk the beer carries into fermentation',
 		accent: 'amber',
 		action: 'Chill and transfer',
-		actionHint: 'The wort comes down to pitching temperature and moves to the fermenter.',
 		done: 'Chilled and in the fermenter.',
 		reveals: 'what the cold side put at risk'
 	},
@@ -133,7 +128,6 @@ export const STAGES: StageMeta[] = [
 		decide: 'how much of its own character the yeast puts into the beer',
 		accent: 'hop',
 		action: 'Pitch the yeast',
-		actionHint: 'The yeast goes in and the schedule runs to the end.',
 		done: 'Fermentation finished.',
 		reveals: 'final gravity, alcohol, and everything the yeast made'
 	},
@@ -146,7 +140,6 @@ export const STAGES: StageMeta[] = [
 		decide: 'how the beer actually arrives in the glass',
 		accent: 'copper',
 		action: 'Package it',
-		actionHint: 'The beer is carbonated and put away to condition.',
 		done: 'Bottled and conditioning.',
 		reveals: 'how it will actually taste in the glass'
 	},
@@ -156,7 +149,6 @@ export const STAGES: StageMeta[] = [
 		reality: 'You open one, pour it into a glass, and find out.',
 		accent: 'amber',
 		action: 'Pour a glass',
-		actionHint: 'Everything the simulation knows, laid out.',
 		done: 'Poured.',
 		reveals: 'the full judgement'
 	}

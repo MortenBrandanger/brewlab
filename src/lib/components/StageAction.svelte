@@ -54,11 +54,13 @@
 		</div>
 	{:else}
 		<div class="flex flex-wrap items-center gap-x-4 gap-y-3">
+			<!--
+				The button already says what the action is. A heading and a hint
+				restating it made the same sentence appear three times.
+			-->
 			<div class="min-w-[14rem] flex-1">
-				<p class="font-display text-sm font-semibold">{meta.action}</p>
-				<p class="prose-measure mt-0.5 text-xs text-muted">{meta.actionHint}</p>
 				{#if blocked}
-					<p class="mt-1.5 flex items-start gap-1.5 text-xs text-warn">
+					<p class="flex items-start gap-1.5 text-sm text-warn">
 						<svg viewBox="0 0 16 16" class="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true">
 							<path
 								d="M8 2 L15 14 L1 14 Z"
@@ -77,11 +79,11 @@
 						{blocked}
 					</p>
 				{:else if outOfOrder}
-					<p class="mt-1.5 text-xs text-subtle">
+					<p class="text-sm text-subtle">
 						You have skipped ahead. Doing this now marks everything before it as done too.
 					</p>
-				{:else}
-					<p class="mt-1.5 text-xs text-subtle">Unlocks {meta.reveals}.</p>
+				{:else if meta.reveals}
+					<p class="prose-measure text-sm text-subtle">Unlocks {meta.reveals}.</p>
 				{/if}
 			</div>
 			<button type="button" class="btn btn-primary h-11 px-5" disabled={!!blocked} onclick={act}>
