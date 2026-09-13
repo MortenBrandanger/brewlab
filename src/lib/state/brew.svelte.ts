@@ -68,7 +68,7 @@ class BrewStore {
 		const meta = STAGES[stageIndex(stage)];
 		if (!meta?.requires) return undefined;
 		if (meta.requires === 'fermentables' && this.recipe.fermentables.length === 0) {
-			return 'Add at least one fermentable first. There is nothing to mill.';
+			return 'Add a malt first. There is nothing to mill.';
 		}
 		if (meta.requires === 'conversion' && this.context?.mash.conversionMinutes === 0) {
 			return 'No mash step sits in the conversion range, so nothing would convert.';

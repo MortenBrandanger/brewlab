@@ -39,7 +39,7 @@
 
 	const categories = ['base', 'speciality', 'roast', 'adjunct', 'sugar'] as const;
 
-	/** Three grists that go somewhere, for a brewer staring at an empty tun. */
+	/** Three grists that go somewhere, for a brewer staring at an empty scale. */
 	const STARTERS = [
 		{
 			name: 'Pale and hoppy',
@@ -73,13 +73,38 @@
 	}
 </script>
 
+{#snippet addControl()}
+	<button
+		type="button"
+		class="btn btn-ghost"
+		onclick={() => (picking = !picking)}
+		aria-expanded={picking}
+	>
+		<svg viewBox="0 0 16 16" class="h-4 w-4" aria-hidden="true">
+			<path
+				d="M8 3 V13 M3 8 H13"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.8"
+				stroke-linecap="round"
+			/>
+		</svg>
+		Add malt or sugar
+	</button>
+{/snippet}
+
 <div class="flex flex-col gap-5">
 	{#if brew.recipe.fermentables.length === 0}
+		<!--
+			Both ways in live inside this box. Splitting the starting grists from the
+			"add one at a time" button put two answers to the same question in two
+			places, with a border between them.
+		-->
 		<section class="rounded-lg border border-dashed border-line-strong p-5">
-			<h3 class="font-display text-sm font-semibold">The tun is empty</h3>
+			<h3 class="font-display text-sm font-semibold">Nothing weighed out yet</h3>
 			<p class="prose-measure mt-1 text-sm text-muted">
-				A beer needs something to ferment. Pick a starting grist and change it from there, or add
-				malts one at a time.
+				A beer needs something to ferment. Start from one of these and change it, or build the grist
+				yourself.
 			</p>
 			<ul class="mt-4 grid gap-2 sm:grid-cols-3">
 				{#each STARTERS as starter (starter.name)}
@@ -95,6 +120,7 @@
 					</li>
 				{/each}
 			</ul>
+			<div class="mt-3">{@render addControl()}</div>
 		</section>
 	{:else}
 		<!-- The grist at a glance: real colours, real proportions. -->
@@ -212,35 +238,10 @@
 				{/if}
 			{/each}
 		</ul>
-	{/if}
 
-	<div class="flex flex-wrap items-center gap-3">
-		<button
-			type="button"
-			class="btn btn-ghost"
-			onclick={() => (picking = !picking)}
-			aria-expanded={picking}
-		>
-			<svg viewBox="0 0 16 16" class="h-4 w-4" aria-hidden="true">
-				<path
-					d="M8 3 V13 M3 8 H13"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="1.8"
-					stroke-linecap="round"
-				/>
-			</svg>
-			Add fermentable
-		</button>
-		<p class="tnum text-xs text-muted">
-			{totalKg.toFixed(2)} kg total
-			{#if grist}
-				· {Math.round(grist.diastaticShare * 100)}% enzyme-carrying · {Math.round(
-					grist.specialityShare * 100
-				)}% speciality
-			{/if}
-		</p>
-	</div>
+		<!-- The grist bar above already carries the weight and the shares. -->
+		<div>{@render addControl()}</div>
+	{/if}
 
 	{#if picking}
 		<section class="rounded-lg bg-surface p-3 ring-1 ring-line">
