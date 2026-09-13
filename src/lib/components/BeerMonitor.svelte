@@ -218,24 +218,6 @@
 		</dl>
 	</section>
 
-	{#if metrics.length}
-		<dl class="relative grid grid-cols-3 gap-x-3 gap-y-3 border-t border-line pt-4">
-			{#each metrics as metric (metric.label)}
-				<div class="min-w-0">
-					<dt class="text-xs text-subtle">{metric.label}</dt>
-					<dd class="text-sm">
-						<FigureValue
-							id={metric.figure}
-							value={metric.raw}
-							display={metric.value}
-							label={metric.label}
-						/>
-					</dd>
-				</div>
-			{/each}
-		</dl>
-	{/if}
-
 	{#if nextUp}
 		<p class="prose-measure border-t border-line pt-4 text-xs text-subtle">
 			Up next: {nextUp.action.toLowerCase()}.
@@ -252,15 +234,57 @@
 		</div>
 	{/if}
 
-	{#if axes.length}
-		<section class="border-t border-line pt-4">
-			<h3 class="field-label mb-2">Flavour so far</h3>
-			<div class="flex flex-col gap-1.5">
-				{#each axes as [key, value] (key)}
-					<Meter label={SENSORY_LABELS[key]} {value} accent={value > 7 ? 'amber' : 'copper'} />
-				{/each}
-			</div>
-		</section>
+	{#if metrics.length || axes.length}
+		<!--
+			Numbers and flavour fold away. This panel answers "what have I got so
+			far", and a column of readouts was competing with the answer.
+		-->
+		<details class="group border-t border-line pt-4">
+			<summary
+				class="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-sm text-xs font-medium text-copper-text hover:underline"
+			>
+				<svg
+					viewBox="0 0 16 16"
+					class="h-3 w-3 transition-transform group-open:rotate-90"
+					aria-hidden="true"
+				>
+					<path
+						d="M6 3.5 L11 8 L6 12.5"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+					/>
+				</svg>
+				The numbers so far
+			</summary>
+
+			{#if metrics.length}
+				<dl class="relative mt-3 grid grid-cols-3 gap-x-3 gap-y-3">
+					{#each metrics as metric (metric.label)}
+						<div class="min-w-0">
+							<dt class="text-xs text-subtle">{metric.label}</dt>
+							<dd class="text-sm">
+								<FigureValue
+									id={metric.figure}
+									value={metric.raw}
+									display={metric.value}
+									label={metric.label}
+								/>
+							</dd>
+						</div>
+					{/each}
+				</dl>
+			{/if}
+
+			{#if axes.length}
+				<div class="mt-4 flex flex-col gap-1.5">
+					{#each axes as [key, value] (key)}
+						<Meter label={SENSORY_LABELS[key]} {value} accent={value > 7 ? 'amber' : 'copper'} />
+					{/each}
+				</div>
+			{/if}
+		</details>
 	{/if}
 
 	{#if brew.brewedTo >= 0}

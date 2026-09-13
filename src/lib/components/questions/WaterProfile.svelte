@@ -1,4 +1,10 @@
 <script lang="ts">
+	/**
+	 * Which water are you brewing with?
+	 *
+	 * The whole screen is that one question: a source water, or your own salts on
+	 * top of one, and what the choice does to the strike water and the mash pH.
+	 */
 	import SliderField from '../SliderField.svelte';
 	import { SALTS, WATER_PROFILES, WATER_PROFILE_BY_ID } from '$lib/brewing/water';
 	import { strikeTempC } from '$lib/brewing/calculations';
@@ -95,7 +101,6 @@
 
 <div class="flex flex-col gap-5">
 	<section>
-		<h3 class="field-label mb-2">Choose your water</h3>
 		<ul class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
 			{#each WATER_PROFILES as option (option.id)}
 				{@const selected = !custom && option.id === brew.recipe.water.profileId}

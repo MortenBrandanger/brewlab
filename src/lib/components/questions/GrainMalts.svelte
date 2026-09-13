@@ -1,4 +1,10 @@
 <script lang="ts">
+	/**
+	 * What malt goes in?
+	 *
+	 * The grist and nothing else: what is in it, how much of each, and what that
+	 * adds up to.
+	 */
 	import { FERMENTABLES, getFermentable } from '$lib/brewing/ingredients';
 	import { srmToCss } from '$lib/brewing/appearance';
 	import { ebcToSrm } from '$lib/brewing/calculations';

@@ -1,12 +1,9 @@
 <script lang="ts">
 	/**
-	 * The mash, as the three acts it is.
+	 * How do you want it to finish?
 	 *
-	 * A brewer put this third on the list of stages most in need of a sequence,
-	 * and named the reason: the panel showed a plan when the hour is a sequence
-	 * of moments. You set the schedule at the desk, you stand over the tun
-	 * stirring grain into water, and then you put the lid on and leave. Those are
-	 * three different rooms and three different half-hours.
+	 * Four answers named for what the beer tastes like, plus a fifth card for
+	 * placing rests by hand. The enzyme map lives behind that card.
 	 */
 	import SliderField from '../SliderField.svelte';
 	import { step } from '$lib/brewing/recipes';
@@ -109,7 +106,6 @@
 
 <div class="flex flex-col gap-5">
 	<section>
-		<h3 class="field-label mb-2">How do you want it to finish?</h3>
 		<ul class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
 			{#each PRESETS as preset (preset.id)}
 				{@const selected =

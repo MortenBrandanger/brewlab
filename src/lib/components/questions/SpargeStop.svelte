@@ -1,4 +1,10 @@
 <script lang="ts">
+	/**
+	 * When do you stop collecting?
+	 *
+	 * The pre-boil volume, and everything that follows from it: where the water
+	 * ends up, how much sugar comes with it, and what the kettle reads.
+	 */
 	import SliderField from '../SliderField.svelte';
 	import { GRAIN_ABSORPTION_L_PER_KG } from '$lib/brewing/simulate';
 	import { brew } from '$lib/state/brew.svelte';
@@ -17,17 +23,6 @@
 
 <div class="flex flex-col gap-6">
 	<div class="grid gap-x-6 gap-y-2 sm:grid-cols-2">
-		<SliderField
-			label="Batch size"
-			bind:value={brew.recipe.batchVolumeL}
-			defaultValue={DEFAULTS.batchVolumeL}
-			min={1}
-			max={60}
-			step={0.5}
-			unit=" L"
-			format={(n) => n.toFixed(1)}
-			why="How much beer you want at the end. Twenty litres is a normal homebrew batch — about a case of bottles. Gravity, bitterness and colour are all concentrations, so this one number moves every figure in the report at once."
-		/>
 		<SliderField
 			label="Stop collecting at"
 			bind:value={brew.recipe.preBoilVolumeL}

@@ -4,6 +4,13 @@ import { emptyRecipe, newId } from '$lib/brewing/recipes';
 import { CHALLENGE_BY_ID, evaluateChallenge } from '$lib/brewing/challenges';
 import { loadProgress, saveProgress, type StoredProgress } from '$lib/persist/recipes';
 import { STAGES, stageIndex, revealedAt, type Reveal, type StageId } from './stages';
+import {
+	QUESTIONS,
+	firstQuestionOf,
+	isLastOfStage,
+	reachableThrough,
+	type Question
+} from './questions';
 
 export type BrewMode = 'free' | 'style' | 'challenge';
 
@@ -91,7 +98,10 @@ class BrewStore {
 		if (this.blockedBecause(stage)) return undefined;
 		this.brewedTo = Math.max(this.brewedTo, index);
 		const next = STAGES[index + 1];
-		if (next) this.stage = next.id;
+		if (next) {
+			this.stage = next.id;
+			this.at = firstQuestionOf(next.id);
+		}
 		return next?.id;
 	}
 
@@ -106,6 +116,7 @@ class BrewStore {
 		this.brewedTo = Math.max(-1, Math.min(STAGES.length - 1, brewedTo));
 		const known = STAGES.find((s) => s.id === stage);
 		this.stage = known?.id ?? STAGES[Math.max(0, Math.min(STAGES.length - 1, this.brewedTo))].id;
+		this.at = firstQuestionOf(this.stage);
 		this.started = true;
 	}
 
@@ -113,6 +124,7 @@ class BrewStore {
 		this.recipe = structuredClone(recipe);
 		this.stored = stored;
 		this.brewedTo = brewedTo;
+		this.at = firstQuestionOf(this.stage);
 		this.started = true;
 	}
 
@@ -129,28 +141,41 @@ class BrewStore {
 		this.stored = undefined;
 		this.brewedTo = -1;
 		this.stage = 'water';
-		this.stepWithin = {};
+		this.at = 0;
 		this.started = true;
 		// leaveChallenge derives the mode from the target we just set.
 		this.leaveChallenge();
 	}
 
-	/**
-	 * How far through a stage's own sequence of acts the reader has walked.
-	 *
-	 * A stage is not one panel of controls but an ordered set of things you do:
-	 * plan the hops, bring it to a boil, flame out. This survives navigating away
-	 * and back, because losing your place mid-boil and starting the stage again
-	 * is exactly the kind of small insult that makes an app feel like a form.
-	 */
-	stepWithin = $state<Partial<Record<StageId, number>>>({});
+	/** Which of the brew day's questions is on screen. */
+	at = $state(0);
 
-	stepFor(stage: StageId): number {
-		return this.stepWithin[stage] ?? 0;
+	get question(): Question {
+		return QUESTIONS[Math.min(this.at, QUESTIONS.length - 1)];
 	}
 
-	setStep(stage: StageId, index: number) {
-		this.stepWithin = { ...this.stepWithin, [stage]: Math.max(0, index) };
+	/** Answering the last question of a stage is what carries that stage out. */
+	get endsStage(): boolean {
+		return isLastOfStage(this.at);
+	}
+
+	/**
+	 * Forward stops at the end of the stage being worked on. Back is free, the
+	 * way changing your mind about the grain and watching what it does is the
+	 * whole point of a simulator.
+	 */
+	goTo(index: number) {
+		const limit = reachableThrough(this.brewedTo);
+		this.at = Math.max(0, Math.min(index, limit));
+		this.stage = QUESTIONS[this.at].stage;
+	}
+
+	next() {
+		this.goTo(this.at + 1);
+	}
+
+	back() {
+		this.goTo(this.at - 1);
 	}
 
 	/**
@@ -160,7 +185,9 @@ class BrewStore {
 	 * brew day either.
 	 */
 	setStage(stage: StageId) {
-		this.stage = STAGES[Math.min(stageIndex(stage), this.brewedTo + 1)].id;
+		const allowed = STAGES[Math.min(stageIndex(stage), this.brewedTo + 1)].id;
+		this.stage = allowed;
+		this.at = firstQuestionOf(allowed);
 	}
 
 	startChallenge(id: string, recipe: Recipe, fromScratch: boolean) {
