@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { simulate } from './simulate';
+import { buildContext, simulate } from './simulate';
 import { EXAMPLES, boilHop, defaultRecipe, emptyRecipe, ferm, fermStep, step } from './recipes';
 import { SENSORY_KEYS } from './sensory';
 import type { Recipe } from './types';
@@ -260,5 +260,27 @@ describe('calibration against canonical recipes', () => {
 		expect(hot.metrics.fg - cool.metrics.fg).toBeGreaterThan(0.004);
 		expect(cool.metrics.abv).toBeGreaterThan(hot.metrics.abv);
 		expect(hot.sensory.body - cool.sensory.body).toBeGreaterThan(0.5);
+	});
+});
+
+describe('a brew day in progress', () => {
+	/*
+	 * A new brew has no yeast, because choosing one is stage seven's decision.
+	 * buildContext used to bail out without a strain, which silently blanked
+	 * every derived figure on the first six stages -- mash water, grain
+	 * absorption, the run-off breakdown, the water panel -- exactly when the
+	 * brewer is reading them.
+	 */
+	test('has every pre-fermentation figure before a yeast is chosen', () => {
+		const recipe = emptyRecipe();
+		recipe.water.profileId = 'balanced';
+		recipe.fermentables = [ferm('pale-ale', 4.4), ferm('munich-light', 0.4)];
+		expect(recipe.fermentation.yeastId).toBe('');
+
+		const ctx = buildContext(recipe);
+		expect(ctx).toBeDefined();
+		expect(ctx!.gravity.grist.grainKg).toBeCloseTo(4.8, 2);
+		expect(ctx!.water.mashPh).toBeGreaterThan(4.5);
+		expect(ctx!.totalWaterL).toBeGreaterThan(recipe.preBoilVolumeL);
 	});
 });

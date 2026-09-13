@@ -201,8 +201,16 @@ export function simulate(recipe: Recipe): SimulationResult {
  * (hop load, water chemistry, mash profile) rather than only the final report.
  */
 export function buildContext(recipe: Recipe): EngineContext | undefined {
-	const yeast = getYeast(recipe.fermentation.yeastId);
-	if (!yeast) return undefined;
+	/*
+	 * Nothing before fermentation depends on the strain -- water chemistry, mash
+	 * water, grain absorption and the run-off are all settled long before the
+	 * yeast goes in. Bailing out without one used to blank every derived figure
+	 * on the first six stages, which is exactly when a brewer has not chosen a
+	 * yeast yet. The strain-dependent parts of the context are only ever
+	 * displayed once fermentation has been carried out, and that is gated on a
+	 * real choice, so falling back here shows correct numbers rather than none.
+	 */
+	const yeast = getYeast(recipe.fermentation.yeastId) ?? YEASTS[0];
 	const mash = computeMashProfile(recipe.mash);
 	const gravity = computeGravity(recipe, mash);
 	const totalWaterL = recipe.preBoilVolumeL + gravity.grist.grainKg * GRAIN_ABSORPTION_L_PER_KG;
