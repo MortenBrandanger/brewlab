@@ -7,10 +7,12 @@
 	 * chosen option's description was visible, which meant the screen could not
 	 * be used to decide — it could only confirm a decision already made.
 	 *
-	 * Nothing else lives here. It previously carried three paragraphs that said
-	 * the same thing whichever option was selected: the aeration advice, the
-	 * gravity reading and the sealing. The gravity arrives in the panel when the
-	 * stage is carried out, which is what the reveal is for.
+	 * Nothing else lives here. The screen previously carried three paragraphs
+	 * that read the same whichever option was selected — and the last of them,
+	 * "a little air here is harmless", argued against the question it sat under.
+	 * It is not harmless: the model charges up to fourteen points for oxidation
+	 * and credits four for a closed transfer. That consequence now lives in the
+	 * cards, where the choice is made, and the paragraph is gone.
 	 */
 	import { brew } from '$lib/state/brew.svelte';
 	import { DEFAULTS } from '$lib/brewing/recipes';
@@ -20,17 +22,17 @@
 		{
 			value: 'careless',
 			label: 'Splashed',
-			says: 'Tipped in from height with the lid off. Quick, and it beats air into the wort along with whatever is drifting about the room.'
+			says: 'Tipped in from height with the lid off. Quick, and it beats air into the beer along with whatever is drifting about the room. It comes back weeks later as a taste of wet cardboard.'
 		},
 		{
 			value: 'normal',
 			label: 'Ordinary care',
-			says: 'Siphoned through sanitised tubing with the end reaching the bottom of the bucket, so it fills without splashing. What most brewers do.'
+			says: 'Siphoned through sanitised tubing with the end reaching the bottom of the bucket, so it fills without splashing. What most brewers do, and enough for most beers.'
 		},
 		{
 			value: 'closed',
 			label: 'Closed transfer',
-			says: 'The bucket filled with CO₂ first so the beer never meets air at all. Fiddly, and worth the trouble for a hop-forward beer.'
+			says: 'The bucket filled with CO₂ first so the beer never meets air at all. Fiddly, and the single biggest difference between a homebrewed IPA that still smells of hops after a fortnight and one that does not.'
 		}
 	];
 
@@ -62,9 +64,4 @@
 			</li>
 		{/each}
 	</ul>
-
-	<p class="prose-measure text-xs text-subtle">
-		A little air here is harmless — the yeast wants some to build itself before it starts on the
-		sugar. It is after fermentation that the same splash turns hop aroma into wet cardboard.
-	</p>
 </div>
