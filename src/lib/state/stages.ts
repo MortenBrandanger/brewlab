@@ -207,7 +207,14 @@ const REVEALED_AFTER: Record<Reveal, StageId> = {
 	water: 'water',
 	colour: 'grain',
 	potential: 'grain',
-	gravity: 'sparge',
+	/*
+	 * A brewer reads the original gravity off a hydrometer floating in the
+	 * chilled wort, not at the tun. Revealing it at the sparge handed over the
+	 * most satisfying measurement of the brew day before the wort that produces
+	 * it existed — the sparge still shows its own pre-boil reading, which is a
+	 * real measurement taken there.
+	 */
+	gravity: 'chill',
 	bitterness: 'boil',
 	risk: 'chill',
 	alcohol: 'ferment',
@@ -227,6 +234,9 @@ const FIELD_STAGE: [string, StageId][] = [
 	['preBoilVolumeL', 'sparge'],
 	['batchVolumeL', 'sparge'],
 	['efficiencyPct', 'sparge'],
+	// More specific first: the table matches on prefix and returns the first hit,
+	// and dry hops are edited on the fermentation stage, not in the kettle.
+	['hops.dryHop', 'ferment'],
 	['hops', 'boil'],
 	['boilTimeMin', 'boil'],
 	['chill', 'chill'],

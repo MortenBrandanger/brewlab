@@ -295,7 +295,7 @@ export function computeFindings(ctx: EngineContext): Finding[] {
 			explanation:
 				'Aroma extraction saturates somewhere around 8 g/L. Beyond that you mostly add vegetal and grassy character, strip carbonation through hop creep, and risk a harsh polyphenol bite. More hops stop buying more aroma.',
 			impact: { technical: -5, enjoyment: -6 },
-			fields: ['hops']
+			fields: ['hops.dryHop']
 		});
 	}
 	if (hopLoad.maxDryHopDays > 7) {
@@ -306,7 +306,7 @@ export function computeFindings(ctx: EngineContext): Finding[] {
 			explanation:
 				'Most of the aroma is extracted within two or three days. Leaving hops in for a week or more adds chlorophyll and tannin — the grassy, tea-like character of over-steeped hops — without adding aroma.',
 			impact: { enjoyment: -4 },
-			fields: ['hops']
+			fields: ['hops.dryHop']
 		});
 	}
 	if (yeast.souring >= 4 && ibu.total > 15) {

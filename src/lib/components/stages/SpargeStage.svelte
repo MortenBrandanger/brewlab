@@ -147,8 +147,11 @@
 		{/if}
 	</div>
 
-	<p class="tnum text-sm text-muted">
-		Pre-boil gravity <span class="font-medium text-fg">{preBoilGravity.toFixed(3)}</span>, rising to
-		<span class="font-medium text-fg">{brew.result.metrics.og.toFixed(3)}</span> by the end of the boil.
+	<!-- What you can actually read here. The gravity after the boil is measured
+	     off a hydrometer in the chilled wort, two stages from now. -->
+	<p class="prose-measure text-sm text-muted">
+		A sample off the tap reads
+		<span class="tnum font-medium text-fg">{preBoilGravity.toFixed(3)}</span>. The boil will
+		concentrate it further as water evaporates.
 	</p>
 </div>

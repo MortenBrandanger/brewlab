@@ -3,69 +3,19 @@
 	import FigureValue from '../FigureValue.svelte';
 	import LearningNote from '../LearningNote.svelte';
 	import HopTimeline from '../HopTimeline.svelte';
-	import { HOPS, getHop } from '$lib/brewing/ingredients';
-	import { newHopAddition } from '$lib/brewing/recipes';
+	import HopAdditions from '../HopAdditions.svelte';
 	import { brew } from '$lib/state/brew.svelte';
 	import { DEFAULTS } from '$lib/brewing/recipes';
-	import type { HopUse } from '$lib/brewing/types';
 
-	/**
-	 * Hops go in at three different moments, and only the first two happen during
-	 * this stage at all. Saying so is the difference between a schedule that makes
-	 * sense and three unexplained lists.
-	 */
-	const USE_LABEL: Record<HopUse, string> = {
-		boil: 'In the kettle',
-		whirlpool: 'After the flame',
-		dryHop: 'Later, in the fermenter'
-	};
-
-	const USE_WHEN: Record<HopUse, string> = {
-		boil: 'While the wort is boiling. Heat and time turn hop resin into bitterness, so this is where almost all of it comes from — and where aroma is destroyed.',
-		whirlpool:
-			'The flame is out but the wort is still hot, so it steeps rather than boils. Flavour and aroma survive; bitterness barely builds.',
-		dryHop:
-			'Days after this stage, in the fermenter, with no heat at all. Pure aroma: dry hops add no measured IBU, though they do add a perceived bite.'
-	};
-
-	const USE_ADD: Record<HopUse, string> = {
-		boil: 'Add a kettle hop',
-		whirlpool: 'Add a whirlpool hop',
-		dryHop: 'Add a dry hop'
-	};
-
+	/** The timeline labels each addition with the bitterness it actually buys. */
 	const ibuByAddition = $derived(
 		new Map(
 			brew.result ? (brew.context?.ibu.contributions ?? []).map((c) => [c.additionId, c.ibu]) : []
 		)
 	);
 
-	let picking = $state<HopUse | undefined>(undefined);
 	/** An unusual boil length is a deliberate choice, so it survives a revisit. */
 	let customBoil = $state(![30, 60, 90].includes(brew.recipe.boilTimeMin));
-	let originFilter = $state<string>('all');
-
-	const origins = $derived(['all', ...new Set(HOPS.map((h) => h.origin))]);
-	const pickerHops = $derived(
-		originFilter === 'all' ? HOPS : HOPS.filter((h) => h.origin === originFilter)
-	);
-
-	function add(hopId: string) {
-		if (!picking) return;
-		brew.recipe.hops.push(newHopAddition(picking, hopId));
-		picking = undefined;
-	}
-
-	function remove(id: string) {
-		brew.recipe.hops = brew.recipe.hops.filter((h) => h.id !== id);
-	}
-
-	const grouped = $derived(
-		(['boil', 'whirlpool', 'dryHop'] as HopUse[]).map((use) => ({
-			use,
-			additions: brew.recipe.hops.filter((h) => h.use === use)
-		}))
-	);
 
 	const descriptors = $derived(brew.context?.hopLoad.descriptors ?? []);
 </script>
@@ -166,183 +116,11 @@
 		</p>
 	</div>
 
-	{#each grouped as group (group.use)}
-		<section>
-			<div class="flex items-center justify-between gap-3">
-				<div class="min-w-[12rem] flex-1">
-					<h3 class="field-label">{USE_LABEL[group.use]}</h3>
-					<p class="prose-measure mt-1 text-xs text-muted">{USE_WHEN[group.use]}</p>
-				</div>
-				<button
-					type="button"
-					class="btn btn-ghost h-8 text-xs"
-					onclick={() => (picking = picking === group.use ? undefined : group.use)}
-					aria-expanded={picking === group.use}
-				>
-					{USE_ADD[group.use]}
-				</button>
-			</div>
+	<section>
+		<HopAdditions use="boil" />
+	</section>
 
-			{#if group.additions.length === 0}
-				<p class="mt-2 text-xs text-subtle">
-					{#if group.use === 'boil'}
-						Nothing in the kettle yet. Without a bittering charge the beer will taste like sweet
-						wort.
-					{:else if group.use === 'whirlpool'}
-						None. Optional.
-					{:else}
-						None. Optional.
-					{/if}
-				</p>
-			{:else}
-				<ul class="mt-2 flex flex-col gap-2">
-					{#each group.additions as addition (addition.id)}
-						{@const hop = getHop(addition.hopId)}
-						{#if hop}
-							<li class="rounded-lg bg-surface p-3 ring-1 ring-line">
-								<div class="flex flex-wrap items-start justify-between gap-2">
-									<div class="min-w-0">
-										<p class="text-sm font-medium">{hop.name}</p>
-										<p class="text-xs text-subtle">
-											{hop.origin} · {hop.alphaAcid.toFixed(1)}% alpha · {hop.tags.join(', ')}
-										</p>
-									</div>
-									<div class="flex items-center gap-2">
-										{#if (ibuByAddition.get(addition.id) ?? 0) >= 0.5}
-											<span class="chip tnum"
-												>{Math.round(ibuByAddition.get(addition.id) ?? 0)} IBU</span
-											>
-										{/if}
-										<button
-											type="button"
-											class="btn btn-quiet h-9 w-9 !px-0"
-											onclick={() => remove(addition.id)}
-											aria-label="Remove {hop.name}, {USE_LABEL[group.use].toLowerCase()}"
-										>
-											<svg viewBox="0 0 16 16" class="h-4 w-4" aria-hidden="true">
-												<path
-													d="M4 4 L12 12 M12 4 L4 12"
-													fill="none"
-													stroke="currentColor"
-													stroke-width="1.8"
-													stroke-linecap="round"
-												/>
-											</svg>
-										</button>
-									</div>
-								</div>
-								<div class="mt-1 grid gap-x-5 sm:grid-cols-2 lg:grid-cols-3">
-									<SliderField
-										label="Amount"
-										bind:value={addition.grams}
-										min={0}
-										max={300}
-										step={5}
-										unit=" g"
-										marks={[
-											{ at: 20, label: 'lager' },
-											{ at: 60, label: 'pale ale' },
-											{ at: 150, label: 'IPA' }
-										]}
-										why="Bitterness rises roughly in step with the grams, so doubling the weight roughly doubles it. The marks are what a 20-litre batch of each beer takes at the start of a boil. Hops added late, or after the flame is out, add far less bitterness for the same weight, so those go heavier."
-										id="g-{addition.id}"
-									/>
-									{#if addition.use === 'boil'}
-										<SliderField
-											label="Minutes left in the boil"
-											bind:value={addition.time}
-											min={0}
-											max={brew.recipe.boilTimeMin}
-											step={1}
-											unit=" min"
-											id="t-{addition.id}"
-										/>
-									{:else if addition.use === 'whirlpool'}
-										<SliderField
-											label="Stand time"
-											bind:value={addition.time}
-											min={0}
-											max={60}
-											step={5}
-											unit=" min"
-											id="t-{addition.id}"
-										/>
-										<SliderField
-											label="Stand temperature"
-											bind:value={() => addition.tempC ?? 80, (v) => (addition.tempC = v)}
-											min={60}
-											max={100}
-											step={1}
-											unit=" °C"
-											marks={[
-												{ at: 70, label: 'aroma only' },
-												{ at: 90, label: 'some bitterness' }
-											]}
-											why="How far you let the kettle cool before these go in. Hotter keeps extracting bitterness and drives more aroma off; cooler is almost pure aroma. Most brewers wait for 75–85 °C."
-											id="wt-{addition.id}"
-										/>
-									{:else}
-										<SliderField
-											label="Contact"
-											bind:value={addition.time}
-											min={1}
-											max={21}
-											step={1}
-											unit=" days"
-											id="t-{addition.id}"
-										/>
-										<SliderField
-											label="Added on day"
-											bind:value={() => addition.day ?? 5, (v) => (addition.day = v)}
-											min={0}
-											max={21}
-											step={1}
-											unit=" of fermentation"
-											marks={[{ at: 5, label: 'usual' }]}
-											why="Which day of fermentation these go in. Most brewers wait until the vigorous bubbling has died down, around day three to five, because the escaping gas carries the aroma straight back out again."
-											id="d-{addition.id}"
-										/>
-									{/if}
-								</div>
-							</li>
-						{/if}
-					{/each}
-				</ul>
-			{/if}
-		</section>
-	{/each}
-
-	{#if picking}
-		<section class="rounded-lg bg-surface p-3 ring-1 ring-line">
-			<div class="mb-3 flex flex-wrap gap-1">
-				{#each origins as origin (origin)}
-					<button
-						type="button"
-						class="btn h-8 text-xs {originFilter === origin ? 'btn-primary' : 'btn-quiet'}"
-						onclick={() => (originFilter = origin)}
-						aria-pressed={originFilter === origin}
-					>
-						{origin === 'all' ? 'All origins' : origin}
-					</button>
-				{/each}
-			</div>
-			<ul class="grid gap-1.5 sm:grid-cols-2">
-				{#each pickerHops as hop (hop.id)}
-					<li>
-						<button
-							type="button"
-							class="w-full rounded-md p-2 text-start transition-colors hover:bg-ui-hover"
-							onclick={() => add(hop.id)}
-						>
-							<span class="flex items-baseline justify-between gap-2">
-								<span class="text-sm font-medium">{hop.name}</span>
-								<span class="tnum text-xs text-muted">{hop.alphaAcid.toFixed(1)}% AA</span>
-							</span>
-							<span class="block text-xs text-subtle">{hop.blurb}</span>
-						</button>
-					</li>
-				{/each}
-			</ul>
-		</section>
-	{/if}
+	<section>
+		<HopAdditions use="whirlpool" />
+	</section>
 </div>

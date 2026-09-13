@@ -3,6 +3,7 @@
 	import SegmentedControl from '../SegmentedControl.svelte';
 	import LearningNote from '../LearningNote.svelte';
 	import FermentationGraph from '../FermentationGraph.svelte';
+	import HopAdditions from '../HopAdditions.svelte';
 	import Meter from '../Meter.svelte';
 	import { YEASTS, getYeast } from '$lib/brewing/ingredients';
 	import { DEFAULTS, fermStep } from '$lib/brewing/recipes';
@@ -96,19 +97,6 @@
 				{ value: 'over', label: 'Heavy', hint: 'A starter, or several packets' }
 			]}
 		/>
-		<label class="flex items-start gap-3 self-end rounded-lg bg-surface p-3 ring-1 ring-line">
-			<input
-				type="checkbox"
-				class="mt-0.5 h-5 w-5 rounded-sm border-line-strong bg-surface text-copper focus-visible:outline-2 focus-visible:outline-amber"
-				bind:checked={brew.recipe.fermentation.coldCrash}
-			/>
-			<span>
-				<span class="block text-sm font-medium">Cold crash before packaging</span>
-				<span class="block text-xs text-subtle"
-					>Drops yeast and haze out. Do it too early and diacetyl stays behind.</span
-				>
-			</span>
-		</label>
 	</div>
 
 	<FermentationGraph
@@ -187,6 +175,31 @@
 		</ul>
 	</section>
 
+	<section>
+		<HopAdditions use="dryHop" />
+	</section>
+
+	<!--
+		Last, because it happens last: two or three weeks after the pitch, once
+		fermentation is finished. It used to sit beside the pitch rate, which read
+		as something you do on the same afternoon.
+	-->
+	<label class="flex items-start gap-3 rounded-lg bg-surface p-3 ring-1 ring-line">
+		<input
+			type="checkbox"
+			class="mt-0.5 h-5 w-5 rounded-sm border-line-strong bg-surface text-copper focus-visible:outline-2 focus-visible:outline-amber"
+			bind:checked={brew.recipe.fermentation.coldCrash}
+		/>
+		<span>
+			<span class="block text-sm font-medium">Finish by chilling it to near freezing</span>
+			<span class="prose-measure block text-xs text-subtle">
+				A couple of days in the cold once the schedule above is done. Yeast and haze settle out and
+				the beer pours clear. Only worth doing after fermentation has genuinely finished — chill it
+				early and the yeast stops before it has cleared up the buttery taste it makes on the way.
+			</span>
+		</span>
+	</label>
+
 	{#if risks && attenuation}
 		<section class="rounded-lg bg-surface p-3 ring-1 ring-line">
 			<h3 class="field-label mb-2">What the yeast is likely to do</h3>
@@ -201,13 +214,13 @@
 					label="Hot alcohol"
 					value={risks.fusel}
 					accent={risks.fusel > 4 ? 'danger' : 'hop'}
-					hint="Fusel alcohols from warm fermentation"
+					hint="A hot, solvent-like burn from fermenting too warm. It does not fade with age."
 				/>
 				<Meter
 					label="Diacetyl"
 					value={risks.diacetyl}
 					accent={risks.diacetyl > 4 ? 'danger' : 'hop'}
-					hint="Butter or butterscotch left behind"
+					hint="A butterscotch taste and a slick film on the tongue. A flaw, not a feature: the yeast clears it up if you let it finish."
 				/>
 			</div>
 			<ul class="mt-3 flex flex-col gap-1">

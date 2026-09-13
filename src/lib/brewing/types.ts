@@ -227,6 +227,19 @@ export type ConditioningSetup = {
 	tempC: Celsius;
 	/** Volumes of CO2. */
 	co2Volumes: number;
+	/**
+	 * Bottles carbonate themselves from a measured dose of sugar and yeast, which
+	 * needs a warm fortnight before the cold store. A keg is carbonated from a
+	 * gas bottle and needs neither. The stage used to assume bottles and mention
+	 * kegs in a footnote, and would happily compute a priming dose for beer sent
+	 * straight to 3 °C, where nothing would have carbonated at all.
+	 *
+	 * Both are optional so that recipes saved before they existed still load;
+	 * read them through `packagingOf()` rather than directly.
+	 */
+	packaging?: 'bottles' | 'keg';
+	/** Where bottles sit while they carbonate, before they go somewhere cold. */
+	carbonationTempC?: Celsius;
 };
 
 /* -------------------------------------------------------------------------- */

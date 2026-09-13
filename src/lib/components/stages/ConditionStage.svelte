@@ -1,5 +1,6 @@
 <script lang="ts">
 	import SliderField from '../SliderField.svelte';
+	import SegmentedControl from '../SegmentedControl.svelte';
 	import AgeCurve from '../AgeCurve.svelte';
 	import { brew } from '$lib/state/brew.svelte';
 	import { DEFAULTS } from '$lib/brewing/recipes';
@@ -24,6 +25,16 @@
 		Math.max(0, (conditioning.co2Volumes - residualCo2) * 4 * brew.recipe.batchVolumeL)
 	);
 
+	/** Optional on older saved recipes, so both are read with a fallback. */
+	const packaging = $derived(brew.recipe.conditioning.packaging ?? 'bottles');
+	const carbonationTempC = $derived(brew.recipe.conditioning.carbonationTempC ?? 20);
+	/**
+	 * Bottle yeast is dormant in the cold. Sending bottles straight to a cellar
+	 * means the priming sugar never ferments and the beer stays flat, which the
+	 * stage used to allow silently while still printing a sugar dose.
+	 */
+	const tooColdToCarbonate = $derived(packaging === 'bottles' && carbonationTempC < 15);
+
 	const hopAroma = $derived(brew.result.sensory.hopAroma);
 	const hoppy = $derived(
 		(brew.context?.hopLoad.dryHopGPerL ?? 0) + (brew.context?.hopLoad.whirlpoolGPerL ?? 0) > 2
@@ -31,6 +42,63 @@
 </script>
 
 <div class="flex flex-col gap-6">
+	<!-- The first decision of the stage: it changes what the rest of it asks. -->
+	<SegmentedControl
+		label="How are you packaging it"
+		bind:value={() => packaging, (v) => (brew.recipe.conditioning.packaging = v)}
+		options={[
+			{
+				value: 'bottles' as const,
+				label: 'Bottles',
+				hint: 'Filled with a measured dose of sugar and capped. The yeast still in the beer eats that sugar and the gas has nowhere to go, so the bottle carbonates itself over about two weeks in the warm.'
+			},
+			{
+				value: 'keg' as const,
+				label: 'Keg',
+				hint: 'Sealed and connected to a CO₂ bottle, which pushes gas in until the beer holds what you asked for. No sugar, no waiting, and it can go straight into the cold.'
+			}
+		]}
+	/>
+
+	{#if packaging === 'bottles'}
+		<SliderField
+			label="Carbonating at"
+			bind:value={() => carbonationTempC, (v) => (brew.recipe.conditioning.carbonationTempC = v)}
+			defaultValue={DEFAULTS.conditioning.carbonationTempC}
+			min={2}
+			max={28}
+			step={1}
+			unit=" °C"
+			marks={[
+				{ at: 15, label: 'too cold' },
+				{ at: 21, label: 'room' }
+			]}
+			why="Where the crate sits for the first fortnight, before it goes anywhere cold. The yeast left in the bottle has to be awake to eat the priming sugar, and below about 15 °C it is not."
+		/>
+		{#if tooColdToCarbonate}
+			<p class="flex items-start gap-1.5 text-sm text-warn">
+				<svg viewBox="0 0 16 16" class="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true">
+					<path
+						d="M8 2 L15 14 L1 14 Z"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="1.6"
+						stroke-linejoin="round"
+					/>
+					<path
+						d="M8 6.5 V9.5 M8 11.5 V11.6"
+						stroke="currentColor"
+						stroke-width="1.6"
+						stroke-linecap="round"
+					/>
+				</svg>
+				At {carbonationTempC} °C the yeast in the bottle stays dormant, so the priming sugar is never
+				eaten and the beer stays flat. Give it a fortnight somewhere around 20 °C first, then move the
+				crate somewhere cold.
+			</p>
+		{/if}
+	{/if}
+
 	<div class="grid gap-x-6 gap-y-2 sm:grid-cols-2">
 		<SliderField
 			label="Conditioning time"
@@ -48,7 +116,7 @@
 			why="Strong, dark and lager-fermented beers gain here. Hop-forward beers only lose: aroma compounds are volatile and unstable, and nothing brings them back."
 		/>
 		<SliderField
-			label="Storage temperature"
+			label={packaging === 'bottles' ? 'Then stored at' : 'Stored at'}
 			bind:value={brew.recipe.conditioning.tempC}
 			defaultValue={DEFAULTS.conditioning.tempC}
 			min={-1}
@@ -82,17 +150,29 @@
 		deepDive="Beer already holds dissolved CO₂ when fermentation finishes, and how much depends on the temperature it finished at — warmer beer holds less. Priming sugar makes up the difference, at roughly 2 grams of dextrose per litre for every extra volume. Overshoot and you get gushers, or bottles that fail: standard crown-capped bottles are not rated much beyond three volumes."
 	/>
 
-	<section class="rounded-lg bg-surface p-3 ring-1 ring-line">
-		<h3 class="field-label mb-2">Priming</h3>
-		<p class="tnum text-sm">
-			About <span class="font-medium">{primingG.toFixed(0)} g</span> of dextrose for
-			{brew.recipe.batchVolumeL.toFixed(1)} L, to reach {conditioning.co2Volumes.toFixed(1)} volumes.
-		</p>
-		<p class="mt-1 text-xs text-subtle">
-			The beer already holds roughly {residualCo2.toFixed(1)} volumes, left over from fermenting at {finalTempC}
-			°C. Force carbonating instead? Then this is just the target.
-		</p>
-	</section>
+	{#if packaging === 'bottles'}
+		<section class="rounded-lg bg-surface p-3 ring-1 ring-line">
+			<h3 class="field-label mb-2">Sugar to add before capping</h3>
+			<p class="tnum text-sm">
+				About <span class="font-medium">{primingG.toFixed(0)} g</span> of dextrose for
+				{brew.recipe.batchVolumeL.toFixed(1)} L, to reach {conditioning.co2Volumes.toFixed(1)} volumes.
+			</p>
+			<p class="prose-measure mt-1 text-xs text-subtle">
+				Dextrose is plain glucose, sold as brewing sugar. Boil it in a cup of water, let it cool,
+				and siphon the beer onto it so it mixes evenly — a bottle that gets more than its share is
+				the one that gushes. The beer already holds roughly {residualCo2.toFixed(1)} volumes left over
+				from fermenting at {finalTempC} °C, so only the difference needs adding.
+			</p>
+		</section>
+	{:else}
+		<section class="rounded-lg bg-surface p-3 ring-1 ring-line">
+			<h3 class="field-label mb-2">On the gas</h3>
+			<p class="prose-measure text-sm text-muted">
+				No sugar needed: the CO₂ bottle does the work. Set the regulator to whatever holds
+				{conditioning.co2Volumes.toFixed(1)} volumes at your serving temperature and leave it a few days.
+			</p>
+		</section>
+	{/if}
 
 	<section>
 		<h3 class="field-label mb-2">How this beer ages</h3>

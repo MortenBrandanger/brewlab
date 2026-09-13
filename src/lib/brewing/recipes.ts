@@ -644,7 +644,13 @@ export function emptyRecipe(): Recipe {
 			coldCrash: true
 		},
 		chill: { minutes: 25, pitchTempC: 18, transferQuality: 'normal' },
-		conditioning: { days: 14, tempC: 8, co2Volumes: 2.4 }
+		conditioning: {
+			days: 14,
+			tempC: 8,
+			co2Volumes: 2.4,
+			packaging: 'bottles',
+			carbonationTempC: 20
+		}
 	};
 }
 
