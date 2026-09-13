@@ -8,8 +8,6 @@
 	const done = $derived(brew.isDone(stage));
 	const blocked = $derived(brew.blockedBecause(stage));
 	const next = $derived(STAGES[stageIndex(stage) + 1]);
-	/** Doing a stage out of order would skip the ones before it. */
-	const outOfOrder = $derived(!done && brew.brewedTo < stageIndex(stage) - 1);
 
 	function act() {
 		const moved = brew.commit(stage);
@@ -78,10 +76,6 @@
 							/>
 						</svg>
 						{blocked}
-					</p>
-				{:else if outOfOrder}
-					<p class="text-sm text-subtle">
-						You have skipped ahead. Doing this now marks everything before it as done too.
 					</p>
 				{/if}
 			</div>

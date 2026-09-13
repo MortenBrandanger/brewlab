@@ -134,8 +134,14 @@ class BrewStore {
 		this.leaveChallenge();
 	}
 
+	/**
+	 * Going back is free; going forward stops at the next undone stage. The
+	 * navigator styles the road ahead as unreachable, but this is what enforces
+	 * it, so a link from the report or a restored session cannot step past the
+	 * brew day either.
+	 */
 	setStage(stage: StageId) {
-		this.stage = stage;
+		this.stage = STAGES[Math.min(stageIndex(stage), this.brewedTo + 1)].id;
 	}
 
 	startChallenge(id: string, recipe: Recipe, fromScratch: boolean) {
