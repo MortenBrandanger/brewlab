@@ -2,6 +2,9 @@
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import AppHeader from '$lib/components/AppHeader.svelte';
+	import { dev } from '$app/environment';
+	import { injectAnalytics } from '@vercel/analytics/sveltekit';
+	import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
 	import { brew } from '$lib/state/brew.svelte';
 	import { prefs } from '$lib/state/prefs.svelte';
 	import { loadAutosave, saveAutosave } from '$lib/persist/recipes';
@@ -9,6 +12,11 @@
 	import { decodeRecipe } from '$lib/persist/share';
 
 	let { children } = $props();
+
+	// Page views and country only: no cookies, no cross-site tracking, nothing
+	// that identifies a person. The recipe itself never leaves the browser.
+	injectAnalytics({ mode: dev ? 'development' : 'production' });
+	injectSpeedInsights();
 
 	/**
 	 * Startup order matters: a shared link wins over the autosave, because the
