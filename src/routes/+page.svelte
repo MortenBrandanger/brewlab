@@ -19,6 +19,7 @@
 	import { hazeFor } from '$lib/brewing/appearance';
 	import { STAGES, STAGE_BY_ID, stageIndex, type StageId } from '$lib/state/stages';
 	import { brew } from '$lib/state/brew.svelte';
+	import { prefs } from '$lib/state/prefs.svelte';
 
 	const stage = $derived(STAGE_BY_ID.get(brew.stage)!);
 	const index = $derived(stageIndex(brew.stage));
@@ -75,17 +76,39 @@
 								{stage.name}
 							</h1>
 							<p class="prose-measure mt-2 text-sm text-fg">{stage.reality}</p>
-							{#if stage.what}
-								<p class="prose-measure mt-2 text-sm text-muted">
-									<span class="text-subtle">Why it matters:</span>
-									{stage.what}
-								</p>
-							{/if}
 							{#if stage.decide}
-								<p class="prose-measure mt-2 text-sm">
+								<p class="prose-measure mt-1.5 text-sm">
 									<span class="field-label inline">This sets</span>
 									<span class="text-fg"> {stage.decide}.</span>
 								</p>
+							{/if}
+							<!--
+								The science sits behind a disclosure rather than above the
+								controls. Expanding should add depth to a lean page, not more
+								text to a page that already had plenty.
+							-->
+							{#if stage.what && prefs.showWhy}
+								<details class="group mt-2">
+									<summary
+										class="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-sm py-1 text-sm font-medium text-copper-text hover:underline"
+									>
+										<svg
+											viewBox="0 0 16 16"
+											class="h-3.5 w-3.5 transition-transform group-open:rotate-90"
+											aria-hidden="true"
+										>
+											<path
+												d="M6 3.5 L11 8 L6 12.5"
+												fill="none"
+												stroke="currentColor"
+												stroke-width="2"
+												stroke-linecap="round"
+											/>
+										</svg>
+										Why it matters
+									</summary>
+									<p class="prose-measure mt-1.5 text-sm text-muted">{stage.what}</p>
+								</details>
 							{/if}
 						</div>
 						<BreweryScene

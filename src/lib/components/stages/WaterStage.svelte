@@ -1,6 +1,5 @@
 <script lang="ts">
 	import SliderField from '../SliderField.svelte';
-	import LearningNote from '../LearningNote.svelte';
 	import { SALTS, WATER_PROFILES, WATER_PROFILE_BY_ID } from '$lib/brewing/water';
 	import { strikeTempC } from '$lib/brewing/calculations';
 	import { brew } from '$lib/state/brew.svelte';
@@ -194,14 +193,13 @@
 
 	{#if strike !== undefined && firstRest}
 		<p class="prose-measure text-sm">
-			<span class="tnum font-medium"
-				>About {totalWaterL.toFixed(0)} litres, heated to
-				<span class="text-copper-text">{strike.toFixed(0)} °C</span>.</span
-			>
+			<span class="tnum font-medium">
+				About {totalWaterL.toFixed(0)} litres, heated to
+				<span class="text-copper-text">{strike.toFixed(0)} °C</span>
+			</span>
 			<span class="text-muted">
-				Not a number you pick: it follows from the {firstRest.tempC} °C mash rest you have set, because
-				cold grain will pull the temperature down about {(strike - firstRest.tempC).toFixed(0)} degrees
-				the moment it goes in. Change the mash and this changes with it.
+				— {(strike - firstRest.tempC).toFixed(0)} degrees above your {firstRest.tempC} °C mash rest, because
+				the cold grain will pull it down.
 			</span>
 		</p>
 	{/if}
@@ -219,9 +217,4 @@
 			</span>
 		</p>
 	{/if}
-
-	<LearningNote
-		why="Mash pH matters more than any single ion. Between 5.2 and 5.6 the enzymes work well, the husks keep their tannins to themselves, and the beer tastes bright rather than dull. You cannot know it yet — it comes from the water and the grain together."
-		deepDive="Sulfate makes bitterness read as dry and sharp, which is why Burton water suits pale ales. Chloride does the opposite: it fills the palate out and pushes malt forward. What matters is where each sits in absolute terms, not the ratio between them that gets quoted online. Calcium helps enzymes work, drops pH, encourages the yeast to flocculate and helps protein settle out — most brewers want 50 to 150 ppm of it. The pH estimate here is a teaching model built from published buffering figures, not a titration: real malt varies batch to batch, and 0.1 pH of disagreement with your own meter is entirely normal."
-	/>
 </div>

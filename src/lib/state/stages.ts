@@ -50,7 +50,7 @@ export const STAGES: StageMeta[] = [
 		name: 'Water',
 		reality:
 			'You fill a pot with your brewing water. If your tap water is not right for the beer you are making, you cut it with bottled or filtered water. Then you stir in a few grams of brewing salts, maybe a splash of acid, and put it on to heat.',
-		what: 'The minerals in the water decide how bitterness and malt come across, and together with the grain they set the acidity of the mash. Get that acidity wrong and the beer tastes dull and drying however good the recipe is.',
+		what: 'The minerals in the water decide how bitterness and malt come across, and together with the grain they set the acidity of the mash. Mash pH matters more than any single ion: between 5.2 and 5.6 the enzymes work well, the husks keep their tannins to themselves, and the beer tastes bright rather than dull. Get it wrong and the beer tastes drying however good the recipe is. You cannot know it yet — it comes from the water and the grain together.',
 		accent: 'hop',
 		action: 'Fill and heat the water',
 		actionHint: 'The pot goes on to heat, ready for the grain.',
