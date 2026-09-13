@@ -185,8 +185,7 @@
 
 	{#if nextUp}
 		<p class="prose-measure border-t border-line pt-4 text-xs text-subtle">
-			<span class="text-muted">Up next: {nextUp.action.toLowerCase()}.</span>
-			{#if nextUp.reveals}That is what lets the model tell you {nextUp.reveals}.{/if}
+			Up next: {nextUp.action.toLowerCase()}.
 		</p>
 	{:else if finished}
 		<div class="border-t border-line pt-4">

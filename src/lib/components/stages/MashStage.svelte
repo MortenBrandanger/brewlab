@@ -1,6 +1,5 @@
 <script lang="ts">
 	import SliderField from '../SliderField.svelte';
-	import LearningNote from '../LearningNote.svelte';
 	import { step } from '$lib/brewing/recipes';
 	import { strikeTempC } from '$lib/brewing/calculations';
 	import { brew } from '$lib/state/brew.svelte';
@@ -281,9 +280,4 @@
 			{/if}
 		</section>
 	{/if}
-
-	<LearningNote
-		why="Two enzymes compete. Beta-amylase makes simple, fermentable sugar and dies above about 70 °C. Alpha-amylase survives the heat but leaves long dextrins the yeast cannot use. Where you sit between them decides how dry the beer finishes."
-		deepDive="At 62 °C beta-amylase dominates and the wort is highly fermentable, so the beer finishes low and tastes thin and crisp. At 70 °C beta is gone within minutes and alpha leaves unfermentable dextrins behind, so the beer finishes high and tastes full and sweet. A step mash gets both: a rest near 63 °C for fermentability, then one near 71 °C to finish the conversion. The mash-out at 76 °C stops enzyme activity entirely and thins the wort so it runs off the grain bed more freely."
-	/>
 </div>

@@ -55,8 +55,9 @@
 	{:else}
 		<div class="flex flex-wrap items-center gap-x-4 gap-y-3">
 			<!--
-				The button already says what the action is. A heading and a hint
-				restating it made the same sentence appear three times.
+				Nothing here restates the action or the stage. The button says what
+				you are about to do; the header above says what the stage sets. This
+				slot carries only what is missing: a block, or a warning about order.
 			-->
 			<div class="min-w-[14rem] flex-1">
 				{#if blocked}
@@ -82,8 +83,6 @@
 					<p class="text-sm text-subtle">
 						You have skipped ahead. Doing this now marks everything before it as done too.
 					</p>
-				{:else if meta.reveals}
-					<p class="prose-measure text-sm text-subtle">Unlocks {meta.reveals}.</p>
 				{/if}
 			</div>
 			<button type="button" class="btn btn-primary h-11 px-5" disabled={!!blocked} onclick={act}>

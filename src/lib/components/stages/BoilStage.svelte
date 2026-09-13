@@ -303,9 +303,4 @@
 			</ul>
 		</section>
 	{/if}
-
-	<LearningNote
-		why="Bitterness needs heat and time; aroma is destroyed by both. That single trade-off explains every hop schedule ever written."
-		deepDive="Alpha acids are not bitter until they isomerise, which needs near-boiling temperature and roughly an hour to approach completion. The Tinseth model used here also accounts for wort gravity: a dense wort extracts less, which is why a big beer needs disproportionately more hops. Aroma oils do the opposite — they boil off in minutes, so anything added in the last ten minutes, in the whirlpool, or after fermentation is there for smell and flavour rather than bitterness. Dry hops contribute no measured IBU at all, though they do add a perceived bite through polyphenols, and past roughly 8 g/L they stop adding aroma and start adding grass."
-	/>
 </div>

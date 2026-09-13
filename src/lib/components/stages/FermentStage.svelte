@@ -215,9 +215,4 @@
 			</ul>
 		</section>
 	{/if}
-
-	<LearningNote
-		why="Yeast decides more of a beer's character than most recipes admit. Strain, temperature and pitch rate together set esters, phenols, how far the beer attenuates and whether it tastes hot."
-		deepDive="Esters are fruity — banana, pear, apple — and they climb with temperature, gravity and underpitching, because they are made during the growth phase. Phenols are spicy and clove-like, and only some strains make them at all. Fusel alcohols are the failure mode: warm fermentation on a strong wort produces higher alcohols that taste solvent and do not age out. The usual defence is to pitch plenty of healthy yeast at the cool end of the range and let the temperature rise a few degrees once fermentation is established, which keeps the growth phase cool and the finish warm enough to clean up."
-	/>
 </div>

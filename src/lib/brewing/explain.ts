@@ -357,6 +357,10 @@ export function ageCurve(ctx: EngineContext, baseQuality: number): AgePoint[] {
 	const aromaHalfLifeWeeks = clamp(10 - risks.oxidation * 0.5, 3, 12);
 	const oxidationRate = clamp(risks.oxidation * 0.22, 0.05, 2.2);
 
+	// A timeline should report changes, not states. Computing the note per week
+	// independently made "Oxidation is starting to show" appear on weeks 20, 30
+	// and 52 alike, which reads as three events rather than one.
+	let lastNote = '';
 	return AGE_WEEKS.map((week) => {
 		const gain = maturationRoom * (1 - Math.exp(-week / maturationTau));
 		const aromaLoss = aromaAtRisk * (1 - Math.pow(0.5, week / aromaHalfLifeWeeks));
@@ -370,6 +374,9 @@ export function ageCurve(ctx: EngineContext, baseQuality: number): AgePoint[] {
 			note = 'Coming together: alcohol softer, flavours more knitted.';
 		else if (oxidationLoss > 4) note = 'Oxidation is starting to show as cardboard or sherry.';
 		else if (week >= 30) note = 'Well past its best for most drinkers.';
+
+		if (note && note === lastNote) note = '';
+		else if (note) lastNote = note;
 
 		return { week, quality, note };
 	});

@@ -11,6 +11,7 @@
 		format = (n: number) => String(n),
 		why = '',
 		deepDive = '',
+		deepDiveTitle = 'Why this matters',
 		/** Marks shown under the track, e.g. the normal working range. */
 		marks = [] as { at: number; label: string }[],
 		id = `slider-${Math.random().toString(36).slice(2, 9)}`
@@ -24,6 +25,7 @@
 		format?: (n: number) => string;
 		why?: string;
 		deepDive?: string;
+		deepDiveTitle?: string;
 		marks?: { at: number; label: string }[];
 		id?: string;
 	} = $props();
@@ -50,6 +52,6 @@
 		</div>
 	{/if}
 	{#if why}
-		<LearningNote {why} {deepDive} />
+		<LearningNote {why} {deepDive} title={deepDiveTitle} />
 	{/if}
 </div>

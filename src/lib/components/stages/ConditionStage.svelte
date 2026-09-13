@@ -1,6 +1,5 @@
 <script lang="ts">
 	import SliderField from '../SliderField.svelte';
-	import LearningNote from '../LearningNote.svelte';
 	import AgeCurve from '../AgeCurve.svelte';
 	import { brew } from '$lib/state/brew.svelte';
 
@@ -75,6 +74,7 @@
 			{ at: 3.2, label: 'saison' }
 		]}
 		why="A volume of CO₂ means the beer holds its own volume again in dissolved gas. Carbonation is a flavour control, not a formality: it carries aroma out of the glass, sharpens bitterness and makes a beer feel lighter than its gravity suggests."
+		deepDiveTitle="More about carbonation"
 		deepDive="Beer already holds dissolved CO₂ when fermentation finishes, and how much depends on the temperature it finished at — warmer beer holds less. Priming sugar makes up the difference, at roughly 2 grams of dextrose per litre for every extra volume. Overshoot and you get gushers, or bottles that fail: standard crown-capped bottles are not rated much beyond three volumes."
 	/>
 
@@ -115,9 +115,4 @@
 			</p>
 		{/if}
 	</section>
-
-	<LearningNote
-		why="Two clocks run at once. One is maturation: alcohol softens, roast and caramel knit together, sulfur blows off. The other is decay: hop aroma fades and oxygen does its slow work. Which clock matters depends entirely on the beer."
-		deepDive="An imperial stout at 10% is genuinely better after six months, because it has a lot to gain and very little volatile aroma to lose. An IPA is at its best within a few weeks of packaging and is noticeably duller after three months. A lager needs weeks at low temperature simply to become itself. The one thing that helps every beer is storing it cold: it slows every reaction on both clocks, and the ones you want are the ones you were going to wait for anyway."
-	/>
 </div>

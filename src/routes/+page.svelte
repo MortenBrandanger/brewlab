@@ -134,6 +134,9 @@
 							Why {stage.name.toLowerCase()} matters
 						</summary>
 						<p class="prose-measure mt-1.5 text-sm text-muted">{stage.what}</p>
+						{#if stage.deepDive}
+							<p class="prose-measure mt-2.5 text-sm text-subtle">{stage.deepDive}</p>
+						{/if}
 					</details>
 				{/if}
 

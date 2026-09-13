@@ -1,6 +1,5 @@
 <script lang="ts">
 	import SliderField from '../SliderField.svelte';
-	import LearningNote from '../LearningNote.svelte';
 	import { GRAIN_ABSORPTION_L_PER_KG } from '$lib/brewing/simulate';
 	import { brew } from '$lib/state/brew.svelte';
 	import { prefs } from '$lib/state/prefs.svelte';
@@ -101,6 +100,7 @@
 				{ at: 85, label: '85' }
 			]}
 			why="How much of the sugar in the grain actually reaches the fermenter. Most homebrew systems land between 65 and 78%. The simulator adjusts this further for mash length, grain bill size and how much base malt there is."
+			deepDiveTitle="More about efficiency"
 			deepDive="Efficiency is not a fixed property of your equipment. It falls as the grain bill grows, because a bigger bed holds more sugar-rich wort and the sparge dilutes what is left. It falls when the mash is cut short, because starch never converted. It falls when the grist is short of enzyme-carrying malt. Measure yours once at a normal gravity and treat that number as a starting point, not a constant."
 		/>
 		{#if prefs.advanced}
@@ -118,9 +118,4 @@
 		Pre-boil gravity <span class="font-medium text-fg">{preBoilGravity.toFixed(3)}</span>, rising to
 		<span class="font-medium text-fg">{brew.result.metrics.og.toFixed(3)}</span> by the end of the boil.
 	</p>
-
-	<LearningNote
-		why="Sparging rinses the sugar the grain is still holding. Rinse too little and you leave gravity behind; rinse too much and you start pulling tannins out of the husks instead."
-		deepDive="The rule of thumb is to stop collecting when the runnings drop below about 1.010, and to keep sparge water under 76 °C. Both limits exist for the same reason: as sugar concentration falls and temperature rises, husk tannins become much more soluble. They do not taste bitter so much as drying and astringent, like over-brewed tea, and no amount of conditioning removes them."
-	/>
 </div>

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import LearningNote from '../LearningNote.svelte';
 	import { FERMENTABLES, getFermentable } from '$lib/brewing/ingredients';
 	import { srmToCss } from '$lib/brewing/appearance';
 	import { ebcToSrm } from '$lib/brewing/calculations';
@@ -75,13 +74,6 @@
 </script>
 
 <div class="flex flex-col gap-5">
-	{#if prefs.showWhy}
-		<p class="prose-measure text-xs text-muted">
-			EBC is the colour scale brewers use, measured on the malt and on the finished beer. Roughly: 4
-			is pale straw, 12 gold, 25 amber, 60 brown and anything past 200 is black.
-		</p>
-	{/if}
-
 	{#if brew.recipe.fermentables.length === 0}
 		<section class="rounded-lg border border-dashed border-line-strong p-5">
 			<h3 class="font-display text-sm font-semibold">The tun is empty</h3>
@@ -121,6 +113,14 @@
 					{/if}
 				{/each}
 			</div>
+			{#if prefs.showWhy}
+				<!-- A glossary note belongs against the numbers it decodes, not floating
+				     at the top of the panel where it explains nothing yet. -->
+				<p class="prose-measure mt-1.5 text-xs text-muted">
+					EBC is the colour scale brewers use, measured on the malt and on the finished beer.
+					Roughly: 4 is pale straw, 12 gold, 25 amber, 60 brown and anything past 200 is black.
+				</p>
+			{/if}
 			<p class="tnum mt-1.5 text-xs text-subtle">
 				{totalKg.toFixed(2)} kg of grist
 				{#if grist}
@@ -279,9 +279,4 @@
 			</ul>
 		</section>
 	{/if}
-
-	<LearningNote
-		why="Base malt supplies the enzymes and most of the sugar. Speciality and roasted malts supply colour and flavour but bring no enzymes of their own, so they lean on the base malt to convert them."
-		deepDive="Crystal malt is stewed while still wet, so its starch converts inside the husk into sugars that yeast largely cannot ferment. That is why it sweetens as well as colours, and why a recipe with 25% crystal tastes sticky no matter how much you hop it. Roasted malts are kilned dry and hot, which builds coffee and chocolate notes plus real bitterness — a dry stout gets a noticeable share of its perceived bitterness from roasted barley rather than from hops. Sugar sits at the other end: fully fermentable, so it raises alcohol while thinning the body."
-	/>
 </div>

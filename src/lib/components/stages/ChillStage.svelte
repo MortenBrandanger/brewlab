@@ -1,7 +1,6 @@
 <script lang="ts">
 	import SliderField from '../SliderField.svelte';
 	import SegmentedControl from '../SegmentedControl.svelte';
-	import LearningNote from '../LearningNote.svelte';
 	import { getYeast } from '$lib/brewing/ingredients';
 	import { brew } from '$lib/state/brew.svelte';
 
@@ -106,9 +105,4 @@
 			{/each}
 		</ul>
 	</section>
-
-	<LearningNote
-		why="Chilling is not just about getting the wort cool enough to pitch. A fast chill forms a sharp cold break, which drops proteins out and gives a clearer beer, and it closes the window in which anything else can get established."
-		deepDive="None of these are certainties. A slow chill does not guarantee an infection, and plenty of brewers have made excellent beer with a no-chill method by keeping everything sealed. What a slow chill does is widen the distribution: more chances for something to go wrong, and a longer time producing DMS in a pilsner-malt wort. Treat these bars as probability, not prophecy."
-	/>
 </div>
