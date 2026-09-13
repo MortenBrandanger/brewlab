@@ -98,7 +98,10 @@
 				.filter((n) => n !== undefined);
 			rows.push({
 				label: 'Grain',
-				value: `${result.metrics.grainKg.toFixed(2)} kg · ${names.slice(0, 3).join(', ')}${names.length > 3 ? ` +${names.length - 3}` : ''}`
+				// Emptying the grist after milling left a row reading "0.00 kg · ".
+				value: names.length
+					? `${result.metrics.grainKg.toFixed(2)} kg · ${names.slice(0, 3).join(', ')}${names.length > 3 ? ` +${names.length - 3}` : ''}`
+					: 'Nothing weighed out'
 			});
 		}
 

@@ -23,12 +23,29 @@
 	let picking = $state(false);
 	let pickerCategory = $state<FermentableCategory>('base');
 
+	/**
+	 * A sensible opening weight.
+	 *
+	 * The first base malt into an empty tun is the bulk of the grist, so it
+	 * starts at a real batch weight; everything after it is an addition and
+	 * starts small. Naming two malt ids explicitly meant picking Maris Otter as
+	 * your base handed you 250 grams.
+	 */
+	function openingWeight(id: string): number {
+		const f = getFermentable(id);
+		if (f?.category !== 'base') return 0.25;
+		const hasBase = brew.recipe.fermentables.some(
+			(a) => getFermentable(a.fermentableId)?.category === 'base' && a.weightKg > 0
+		);
+		return hasBase ? 0.5 : 4;
+	}
+
 	function add(id: string) {
 		const existing = brew.recipe.fermentables.find((f) => f.fermentableId === id);
 		if (existing) {
 			existing.weightKg = Math.round((existing.weightKg + 0.25) * 100) / 100;
 		} else {
-			brew.recipe.fermentables.push(ferm(id, id === 'pale-ale' || id === 'pilsner' ? 4 : 0.25));
+			brew.recipe.fermentables.push(ferm(id, openingWeight(id)));
 		}
 		picking = false;
 	}
@@ -96,17 +113,17 @@
 <div class="flex flex-col gap-5">
 	{#if brew.recipe.fermentables.length === 0}
 		<!--
-			Both ways in live inside this box. Splitting the starting grists from the
-			"add one at a time" button put two answers to the same question in two
-			places, with a border between them.
+			Four cards of the same kind, the way the water stage offers six waters
+			and "treat it myself" in one grid. Choosing your own malts is one of the
+			ways in, not a lesser afterthought under the real options -- a row of
+			cards beside a small ghost button reads as two unrelated mechanisms.
 		-->
 		<section class="rounded-lg border border-dashed border-line-strong p-5">
 			<h3 class="font-display text-sm font-semibold">Nothing weighed out yet</h3>
 			<p class="prose-measure mt-1 text-sm text-muted">
-				A beer needs something to ferment. Start from one of these and change it, or build the grist
-				yourself.
+				A beer needs something to ferment. Every weight stays yours to change afterwards.
 			</p>
-			<ul class="mt-4 grid gap-2 sm:grid-cols-3">
+			<ul class="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
 				{#each STARTERS as starter (starter.name)}
 					<li>
 						<button
@@ -119,8 +136,23 @@
 						</button>
 					</li>
 				{/each}
+				<li>
+					<button
+						type="button"
+						class="h-full w-full rounded-lg p-3 text-start ring-1 {picking
+							? 'bg-copper-dim ring-copper'
+							: 'bg-surface ring-line hover:bg-ui-hover hover:ring-line-strong'}"
+						aria-expanded={picking}
+						aria-pressed={picking}
+						onclick={() => (picking = !picking)}
+					>
+						<span class="block text-sm font-medium">Pick the malts myself</span>
+						<span class="mt-0.5 block text-xs {picking ? 'text-fg' : 'text-subtle'}">
+							Start from an empty tun and add them one at a time.
+						</span>
+					</button>
+				</li>
 			</ul>
-			<div class="mt-3">{@render addControl()}</div>
 		</section>
 	{:else}
 		<!-- The grist at a glance: real colours, real proportions. -->
