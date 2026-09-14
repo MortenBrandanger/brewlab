@@ -14,7 +14,7 @@
 </script>
 
 <ul class="flex flex-col gap-2">
-	{#each findings as finding (finding.code)}
+	{#each findings as finding, i (`${finding.code}-${i}`)}
 		{@const stage = stageForFields(finding.fields)}
 		<li
 			class="rounded-lg border-s-4 bg-surface p-3 ring-1 ring-line

@@ -92,6 +92,15 @@ mash landing and a skipped vorlauf), keyboard focus rings on cards and
 headings, and a programmatic pass (every button named, every input labelled,
 skip link, lang, landmarks).
 
+**A tasting panel.** `panel.ts` gives six tasters — the Traditionalist, the
+Enthusiast, the Critic, the Monk, the Hopster, the Wild Card — each a
+weighting of the sensory vector, the faults and the style match, with a line
+chosen from what moved them most and hearts from their score. Their
+disagreement is the point: "The Hopster loved it; The Traditionalist did
+not. That gap is the beer." Portraits are the one thing the assistant should
+not draw: drop PNGs into `static/panel/` (see the README there); a monogram
+badge stands in. The full tasting note is now "What the Critic wrote down".
+
 **The vessel in 3D — illustrated, not "realistic".** `Vessel3D.svelte` renders
 the panel's vessel as a small Three.js scene driven by the simulation — liquid
 level, SRM colour, haze as how solid the liquid looks, head as a foam disc,
@@ -106,7 +115,7 @@ vessel without WebGL, stops rendering when nothing moves, and can be switched
 off with the header's "Flat vessel" toggle. `GRAPHICS.md` explains every
 concept it uses; the owner asked for the lesson as much as the vessel.
 
-**Verification state.** 199 tests green. `svelte-check` 0/0. Contrast audited
+**Verification state.** 205 tests green. `svelte-check` 0/0. Contrast audited
 live across every reachable question and the full report with every disclosure
 open — zero failures.
 

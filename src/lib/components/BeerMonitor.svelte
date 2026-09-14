@@ -502,7 +502,7 @@
 				</p>
 			{:else}
 				<ul class="flex flex-col gap-1.5">
-					{#each problems.slice(0, 4) as finding (finding.code)}
+					{#each problems.slice(0, 4) as finding, i (`${finding.code}-${i}`)}
 						<li class="flex items-start gap-2 text-xs">
 							<span
 								class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full"

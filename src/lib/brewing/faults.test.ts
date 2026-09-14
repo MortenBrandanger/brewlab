@@ -225,3 +225,20 @@ describe('findings are well formed', () => {
 		expect([...ranks].sort((a, b) => a - b)).toEqual(ranks);
 	});
 });
+
+/*
+ * Two malts over their usual share produce two findings with the same code,
+ * and a keyed list on the report used that code as its key. Svelte refused
+ * to render the report for exactly this recipe, and the page silently stayed
+ * on the previous question with the taste stage marked current. Codes are
+ * stable identifiers for the *kind* of finding; they are not unique per beer.
+ */
+import { EXAMPLES as ALL_EXAMPLES } from './recipes';
+import { simulate as run } from './simulate';
+import { it as spec, expect as check } from 'vitest';
+
+spec('a finding code can appear more than once in one report', () => {
+	const r = ALL_EXAMPLES.find((e) => e.name === 'Something went wrong here')!.build();
+	const codes = run(r).findings.map((f) => f.code);
+	check(new Set(codes).size).toBeLessThan(codes.length);
+});

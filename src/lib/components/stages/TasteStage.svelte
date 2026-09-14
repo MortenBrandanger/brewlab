@@ -9,6 +9,7 @@
 	import BeerGlass from '../BeerGlass.svelte';
 	import LearningNote from '../LearningNote.svelte';
 	import Glossed from '../Glossed.svelte';
+	import TastingPanel from '../TastingPanel.svelte';
 	import { describeAppearance } from '$lib/brewing/appearance';
 	import { targetMisses } from '$lib/brewing/target';
 	import { scoreBand } from '$lib/brewing/scoring';
@@ -224,8 +225,10 @@
 				technical values, a list of faults. None of that answers "what did you
 				make". This does, in the order a person actually meets a beer.
 			-->
+			<TastingPanel />
+
 			<section>
-				<h3 class="field-label mb-3">Somebody drinks it</h3>
+				<h3 class="field-label mb-3">What the Critic wrote down</h3>
 				<div class="rounded-lg bg-surface p-5 ring-1 ring-line">
 					<dl class="flex flex-col gap-3">
 						{#each note.passages as passage (passage.phase)}

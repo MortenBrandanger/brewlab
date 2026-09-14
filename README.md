@@ -19,7 +19,7 @@ anywhere.
 ```sh
 pnpm install
 pnpm dev        # http://localhost:5173
-pnpm test       # 199 tests
+pnpm test       # 205 tests
 pnpm check      # svelte-check
 pnpm lint
 pnpm build      # static site in build/
