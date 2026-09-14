@@ -75,7 +75,7 @@ which opens a definition under the word without breaking the sentence.
 Glossing stays out of picker buttons — a word inside a button is a click on
 the button.
 
-**Verification state.** 174 tests green. `svelte-check` 0/0. Contrast audited
+**Verification state.** 197 tests green. `svelte-check` 0/0. Contrast audited
 live across every reachable question and the full report with every disclosure
 open — zero failures.
 
@@ -94,9 +94,6 @@ These were considered and parked on purpose. Do not treat them as oversights.
 - **Smoke has no sensory axis of its own.** It rides the phenol axis, which the
   taster now special-cases by reading the grist. A real `smoke` axis would be
   cleaner but touches sensory, styles and scoring.
-- **Layers 1–3 have no dedicated test files.** They are covered indirectly
-  through the fifteen canonical recipes in `simulate.test.ts`. A regression in
-  the ODE would show up as a calibration failure rather than a named test.
 
 ## If you are picking this up cold
 
