@@ -186,7 +186,23 @@ export type MashInputs = {
 };
 
 export function computeMashProfile(mash: MashSetup, inputs: MashInputs = {}): MashProfile {
-	const steps = mash.steps.filter((s) => s.minutes > 0);
+	/*
+	 * The first conversion rest runs at the temperature the thermometer read,
+	 * not the one on the recipe sheet, when the brewer chose to live with the
+	 * miss. Everything downstream — the sugar spectrum, the body, the finish —
+	 * follows from what actually happened in the tun.
+	 */
+	const landed = mash.landedTempC;
+	let replaced = false;
+	const steps = mash.steps
+		.filter((s) => s.minutes > 0)
+		.map((s) => {
+			if (landed !== undefined && !replaced && s.tempC >= 58 && s.tempC <= 74) {
+				replaced = true;
+				return { ...s, tempC: landed };
+			}
+			return s;
+		});
 	const conversionSteps = steps.filter((s) => s.tempC >= 58 && s.tempC <= 74);
 	const conversionMinutes = conversionSteps.reduce((sum, s) => sum + s.minutes, 0);
 

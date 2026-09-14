@@ -90,7 +90,17 @@
 
 	function choose(preset: (typeof PRESETS)[number]) {
 		brew.recipe.mash.steps = preset.steps();
+		// A new aim is a new mash-in; where the last one landed no longer applies.
+		forgetLanding();
 		byHand = false;
+	}
+
+	function forgetLanding() {
+		if (brew.recipe.mash.toppedUpL !== undefined && grainKg > 0) {
+			brew.recipe.mash.thicknessLPerKg -= brew.recipe.mash.toppedUpL / grainKg;
+		}
+		brew.recipe.mash.landedTempC = undefined;
+		brew.recipe.mash.toppedUpL = undefined;
 	}
 
 	function addStep() {

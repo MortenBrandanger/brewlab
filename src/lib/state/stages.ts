@@ -43,6 +43,8 @@ export type StageMeta = {
 	reveals?: string;
 	/** Blocks the action until this decision has been made. */
 	requires?: 'water' | 'fermentables' | 'conversion' | 'hops' | 'yeast';
+	/** A second thing the action waits for, checked after `requires`. */
+	alsoRequires?: 'landing';
 };
 
 /**
@@ -91,10 +93,11 @@ export const STAGES: StageMeta[] = [
 			'At 62 °C beta-amylase dominates and the wort is highly fermentable, so the beer finishes low and tastes thin and crisp. At 70 °C beta is gone within minutes and alpha leaves unfermentable dextrins behind, so the beer finishes high and tastes full and sweet. A step mash gets both: a rest near 63 °C for fermentability, then one near 71 °C to finish the conversion. The mash-out at 76 °C stops enzyme activity entirely and thins the wort so it runs off the grain bed more freely.',
 		decide: 'how dry or how full the finished beer will be',
 		accent: 'copper',
-		action: 'Mash in',
-		done: 'Mashed in. The grain is resting.',
+		action: 'Close the lid',
+		done: 'Lid on. The grain is resting.',
 		reveals: 'how fermentable the wort is, and how full the beer will feel',
-		requires: 'conversion'
+		requires: 'conversion',
+		alsoRequires: 'landing'
 	},
 	{
 		id: 'sparge',

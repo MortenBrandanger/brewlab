@@ -117,6 +117,15 @@ export type MashSetup = {
 	steps: MashStep[];
 	/** Litres of strike water per kg of grain. */
 	thicknessLPerKg: number;
+	/**
+	 * What the thermometer actually read after the grain went in, when the
+	 * brewer chose to live with it. The first rest runs at this temperature
+	 * instead of the one aimed for. Absent when the mash was corrected, or on a
+	 * recipe that never went through a brew day.
+	 */
+	landedTempC?: Celsius;
+	/** Litres of near-boiling water added to lift a cold mash back to its aim. */
+	toppedUpL?: Litres;
 };
 
 /* -------------------------------------------------------------------------- */

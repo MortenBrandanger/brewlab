@@ -48,7 +48,13 @@ export const QUESTIONS: Question[] = [
 		id: 'mash-finish',
 		stage: 'mash',
 		ask: 'How do you want it to finish?',
-		hint: 'The crushed grain goes into the hot water, you stir the lumps out, and it sits there for an hour turning starch into sugar. The temperature you hold decides how much of that sugar the yeast will be able to eat later: hold it cool and the beer finishes thin and dry, hold it warm and more of the sugar survives into the glass.'
+		hint: 'The crushed grain goes into the hot water and you stir the lumps out. The temperature you aim to hold decides how much of the sugar the yeast will be able to eat later: hold it cool and the beer finishes thin and dry, hold it warm and more of the sugar survives into the glass.'
+	},
+	{
+		id: 'mash-landed',
+		stage: 'mash',
+		ask: 'Where did it land?',
+		hint: 'The grain is in and stirred, and you put the thermometer in. It never reads exactly what you aimed for — the grain was colder than you thought, the tun soaked up heat, the water was a degree off. Every brewer knows this moment: you aimed for one number and you are looking at another. A splash of near-boiling water lifts it back, at the cost of a thinner mash. Or you close the lid on what you have got, and the beer finishes a little differently from the one you planned.'
 	},
 	{
 		id: 'sparge-rig',

@@ -70,7 +70,7 @@ export type VarianceReport = {
 /* -------------------------------------------------------------------------- */
 
 /** mulberry32: small, fast, and good enough for sampling a normal. */
-function rng(seed: number): () => number {
+export function rng(seed: number): () => number {
 	let a = seed >>> 0;
 	return () => {
 		a = (a + 0x6d2b79f5) >>> 0;
@@ -81,7 +81,7 @@ function rng(seed: number): () => number {
 }
 
 /** Box–Muller, clipped at three sigma so one freak run cannot own the range. */
-function normal(next: () => number): number {
+export function normal(next: () => number): number {
 	const u = Math.max(1e-9, next());
 	const v = next();
 	const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
@@ -159,6 +159,11 @@ function perturb(recipe: Recipe, draw: Draw): Recipe {
 		efficiencyPct: Math.max(20, recipe.efficiencyPct + draw.efficiency * SIGMA.efficiency),
 		mash: {
 			...recipe.mash,
+			// A mash the brewer chose to live with still varies batch to batch.
+			landedTempC:
+				recipe.mash.landedTempC === undefined
+					? undefined
+					: recipe.mash.landedTempC + draw.mashTemp * SIGMA.mashTemp,
 			steps: recipe.mash.steps.map((s) => ({
 				...s,
 				// A mash-out is a boil-water addition and lands where it lands; the

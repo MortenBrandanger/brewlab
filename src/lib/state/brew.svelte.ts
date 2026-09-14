@@ -111,6 +111,13 @@ class BrewStore {
 		if (meta.requires === 'conversion' && this.context?.mash.conversionMinutes === 0) {
 			return 'No mash step sits in the conversion range, so nothing would convert.';
 		}
+		if (
+			meta.alsoRequires === 'landing' &&
+			this.recipe.mash.landedTempC === undefined &&
+			this.recipe.mash.toppedUpL === undefined
+		) {
+			return 'Read the thermometer first: top it up, or live with where it landed.';
+		}
 		return undefined;
 	}
 

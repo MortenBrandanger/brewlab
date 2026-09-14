@@ -9,6 +9,7 @@
 	import WaterProfile from './questions/WaterProfile.svelte';
 	import GrainMalts from './questions/GrainMalts.svelte';
 	import MashFinish from './questions/MashFinish.svelte';
+	import MashLanding from './questions/MashLanding.svelte';
 	import BatchSize from './questions/BatchSize.svelte';
 	import SpargeStop from './questions/SpargeStop.svelte';
 	import BoilTime from './questions/BoilTime.svelte';
@@ -38,6 +39,8 @@
 	<GrainMalts />
 {:else if id === 'mash-finish'}
 	<MashFinish />
+{:else if id === 'mash-landed'}
+	<MashLanding />
 {:else if id === 'batch-size'}
 	<BatchSize />
 {:else if id === 'sparge-rig'}

@@ -46,7 +46,7 @@ Nothing is claimed about the beer before it is true.
 
 ## The shape
 
-**One question per screen.** There are eighteen, and if brewing turns out to
+**One question per screen.** There are twenty-one, and if brewing turns out to
 have more, there are more. Nine stages came from the brief rather than from
 brewing, and every stage that held more than one decision read as a pile — the
 water stage was the only one anybody ever found clear, and it is the only one
@@ -102,12 +102,20 @@ Each names the physical act, the decision it asks for, and what it must not do.
 
 ### 3. Mash
 
-- **You are doing:** stirring the crushed grain into hot water and waiting an
-  hour.
-- **You decide:** what temperature to hold, and for how long.
+- **You are doing:** stirring the crushed grain into hot water, reading the
+  thermometer, and waiting an hour.
+- **You decide:** what temperature to aim for — and then what to do about the
+  temperature you actually got. The model rolls the miss, deterministically
+  from the recipe, the way a real brew day misses (one standard deviation of
+  about a degree). Topping up with hot water restores the aim and thins the
+  mash; living with it runs the rest where it landed, and the beer that comes
+  out is the beer of the number on the thermometer. The stage waits for that
+  decision: nothing closes the lid until the brewer has read the thermometer.
 - **Must show:** where the rest sits between the two enzymes, because that is
-  the whole mechanism, and what it does to the finished beer.
-- **Must not:** re-teach the strike temperature. Water owns that.
+  the whole mechanism, and what each choice at the thermometer does to the
+  finished beer, on the card.
+- **Must not:** re-teach the strike temperature. Water owns that. And must not
+  pretend the mash hit its number — every calculator does, and no brewer has.
 
 ### 4. Sparge
 

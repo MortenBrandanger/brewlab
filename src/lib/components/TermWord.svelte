@@ -29,7 +29,7 @@
 </script>
 
 {#if term}
-	<details class="group inline">
+	<details class="group relative inline">
 		<summary
 			class="inline cursor-pointer list-none underline decoration-copper-dim decoration-dotted underline-offset-2 hover:decoration-copper"
 		>
@@ -37,7 +37,14 @@
 				— what does this mean?</span
 			>
 		</summary>
-		<span class="mt-1.5 mb-1 block rounded-lg bg-surface p-2.5 ring-1 ring-line">
+		<!--
+			A popover under the word rather than a block inside the sentence: the
+			block version split "a middle-of-the-road mash. The yeast got through
+			78%" into three orphaned fragments around two boxes.
+		-->
+		<span
+			class="absolute top-full left-0 z-20 mt-1 block w-[min(22rem,calc(100vw-2rem))] rounded-lg bg-surface-2 p-2.5 shadow-lg ring-1 ring-line-strong"
+		>
 			<span class="block text-xs font-medium text-fg">{term.word}</span>
 			<span class="prose-measure mt-0.5 block text-xs text-muted">{term.plain}</span>
 			{#if term.soWhat}

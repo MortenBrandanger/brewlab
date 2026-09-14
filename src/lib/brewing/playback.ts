@@ -77,8 +77,8 @@ function mash(ctx: EngineContext): Playback | undefined {
 		return {
 			at: curve.length > 1 ? i / (curve.length - 1) : 1,
 			when: `${p.minute} min · ${Math.round(p.tempC)} °C`,
-			primary: `${Math.round(sugar * 100)}% of the starch is sugar`,
-			secondary: `${Math.round(fermentable * 100)}% of it the yeast can eat`,
+			primary: `${Math.round(sugar * 100)}% converted`,
+			secondary: `starch to sugar · ${Math.round(fermentable * 100)}% of it the yeast can eat`,
 			level: sugar
 		};
 	});

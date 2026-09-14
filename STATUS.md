@@ -5,7 +5,7 @@ standard the UI is held to. This file is the state of the work.
 
 ## Done and stable
 
-**The shape.** Twenty questions, one decision per screen, grouped into nine
+**The shape.** Twenty-one questions, one decision per screen, grouped into nine
 stages that the engine still works in. Batch size opens the day; the
 fermentation is four acts (which yeast, how much, how warm, how long). `src/lib/state/questions.ts` is the
 spine: each question carries its `ask` and a `hint` that says what you are
@@ -44,6 +44,15 @@ opens with "you aimed at X and missed on…". Scoring can no longer call an
 87-IBU porter coherent (BU:GU now enters coherence) and a severe fault caps
 both enjoyment and the headline.
 
+**The mash misses, and you decide.** `mashLanding.ts` rolls where the mash
+actually landed — seeded from the recipe, so deterministic, one standard
+deviation of 1.1 °C — and the mash stage's second question asks what to do:
+top it up (restores the aim, thins the mash, both written into the recipe)
+or live with it (`landedTempC`, and the first rest runs there). The stage will
+not close the lid until the thermometer has been read. The brewer persona's
+number-one request, and the variance panel's "hitting the mash temperature"
+is now something you experience rather than read.
+
 **The brew day plays back.** `playback.ts` exposes the frames the model already
 computed — the mash minute by minute, the boil as bitterness accumulates and
 water leaves, the fermentation day by day — and the panel plays them for a
@@ -51,7 +60,7 @@ few seconds when a stage is carried out. Not an animation drawn to look like
 brewing: a playback of the simulation that ran. Skippable by click, silent
 when motion is off, and only on the first pass through a stage.
 
-**Verification state.** 166 tests green. `svelte-check` 0/0. Contrast audited
+**Verification state.** 171 tests green. `svelte-check` 0/0. Contrast audited
 live across every reachable question and the full report with every disclosure
 open — zero failures.
 
@@ -62,10 +71,6 @@ These were considered and parked on purpose. Do not treat them as oversights.
 - **Sanitation as a modelled variable.** Infection risk exists as a signal but
   nothing the reader does feeds it. Wiring it up means a calibrated change, not
   a bolt-on.
-- **The mash-temperature miss as a real in-model event.** The variance layer
-  perturbs it statistically; the brew day itself never says "you aimed for 66
-  and got 64.5, fix it or live with it". That is the most-requested realism
-  from the brewer persona and the largest single piece of remaining work.
 - **Vorlauf.** Same category.
 - **Free backward navigation.** The owner is undecided on whether you should be
   able to jump back anywhere: _"jeg er egentlig usikker på om man skal kunne
@@ -74,19 +79,12 @@ These were considered and parked on purpose. Do not treat them as oversights.
 
 ## Known gaps
 
-- **`TermWord.svelte` is built and never used.** The Taste report is still a
-  wall of roughly forty trade terms with nothing to click. The glossary has 62
-  terms and 11 figures ready to wire in.
 - **Hop and malt blurbs are written brewer-to-brewer.** "Despite its Fuggle
   parentage", "the classic dank hop", "like Munich turned up". A novice tester
   guessed "noble" meant premium.
-- **Risk meters say low/moderate/high with no scale or thresholds.**
 - **Smoke has no sensory axis of its own.** It rides the phenol axis, which the
   taster now special-cases by reading the grist. A real `smoke` axis would be
   cleaner but touches sensory, styles and scoring.
-- **Ester/temperature cards can read identically** for a narrow-range strain
-  (English ale at 17/19/21 °C all say "a soft orchard-fruit note · no heat").
-  Honest, but the cards should then say the choice barely matters.
 - **Layers 1–3 have no dedicated test files.** They are covered indirectly
   through the fifteen canonical recipes in `simulate.test.ts`. A regression in
   the ODE would show up as a calibration failure rather than a named test.
