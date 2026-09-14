@@ -266,7 +266,11 @@ function nose(ctx: EngineContext): string {
 		return 'Very little. A faint bread note if you go looking for it, and nothing else — this is a beer that gives you nothing until it is in your mouth.';
 	}
 	clauses.sort((a, b) => b.weight - a.weight);
-	const said = clauses.slice(0, 3).map((c) => c.text);
+	const said = clauses
+		.slice(0, 3)
+		.map((c, i) =>
+			i === 0 ? c.text : c.text.replace('The hops arrive first', 'The hops are there too')
+		);
 	if (faults.length) {
 		const named = list(faults.slice(0, 3));
 		const more = faults.length > 3 ? ', and that is only where I stopped listing' : '';
@@ -364,13 +368,14 @@ function middle(ctx: EngineContext): string {
 	} else if (s.phenols >= 4 && ctx.yeast.phenolNotes) {
 		clauses.push({
 			weight: s.phenols,
-			text: `The ${ctx.yeast.phenolNotes} carries right through.`
+			// The nose has already named it; saying the words again reads like a stutter.
+			text: 'That spice carries right through.'
 		});
 	}
 	if (s.fruitEsters >= 6) {
 		clauses.push({
 			weight: s.fruitEsters - 1,
-			text: `The fruit from the yeast is still going — ${ctx.yeast.esterNotes[1]}.`
+			text: 'The fruit from the yeast has not let go.'
 		});
 	}
 	if (s.malt >= 5 && s.roast < 2.5 && s.caramel < 2.5) {
