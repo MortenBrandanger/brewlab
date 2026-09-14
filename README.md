@@ -19,7 +19,7 @@ anywhere.
 ```sh
 pnpm install
 pnpm dev        # http://localhost:5173
-pnpm test       # 146 tests
+pnpm test       # 163 tests
 pnpm check      # svelte-check
 pnpm lint
 pnpm build      # static site in build/
@@ -28,6 +28,11 @@ pnpm build      # static site in build/
 Node 22+ and pnpm 10.
 
 ## The brew day
+
+Eighteen questions, one decision per screen, grouped into the nine stages the
+engine works in. Each question says what you are physically doing at that
+moment, and read in order they are one continuous brew day rather than
+eighteen explanations of eighteen controls.
 
 The simulator tracks two separate things. The recipe is what the beer _would_ be, and it
 recalculates the instant any control moves. `brewedTo` is how far the brew day has actually
@@ -53,7 +58,7 @@ it testable and what makes the explanations honest.
 | Module            | What it does                                                     |
 | ----------------- | ---------------------------------------------------------------- |
 | `types.ts`        | The domain model: recipe, ingredients, findings, scores, results |
-| `ingredients.ts`  | 27 fermentables, 34 hops, 14 yeast strains                       |
+| `ingredients.ts`  | 28 fermentables, 34 hops, 14 yeast strains                       |
 | `water.ts`        | Ion chemistry, brewing salts and a buffered mash-pH model        |
 | `calculations.ts` | Gravity, Morey colour, Tinseth IBU, mash profile, attenuation    |
 | `sensory.ts`      | The 13-axis flavour prediction and the shared risk signals       |
@@ -66,6 +71,29 @@ it testable and what makes the explanations honest.
 
 `appearance.ts` turns the same simulation into what you see in the glass: SRM colour, haze
 from grist proteins and flocculation, head from carbonation and foam-positive malt.
+
+### The part that is not a formula
+
+Three modules do the actual simulating, each integrating over time rather than
+looking a number up.
+
+| Module                    | What it simulates                                                                                |
+| ------------------------- | ------------------------------------------------------------------------------------------------ |
+| `mashKinetics.ts`         | Alpha- and beta-amylase activity and denaturation through the rest, giving a real sugar spectrum |
+| `fermentationKinetics.ts` | Yeast biology hour by hour: growth budget, sugar preference, flavour, flocculation, stalls       |
+| `variance.ts`             | The same brew day 240 times over realistic execution error, and what the spread is made of       |
+
+The mash produces glucose, maltose, maltotriose and dextrins in proportions
+that follow from the temperature you held and how long you held it. The
+fermentation eats them in the order a yeast actually eats them, and the
+esters, fusels and diacetyl all come out of one mechanism — how much the yeast
+grew, and how warm it was while growing. Attenuation is therefore an outcome
+rather than a strain property.
+
+Three things are built on top: `forecast.ts` narrows a range of what the beer
+could still become as decisions land, `taster.ts` writes a first-person
+tasting note from the finished model, and `rigs.ts` turns "what are you brewing
+on" into brewhouse efficiency and collection volume.
 
 ### What the model is, and is not
 
@@ -90,6 +118,14 @@ tokens live in `src/routes/layout.css`, authored in OKLCH; contrast figures for 
 are documented there. The process navigator, stage panels and the persistent "Your beer"
 monitor all read from one `$derived` simulation, so every control moves the whole beer at
 once.
+
+## The other documents
+
+- `STAGES.md` — what each stage is for, and the rules the UI is held to. The
+  standard, not a description.
+- `CLAUDE.md` — how to work in this repo, and the lessons that cost something.
+- `STATUS.md` — where the work has got to, what was parked on purpose, and what
+  is still missing.
 
 ## Licence and contributions
 

@@ -38,7 +38,7 @@ Nothing is claimed about the beer before it is true.
 
 ## The shape
 
-**One question per screen.** There are nineteen, and if brewing turns out to
+**One question per screen.** There are eighteen, and if brewing turns out to
 have more, there are more. Nine stages came from the brief rather than from
 brewing, and every stage that held more than one decision read as a pile — the
 water stage was the only one anybody ever found clear, and it is the only one
@@ -101,9 +101,14 @@ Each names the physical act, the decision it asks for, and what it must not do.
 ### 4. Sparge
 
 - **You are doing:** draining the tun into the kettle and rinsing the grain.
-- **You decide:** how much beer you want, and when to stop collecting.
+- **You decide:** how much beer you want, and what you are brewing on. The
+  second is the real decision at the tun — how thoroughly you rinse — and it is
+  the kit in front of you. Efficiency and collection volume are consequences of
+  it, never controls.
 - **Must show:** where every litre goes, and that the boil takes volume away.
-- **Must not:** explain the simulator. Explain the tap.
+- **Must not:** explain the simulator. Explain the tap. And never ask for a
+  number nobody chooses: "brewhouse efficiency" as a slider was the clearest
+  example this app ever had of a control that is not a decision.
 
 ### 5. Boil & hops
 
@@ -136,14 +141,23 @@ Each names the physical act, the decision it asks for, and what it must not do.
 
 ### 9. Taste
 
-- **You are doing:** opening one and pouring it.
+- **You are doing:** opening one and pouring it. Pouring is an act like any
+  other, so it has a button, and it is what unlocks the judgement.
 - **You decide:** nothing. The report is the payoff.
 - **Must show:** the beer as it actually is, every judgement traceable to a
-  decision you made.
-- **Must not:** guess at a beer that has not been brewed.
+  decision you made — and it opens with somebody drinking it, in the order a
+  person meets a beer, because that is the answer to "what did you make". The
+  meters and the technical values are not.
+- **Must not:** guess at a beer that has not been brewed. And the tasting note
+  must never contradict the fault list; both read the same thresholds.
 
 ## How this is checked
 
-Not by reading the code. Brew a beer from an empty kettle, read every word as
-someone who has never brewed, and check each stage against its block above.
+Not by reading the code. Brew a beer **from an empty kettle**, read every word
+as someone who has never brewed, and check each stage against its block above.
 That is the only pass that has ever found anything.
+
+From an empty kettle specifically. A recipe loaded from the catalogue arrives
+already brewed and already judged, so it exercises none of the gating — which
+is how a brew made from scratch came to be one click short of its own verdict
+without anybody noticing.
