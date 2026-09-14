@@ -232,7 +232,7 @@ const FIELD_STAGE: [string, StageId][] = [
 	['fermentables', 'grain'],
 	['mash', 'mash'],
 	['preBoilVolumeL', 'sparge'],
-	['batchVolumeL', 'sparge'],
+	['batchVolumeL', 'water'],
 	['efficiencyPct', 'sparge'],
 	// More specific first: the table matches on prefix and returns the first hit,
 	// and dry hops are edited on the fermentation stage, not in the kettle.

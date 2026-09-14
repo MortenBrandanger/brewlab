@@ -9,6 +9,7 @@
 	import BeerGlass from '../BeerGlass.svelte';
 	import LearningNote from '../LearningNote.svelte';
 	import { describeAppearance } from '$lib/brewing/appearance';
+	import { targetMisses } from '$lib/brewing/target';
 	import { scoreBand } from '$lib/brewing/scoring';
 	import { brew } from '$lib/state/brew.svelte';
 	import { STAGES, type StageId } from '$lib/state/stages';
@@ -17,6 +18,16 @@
 
 	const result = $derived(brew.result);
 	const appearance = $derived(result.appearance);
+
+	/**
+	 * What you aimed at, and where you landed against it. Before this the
+	 * report never mentioned the target at all: a porter that came out at 87
+	 * IBU was told it "reads as Imperial stout at 80%" and nothing else, which
+	 * is an answer to a question nobody asked. If you set out to make a
+	 * particular beer, the first thing the report owes you is whether you did.
+	 */
+	const target = $derived(brew.target);
+	const misses = $derived(target ? targetMisses(target.rows) : []);
 	const note = $derived(result.tasting);
 
 	/** What the taster would say if you offered them a second glass. */
@@ -136,11 +147,31 @@
 				<h2 class="mt-1 font-display text-xl">
 					{judged ? result.verdict.headline : 'The beer is packaged'}
 				</h2>
-				<p class="prose-measure mt-2 text-sm text-muted">
-					{judged
-						? result.verdict.summary
-						: 'Everything is done. Pour a glass and the model will say what it thinks, and why.'}
-				</p>
+				{#if judged && target}
+					{#if misses.length === 0}
+						<p class="prose-measure mt-2 text-sm text-muted">
+							You aimed at <span class="text-fg">{target.style.name}</span> and hit it: every figure the
+							style asks for is inside its range.
+						</p>
+					{:else}
+						<p class="prose-measure mt-2 text-sm text-muted">
+							You aimed at <span class="text-fg">{target.style.name}</span> and missed on
+							{misses.length === 1 ? 'one thing' : `${misses.length} things`}.
+						</p>
+						<ul class="mt-1.5 flex flex-col gap-0.5">
+							{#each misses as row (row.key)}
+								<li class="prose-measure text-sm text-warn-bright">{row.miss}</li>
+							{/each}
+						</ul>
+					{/if}
+					<p class="prose-measure mt-2 text-sm text-muted">{result.verdict.summary}</p>
+				{:else}
+					<p class="prose-measure mt-2 text-sm text-muted">
+						{judged
+							? result.verdict.summary
+							: 'Everything is done. Pour a glass and the model will say what it thinks, and why.'}
+					</p>
+				{/if}
 				{#if !judged}
 					<p class="prose-measure mt-2 text-sm text-subtle">
 						{describeAppearance(appearance, result.metrics.ebc)}

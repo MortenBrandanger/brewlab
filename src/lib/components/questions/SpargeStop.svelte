@@ -17,6 +17,7 @@
 	import type { Rig } from '$lib/brewing/rigs';
 	import { GRAIN_ABSORPTION_L_PER_KG } from '$lib/brewing/simulate';
 	import { brew } from '$lib/state/brew.svelte';
+	import { DEFAULTS } from '$lib/brewing/recipes';
 
 	const rig = $derived(rigFor(brew.recipe.efficiencyPct));
 
@@ -34,7 +35,15 @@
 	const absorbedL = $derived(grainKg * GRAIN_ABSORPTION_L_PER_KG);
 	const collectL = $derived(brew.recipe.preBoilVolumeL);
 	const spargeL = $derived(Math.max(0, collectL - (mashWaterL - absorbedL)));
-	const boilOffL = $derived(Math.max(0, collectL - brew.recipe.batchVolumeL));
+	/*
+	 * Not all of the difference between the kettle and the fermenter went up
+	 * as steam: a couple of litres stay behind with the hop debris and the
+	 * break material. Calling the whole gap "boiled away" was a small lie.
+	 */
+	const leftBehindL = $derived(
+		Math.min(rig.kettleLossL, Math.max(0, collectL - brew.recipe.batchVolumeL))
+	);
+	const boilOffL = $derived(Math.max(0, collectL - brew.recipe.batchVolumeL - leftBehindL));
 	const preBoilGravity = $derived(brew.context?.gravity.preBoilGravity ?? 1);
 	const effective = $derived(Math.round((brew.context?.gravity.effectiveEfficiency ?? 0) * 100));
 </script>
@@ -53,7 +62,12 @@
 					aria-pressed={selected}
 					onclick={() => choose(option)}
 				>
-					<span class="block text-sm font-medium">{option.name}</span>
+					<span class="block text-sm font-medium">
+						{option.name}
+						{#if selected && brew.recipe.efficiencyPct === DEFAULTS.efficiencyPct}
+							<span class="ms-1.5 text-[0.625rem] tracking-wide text-fg/70 uppercase">default</span>
+						{/if}
+					</span>
 					<span class="mt-0.5 block text-xs {selected ? 'text-fg' : 'text-subtle'}">
 						{option.what}
 					</span>
@@ -89,7 +103,7 @@
 				</div>
 				<div
 					class="flex items-center justify-center bg-ui-active text-xs text-muted"
-					style="width:{(boilOffL / total) * 100}%"
+					style="width:{((boilOffL + leftBehindL) / total) * 100}%"
 				>
 					boil-off
 				</div>
@@ -100,7 +114,7 @@
 					grain
 				</div>
 			</div>
-			<dl class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+			<dl class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-5">
 				<div>
 					<dt class="text-xs text-subtle">Mash water</dt>
 					<dd class="tnum text-sm font-medium">{mashWaterL.toFixed(1)} L</dd>
@@ -116,6 +130,10 @@
 				<div>
 					<dt class="text-xs text-subtle">Boiled away</dt>
 					<dd class="tnum text-sm font-medium">{boilOffL.toFixed(1)} L</dd>
+				</div>
+				<div>
+					<dt class="text-xs text-subtle">Left with the hop debris</dt>
+					<dd class="tnum text-sm font-medium">{leftBehindL.toFixed(1)} L</dd>
 				</div>
 			</dl>
 		{/if}

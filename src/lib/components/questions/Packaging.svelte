@@ -26,6 +26,7 @@
 	<SegmentedControl
 		label="How are you packaging it"
 		bind:value={() => packaging, (v) => (brew.recipe.conditioning.packaging = v)}
+		defaultValue={DEFAULTS.conditioning.packaging}
 		options={[
 			{
 				value: 'bottles' as const,

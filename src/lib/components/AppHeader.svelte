@@ -79,17 +79,6 @@
 			<button
 				type="button"
 				class="btn btn-quiet h-9 text-xs"
-				aria-pressed={prefs.showWhy}
-				onclick={() => {
-					prefs.showWhy = !prefs.showWhy;
-					prefs.persist();
-				}}
-			>
-				{prefs.showWhy ? 'Hide' : 'Show'} deep dives
-			</button>
-			<button
-				type="button"
-				class="btn btn-quiet h-9 text-xs"
 				aria-pressed={prefs.motion}
 				onclick={() => {
 					prefs.motion = !prefs.motion;

@@ -54,7 +54,12 @@
 						custom = false;
 					}}
 				>
-					<span class="block text-sm font-medium">{size.litres} L</span>
+					<span class="block text-sm font-medium">
+						{size.litres} L
+						{#if selected && size.litres === DEFAULTS.batchVolumeL}
+							<span class="ms-1.5 text-[0.625rem] tracking-wide text-fg/70 uppercase">default</span>
+						{/if}
+					</span>
 					<span class="mt-0.5 block text-xs {selected ? 'text-fg' : 'text-subtle'}">
 						{size.note}
 					</span>

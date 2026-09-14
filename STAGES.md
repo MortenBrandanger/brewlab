@@ -12,6 +12,14 @@ Nothing is claimed about the beer before it is true.
 
 ## Rules that hold everywhere
 
+0. **A target is a claim about the intention, not about the beer.** So while
+   no figure is claimed before the brew day has made it, the _target_ is
+   compared against where the recipe is heading from the moment there is grain
+   in the kettle — and the miss is said in a brewer's words where the decision
+   is being made: "too bitter: 97 IBU, porter wants 25–45" beside the slider,
+   in the watch list, and first thing on the report. Feedback that arrives one
+   stage after the decision is not feedback.
+
 1. **The reader makes the decision.** If a stage asks for a real choice, it
    waits for it. A brew you can click through without deciding anything is a
    beer the simulator made while you watched.
@@ -70,10 +78,13 @@ Each names the physical act, the decision it asks for, and what it must not do.
 
 ### 1. Water
 
-- **You are doing:** filling a pot, cutting or treating the water, putting it on
-  to heat.
-- **You decide:** which water. One pick from a short list. Treating it yourself
-  is the specialist route and sits in the same grid.
+- **You are doing:** deciding how much beer you are making, then filling a pot,
+  cutting or treating the water, putting it on to heat.
+- **You decide:** how much beer, then which water. Both one pick from a short
+  list. Batch size comes first because every volume on the day is measured
+  against it — asking it after the water had been heated to a volume computed
+  from a default was backwards. Treating the water yourself is the specialist
+  route and sits in the same grid.
 - **Must show:** how much, and how hot, because "heat the water" is meaningless
   without them. The strike temperature is explained _here_, once.
 - **Must not:** claim anything about the finished beer. This is a pot of water.
@@ -101,8 +112,7 @@ Each names the physical act, the decision it asks for, and what it must not do.
 ### 4. Sparge
 
 - **You are doing:** draining the tun into the kettle and rinsing the grain.
-- **You decide:** how much beer you want, and what you are brewing on. The
-  second is the real decision at the tun — how thoroughly you rinse — and it is
+- **You decide:** what you are brewing on. That is the real decision at the tun — how thoroughly you rinse — and it is
   the kit in front of you. Efficiency and collection volume are consequences of
   it, never controls.
 - **Must show:** where every litre goes, and that the boil takes volume away.
@@ -129,9 +139,14 @@ Each names the physical act, the decision it asks for, and what it must not do.
 ### 7. Ferment
 
 - **You are doing:** pitching yeast, sealing the airlock, leaving it alone.
-- **You decide:** which yeast, at what temperature, for how long.
+- **You decide:** which yeast, how much of it, how warm, how long — four
+  screens, because they are four acts. This stage was once one screen with five
+  sliders, a toggle, a text field and a graph on it, and survived that way only
+  because nobody looked at it. Each temperature and length is a card placed
+  inside the strain you actually chose, with what it does to this beer on the
+  card. Schedules with more than one rest live behind "set it myself".
 - **Must show:** that the strain and the temperature make much of the beer's
-  character.
+  character, and that time is what clears the butterscotch.
 
 ### 8. Condition
 

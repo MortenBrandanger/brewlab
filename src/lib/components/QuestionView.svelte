@@ -17,7 +17,9 @@
 	import ChillMethod from './questions/ChillMethod.svelte';
 	import Transfer from './questions/Transfer.svelte';
 	import YeastChoice from './questions/YeastChoice.svelte';
-	import FermentSchedule from './questions/FermentSchedule.svelte';
+	import PitchRate from './questions/PitchRate.svelte';
+	import FermentTemp from './questions/FermentTemp.svelte';
+	import FermentDays from './questions/FermentDays.svelte';
 	import DryHops from './questions/DryHops.svelte';
 	import ColdCrash from './questions/ColdCrash.svelte';
 	import Packaging from './questions/Packaging.svelte';
@@ -52,8 +54,12 @@
 	<Transfer />
 {:else if id === 'yeast'}
 	<YeastChoice />
-{:else if id === 'ferment-schedule'}
-	<FermentSchedule />
+{:else if id === 'pitch-rate'}
+	<PitchRate />
+{:else if id === 'ferment-temp'}
+	<FermentTemp />
+{:else if id === 'ferment-days'}
+	<FermentDays />
 {:else if id === 'dry-hops'}
 	<DryHops />
 {:else if id === 'cold-crash'}

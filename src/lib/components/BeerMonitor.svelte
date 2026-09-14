@@ -8,6 +8,7 @@
 	import { WATER_PROFILE_BY_ID } from '$lib/brewing/water';
 	import { brew } from '$lib/state/brew.svelte';
 	import { forecastAbv } from '$lib/brewing/forecast';
+	import { targetMisses } from '$lib/brewing/target';
 	import { STAGES, stageForFields, stageIndex, type Reveal } from '$lib/state/stages';
 	import type { SensoryKey } from '$lib/brewing/types';
 
@@ -114,6 +115,25 @@
 			const stage = stageForFields(f.fields);
 			return !stage || brew.brewedTo >= stageIndex(stage);
 		})
+	);
+
+	/**
+	 * Where the recipe as written misses the target, projected — shown the
+	 * moment it is set, because that is the moment something can still be done
+	 * about it. Reported once the glass is poured too, but by then the report
+	 * says it in full.
+	 */
+	const misses = $derived(
+		brew.knows('judgement') || !brew.target ? [] : targetMisses(brew.target.rows)
+	);
+
+	/** The quieter findings, so "nothing flagged" is never said over a caution. */
+	const cautions = $derived(
+		result.findings.filter((f) => {
+			if (f.severity !== 'caution') return false;
+			const stage = stageForFields(f.fields);
+			return !stage || brew.brewedTo >= stageIndex(stage);
+		}).length
 	);
 
 	const closest = $derived(brew.knows('judgement') ? result.styles[0] : undefined);
@@ -314,7 +334,7 @@
 	{#if brew.brewedTo >= 0}
 		<section class="border-t border-line pt-4">
 			<h3 class="field-label mb-2">Watch list</h3>
-			{#if problems.length === 0}
+			{#if problems.length === 0 && misses.length === 0 && cautions === 0}
 				<p class="flex items-start gap-2 text-xs text-muted">
 					<svg viewBox="0 0 16 16" class="mt-0.5 h-3.5 w-3.5 shrink-0 text-hop" aria-hidden="true">
 						<path
@@ -348,6 +368,23 @@
 					{/each}
 					{#if problems.length > 4}
 						<li class="text-xs text-subtle">and {problems.length - 4} more in the report</li>
+					{/if}
+					{#each misses.slice(0, 3) as row (row.key)}
+						<li class="flex items-start gap-2 text-xs">
+							<span
+								class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full ring-1 ring-warn"
+								aria-hidden="true"
+							></span>
+							<span class="text-muted">
+								<span class="sr-only">Off target: </span>
+								{row.miss}
+							</span>
+						</li>
+					{/each}
+					{#if cautions > 0}
+						<li class="text-xs text-subtle">
+							{cautions === 1 ? 'One thing' : `${cautions} things`} worth checking in the report.
+						</li>
 					{/if}
 				</ul>
 			{/if}

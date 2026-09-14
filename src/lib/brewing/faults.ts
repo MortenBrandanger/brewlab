@@ -102,8 +102,17 @@ export function computeFindings(ctx: EngineContext): Finding[] {
 			code: 'MASH_PH_HIGH',
 			severity: water.mashPh > 5.9 ? 'warning' : 'caution',
 			title: `Estimated mash pH is high at ${water.mashPh}`,
+			/*
+			 * Two different beers land here for opposite reasons. Chalky water
+			 * pushes any mash up; but a pale grist on very soft water arrives at
+			 * 5.8 on its own, because there is nothing in the water to pull it
+			 * down. Telling the second brewer to "start from softer water" sent
+			 * one reader to the softest water in the list and left them there.
+			 */
 			explanation:
-				'Above roughly 5.6 the mash extracts more tannin from the grain husks, conversion slows and the finished beer tends to taste dull and drying. Alkaline water is the usual cause: add lactic acid or acidulated malt, or start from softer water.',
+				water.residualAlkalinity > 30
+					? 'Above roughly 5.6 the mash extracts more tannin from the grain husks, conversion slows and the finished beer tends to taste dull and drying. Alkaline water is the cause here: add lactic acid or acidulated malt, or start from softer water.'
+					: 'Above roughly 5.6 the mash extracts more tannin from the grain husks, conversion slows and the finished beer tends to taste dull and drying. A pale grist lands here on its own, whatever the water — there is too little dark malt to bring the pH down and nothing in soft water to help. Changing water will not fix it; a few millilitres of lactic acid or 2–3% acidulated malt will.',
 			impact: { technical: water.mashPh > 5.9 ? -10 : -4 },
 			fields: ['water']
 		});

@@ -123,7 +123,14 @@
 						}}
 					>
 						<span class="flex items-baseline justify-between gap-2">
-							<span class="text-sm font-medium">{option.label}</span>
+							<span class="text-sm font-medium">
+								{option.label}
+								{#if method === option.id && mins === DEFAULTS.chill.minutes}
+									<span class="ms-1.5 text-[0.625rem] tracking-wide text-fg/70 uppercase"
+										>default</span
+									>
+								{/if}
+							</span>
 							<span class="tnum text-xs {method === option.id ? 'text-fg' : 'text-muted'}">
 								about {mins} min
 							</span>

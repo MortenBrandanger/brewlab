@@ -10,7 +10,6 @@
 	 * Read-more belongs in context, always, and there is one way of asking for it
 	 * in this app rather than three.
 	 */
-	import { prefs } from '$lib/state/prefs.svelte';
 	import { STAGE_BY_ID, type StageId } from '$lib/state/stages';
 
 	let { stage }: { stage: StageId } = $props();
@@ -31,7 +30,7 @@
 		>
 			<p class="text-xs font-medium text-fg">Why {meta.name.toLowerCase()} matters</p>
 			<p class="prose-measure mt-1 text-xs text-muted">{meta.what}</p>
-			{#if meta.deepDive && prefs.showWhy}
+			{#if meta.deepDive}
 				<p class="prose-measure mt-2 text-xs text-subtle">{meta.deepDive}</p>
 			{/if}
 		</div>

@@ -1,6 +1,7 @@
 import type { AgePoint, Finding, Improvement, KeyDecision, Scores, StyleMatch } from './types';
 import { clamp } from './calculations';
 import { describeIntensity } from './sensory';
+import { getFermentable } from './ingredients';
 import type { EngineContext } from './context';
 
 /* -------------------------------------------------------------------------- */
@@ -21,7 +22,7 @@ export function keyDecisions(ctx: EngineContext, findings: Finding[]): KeyDecisi
 				? `This is the main reason the beer finishes at ${attenuation.fg.toFixed(3)} with ${describeIntensity(sensory.body)} body.`
 				: mash.effectiveTempC <= 64
 					? `A cool mash is why the beer attenuated to ${Math.round(attenuation.apparent * 100)}% and finishes dry.`
-					: `A middle-of-the-road mash, which is why attenuation landed near the strain's nominal ${Math.round(yeast.attenuation * 100)}%.`,
+					: `A middle-of-the-road mash. The yeast got through ${Math.round(attenuation.apparent * 100)}% of the sugar, and most of what it left is body rather than sweetness.`,
 		direction: mash.effectiveTempC > 71 || mash.effectiveTempC < 61 ? -1 : 0,
 		weight: Math.abs(mash.effectiveTempC - 66) * 1.4 + 2
 	});
@@ -39,12 +40,14 @@ export function keyDecisions(ctx: EngineContext, findings: Finding[]): KeyDecisi
 		.filter((e) => e.share > 0.03 && e.fermentableId !== biggest?.fermentableId)
 		.sort((a, b) => b.share - a.share)[0];
 	if (speciality) {
+		const isBase = getFermentable(speciality.fermentableId)?.category === 'base';
 		candidates.push({
 			title: `${speciality.name} at ${Math.round(speciality.share * 100)}%`,
-			detail:
-				"Speciality malt is where most of a beer's recognisable flavour comes from, and where most recipes go wrong by adding too much.",
-			direction: gravity.grist.specialityShare > 0.22 ? -1 : 0,
-			weight: speciality.share * 22
+			detail: isBase
+				? 'A second base malt. It changes the malt character more than any number on this page will show, without moving the colour or the strength much at all.'
+				: "Speciality malt is where most of a beer's recognisable flavour comes from, and where most recipes go wrong by adding too much.",
+			direction: !isBase && gravity.grist.specialityShare > 0.22 ? -1 : 0,
+			weight: isBase ? 3 : speciality.share * 22
 		});
 	}
 
@@ -69,7 +72,7 @@ export function keyDecisions(ctx: EngineContext, findings: Finding[]): KeyDecisi
 		title: `${yeast.name} at ${Math.round(ctx.avgFermentTempC)} °C`,
 		detail:
 			sensory.fruitEsters + sensory.phenols > 6
-				? `The yeast is doing a lot of the talking here: ${describeIntensity(sensory.fruitEsters)} fruit and ${describeIntensity(sensory.phenols)} spice.`
+				? `The yeast is doing a lot of the talking here — ${yeast.esterNotes[sensory.fruitEsters >= 5 ? 1 : 0]}${sensory.phenols >= 1.5 && yeast.phenolNotes ? `, and ${yeast.phenolNotes}` : ''}.`
 				: "Fermented in the strain's comfortable range, so the yeast stays in the background and lets the ingredients show.",
 		direction:
 			ctx.avgFermentTempC > yeast.tempMaxC || ctx.avgFermentTempC < yeast.tempMinC ? -1 : 1,
@@ -106,17 +109,14 @@ export function keyDecisions(ctx: EngineContext, findings: Finding[]): KeyDecisi
 		});
 	}
 
-	const severeFindings = findings.filter(
-		(f) => f.severity === 'severe' || f.severity === 'warning'
-	);
-	for (const finding of severeFindings.slice(0, 2)) {
-		candidates.push({
-			title: finding.title,
-			detail: finding.explanation,
-			direction: -1,
-			weight: 9
-		});
-	}
+	/*
+	 * Findings used to be copied in here verbatim, so "Hot alcohol likely"
+	 * appeared twice on one page with the same paragraph under it. The
+	 * decision that caused a fault is already in this list with its direction
+	 * marked — "English ale at 26 °C (hurt the beer)" — and the fault itself
+	 * belongs to the fault list, once.
+	 */
+	void findings;
 
 	candidates.sort((a, b) => b.weight - a.weight);
 	const seen = new Set<string>();
@@ -407,10 +407,16 @@ export function verdict(
 		findings.find((f) => f.severity === 'warning') ??
 		findings.find((f) => f.severity === 'caution');
 
+	/*
+	 * A severe fault caps the headline at "something to fix" however the total
+	 * comes out, because a total is an average and a severe fault is not the
+	 * kind of thing an average should be allowed to hide.
+	 */
+	const severe = findings.some((f) => f.severity === 'severe');
 	const headline =
-		scores.overall >= 85
+		scores.overall >= 85 && !severe
 			? 'A beer worth brewing again'
-			: scores.overall >= 72
+			: scores.overall >= 72 && !severe
 				? 'Sound and enjoyable'
 				: scores.overall >= 58
 					? 'Drinkable, with something to fix'
@@ -425,15 +431,26 @@ export function verdict(
 	 * say: what this resembles, and what is holding it back.
 	 */
 	const parts: string[] = [];
+	/*
+	 * With a target, the report has already said what you aimed at and where
+	 * you landed; naming the nearest style as well only matters when it is a
+	 * different beer from the one intended.
+	 */
+	const aimedAt = ctx.recipe.targetStyleId;
 	if (closest && closest.match >= 55) {
-		parts.push(`It reads as ${closest.name} at a ${closest.match}% match.`);
+		if (!aimedAt) parts.push(`It reads as ${closest.name} at a ${closest.match}% match.`);
+		else if (closest.styleId !== aimedAt)
+			parts.push(`As it stands it reads more like ${closest.name.toLowerCase()}.`);
 	} else if (closest) {
 		parts.push(
 			`Nothing in the style list fits closely; ${closest.name} is the nearest, at ${closest.match}%.`
 		);
 	}
 	if (worst) {
-		parts.push(`The main thing holding it back: ${worst.title.toLowerCase()}.`);
+		// Only the first letter drops: "BU:GU" is not "bu:gu".
+		parts.push(
+			`The main thing holding it back: ${worst.title.charAt(0).toLowerCase()}${worst.title.slice(1)}.`
+		);
 	} else {
 		parts.push('Nothing in the fault model has anything to say about it.');
 	}

@@ -27,10 +27,16 @@ export type Question = {
 
 export const QUESTIONS: Question[] = [
 	{
+		id: 'batch-size',
+		stage: 'water',
+		ask: 'How much beer do you want?',
+		hint: 'A brew day starts with a decision about size. Everything that follows is measured against it — how much water you heat, how much grain you weigh out, how much yeast goes in — so it comes before anything is filled or switched on.'
+	},
+	{
 		id: 'water-profile',
 		stage: 'water',
 		ask: 'Which water are you brewing with?',
-		hint: 'A brew day starts with a pot of water. Beer is mostly water, and what comes out of the tap is different in every town — the minerals in it decide whether bitterness lands sharp or soft, and together with the grain they set how acid the mash turns out. So before anything is heated: use your tap water, cut it with bottled, or build what you want from nothing.'
+		hint: 'Then the water itself. Beer is mostly water, and what comes out of the tap is different in every town — the minerals in it decide whether bitterness lands sharp or soft, and together with the grain they set how acid the mash turns out. So before anything is heated: use your tap water, cut it with bottled, or build what you want from nothing.'
 	},
 	{
 		id: 'grain-malts',
@@ -43,12 +49,6 @@ export const QUESTIONS: Question[] = [
 		stage: 'mash',
 		ask: 'How do you want it to finish?',
 		hint: 'The crushed grain goes into the hot water, you stir the lumps out, and it sits there for an hour turning starch into sugar. The temperature you hold decides how much of that sugar the yeast will be able to eat later: hold it cool and the beer finishes thin and dry, hold it warm and more of the sugar survives into the glass.'
-	},
-	{
-		id: 'batch-size',
-		stage: 'sparge',
-		ask: 'How much beer do you want?',
-		hint: 'The grain is resting under a lid and nothing needs you for an hour. So decide how much beer you are actually making, because everything from here is measured against it — how much water you rinse through the grain, how much boils away, how much yeast goes in.'
 	},
 	{
 		id: 'sparge-rig',
@@ -94,10 +94,22 @@ export const QUESTIONS: Question[] = [
 		hint: 'The wort is sitting in the bucket, cool and still, and it is not beer yet — it is sweet malt tea. Yeast is what changes that: it eats the sugar, makes the alcohol, and on the way makes much of what the beer will taste of. The percentage on each card is how much of the sugar that strain will eat, so how dry it finishes. Flocculation is how readily it clumps and sinks when it is done, which decides how clear the beer ends up.'
 	},
 	{
-		id: 'ferment-schedule',
+		id: 'pitch-rate',
 		stage: 'ferment',
-		ask: 'How warm, and for how long?',
-		hint: 'You sprinkle the yeast on top, seal the lid with an airlock and put the bucket somewhere the temperature does not swing. Within a day it is bubbling, and then you leave it alone for a week or three. Cool keeps the yeast quiet and the beer clean; warm brings out fruit and spice, and past a point a harsh taste of solvent that never ages out. This is also what you chilled down to — you pitch at or just below where you mean to hold it.'
+		ask: 'How much yeast goes in?',
+		hint: 'You have the packet in your hand. How much goes in decides how fast the yeast gets going: a small, tired pitch has to multiply many times over before it can start on the sugar, and yeast that is busy multiplying makes fruit and hot alcohol on the way. Enough cells from the start and it gets straight to work.'
+	},
+	{
+		id: 'ferment-temp',
+		stage: 'ferment',
+		ask: 'How warm?',
+		hint: 'You sprinkle the yeast on top, seal the lid with an airlock and put the bucket somewhere the temperature does not swing. Where you put it is the most consequential number in the brew. Cool keeps the yeast quiet and the beer clean; warm brings out fruit and spice, and past a point a harsh taste of solvent that never ages out. You chill the wort to just below it before pitching, because the first twelve hours set the character of the whole batch.'
+	},
+	{
+		id: 'ferment-days',
+		stage: 'ferment',
+		ask: 'How long?',
+		hint: 'Within a day it is bubbling, and then you leave it alone. Most of the sugar goes in the first few days; what takes the rest of the time is the yeast finishing the job — the last few points of gravity, and cleaning up the buttery taste it made while it was growing. Stop early and both are still in the beer.'
 	},
 	{
 		id: 'dry-hops',

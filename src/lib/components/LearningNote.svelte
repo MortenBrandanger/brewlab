@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { prefs } from '$lib/state/prefs.svelte';
-
 	/**
 	 * Layer two and three of the learning system: a short "why" that sits beside
 	 * the control, and an optional deep dive folded away behind a disclosure.
@@ -20,7 +18,7 @@
 -->
 <div class="mt-2 border-s-2 border-copper-dim ps-3">
 	<p class="prose-measure text-xs text-muted">{why}</p>
-	{#if deepDive && prefs.showWhy}
+	{#if deepDive}
 		<details class="group mt-1.5">
 			<summary
 				class="inline-flex cursor-pointer list-none items-center gap-1 rounded-sm py-1 text-xs font-medium text-copper-text hover:underline"

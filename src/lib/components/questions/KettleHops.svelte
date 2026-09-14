@@ -15,6 +15,8 @@
 	);
 
 	const descriptors = $derived(brew.context?.hopLoad.descriptors ?? []);
+
+	const ibuTarget = $derived(brew.target?.rows.find((r) => r.key === 'ibu'));
 </script>
 
 <div class="flex flex-col gap-6">
@@ -30,13 +32,25 @@
 			<dl class="flex flex-wrap items-baseline gap-x-6 gap-y-2 text-sm">
 				<div>
 					<dt class="text-xs text-subtle">Bitterness</dt>
-					<dd>
+					<dd class="flex flex-wrap items-baseline gap-x-2">
 						<FigureValue
 							id="ibu"
 							value={brew.result.metrics.ibu}
 							display="{Math.round(brew.result.metrics.ibu)} IBU"
 							label="Bitterness"
 						/>
+						{#if ibuTarget}
+							<!-- The target, where the decision is made rather than after it. -->
+							<span
+								class="text-xs"
+								class:text-subtle={ibuTarget.state === 'inside'}
+								class:text-warn={ibuTarget.state !== 'inside'}
+							>
+								{ibuTarget.state === 'inside' ? 'inside' : ibuTarget.state}
+								{brew.target?.style.name.toLowerCase()}'s {ibuTarget.range.min}–{ibuTarget.range
+									.max}
+							</span>
+						{/if}
 					</dd>
 				</div>
 				<div>

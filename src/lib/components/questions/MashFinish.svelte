@@ -79,6 +79,15 @@
 	let byHand = $state(false);
 	const custom = $derived(byHand || !matchesPreset);
 
+	/** Still on what a brand-new brew starts with, so the card can say so. */
+	const untouched = $derived(
+		brew.recipe.mash.steps.length === DEFAULTS.mash.steps.length &&
+			brew.recipe.mash.steps.every(
+				(s, i) =>
+					s.tempC === DEFAULTS.mash.steps[i].tempC && s.minutes === DEFAULTS.mash.steps[i].minutes
+			)
+	);
+
 	function choose(preset: (typeof PRESETS)[number]) {
 		brew.recipe.mash.steps = preset.steps();
 		byHand = false;
@@ -124,7 +133,14 @@
 						aria-pressed={selected}
 						onclick={() => choose(preset)}
 					>
-						<span class="block text-sm font-medium">{preset.name}</span>
+						<span class="block text-sm font-medium">
+							{preset.name}
+							{#if selected && preset.id === 'single' && untouched}
+								<span class="ms-1.5 text-[0.625rem] tracking-wide text-fg/70 uppercase"
+									>default</span
+								>
+							{/if}
+						</span>
 						<span class="mt-0.5 block text-xs {selected ? 'text-fg' : 'text-subtle'}"
 							>{preset.note}</span
 						>
@@ -347,10 +363,10 @@
 						{#each [{ v: k.glucose, c: 'var(--color-hop)', fg: 'var(--color-ink)', l: 'glucose' }, { v: k.maltose, c: 'var(--color-amber)', fg: 'var(--color-ink)', l: 'maltose' }, { v: k.maltotriose, c: 'var(--color-copper)', fg: 'var(--color-ink)', l: 'maltotriose' }, { v: k.dextrins, c: 'var(--color-ui-active)', fg: 'var(--color-fg)', l: 'dextrins' }] as band (band.l)}
 							{#if total > 0 && b(band.v, total) > 1.5}
 								<div
-									class="flex items-center justify-center text-[0.625rem]"
+									class="flex items-center justify-center gap-1 overflow-hidden text-[0.625rem] whitespace-nowrap"
 									style="width:{b(band.v, total)}%; background:{band.c}; color:{band.fg}"
 								>
-									{Math.round(b(band.v, total))}%
+									{Math.round(b(band.v, total))}%{b(band.v, total) > 14 ? ` ${band.l}` : ''}
 								</div>
 							{/if}
 						{/each}

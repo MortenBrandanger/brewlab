@@ -44,7 +44,23 @@ function coherenceContributions(ctx: EngineContext): ScoreContribution[] {
 	const counter = s.bitterness + s.roast * 0.35 + s.acidity * 0.25;
 	const support = s.sweetness + s.body * 0.28 + s.caramel * 0.18;
 	const gap = counter - support;
-	if (Math.abs(gap) <= 4) {
+
+	/*
+	 * The sensory bitterness axis stops at ten, and a porter at 87 IBU sat at
+	 * ten looking balanced against a sweet, heavy body — coherence 94 for a
+	 * beer nobody could finish. Bitterness units against gravity points is the
+	 * one measure that does not saturate, so past the point where the axis has
+	 * given up, it takes over. Below 0.3 is a wheat beer or a mild and fine;
+	 * above 1.1 nothing carries it, whatever the malt bill says.
+	 */
+	const buGu = ctx.ibu.total / Math.max(1, (ctx.gravity.og - 1) * 1000);
+	if (buGu > 1.1) {
+		out.push({
+			label: 'Bitterness far beyond what the malt can carry',
+			detail: `${Math.round(ctx.ibu.total)} IBU against ${Math.round((ctx.gravity.og - 1) * 1000)} gravity points is a ratio of ${buGu.toFixed(2)}. Past about 1.1 the bitterness is no longer a flavour but a wall, and no amount of body behind it reads as balance.`,
+			delta: -clamp((buGu - 1.1) * 40, 0, 28)
+		});
+	} else if (Math.abs(gap) <= 4 && s.bitterness < 9.5) {
 		out.push({
 			label: 'The beer is in balance',
 			detail: `What cuts (${counter.toFixed(1)}) and what coats (${support.toFixed(1)}) are close enough that neither takes over.`,
@@ -283,6 +299,25 @@ export function computeScores(ctx: EngineContext, findings: Finding[]): Scores {
 		...enjoymentContributions(ctx, technical.value, coherence.value),
 		...findingContributions(findings, 'enjoyment')
 	];
+	/*
+	 * A severe fault caps enjoyment. The contributions above are additive, so
+	 * a hot, oxidised, over-bittered beer could still collect "expressive" and
+	 * "easy to keep drinking" and land at 55 — as one did. Nobody enjoys a
+	 * beer with solvent in it past a point, however much else is going on.
+	 */
+	const severe = findings.filter((f) => f.severity === 'severe').length;
+	if (severe > 0) {
+		const running = enjoymentContribs.reduce((sum, c) => sum + c.delta, BASELINE.enjoyment);
+		const ceiling = 42 - (severe - 1) * 8;
+		if (running > ceiling) {
+			enjoymentContribs.push({
+				label: severe === 1 ? 'A severe fault caps enjoyment' : 'Severe faults cap enjoyment',
+				detail:
+					'Whatever else the beer has going for it, a fault at this level is the thing you taste. Enjoyment cannot climb past it.',
+				delta: Math.round((ceiling - running) * 10) / 10
+			});
+		}
+	}
 	const enjoyment = build(BASELINE.enjoyment, enjoymentContribs);
 
 	const overall = Math.round(

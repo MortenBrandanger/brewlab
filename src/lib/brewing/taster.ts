@@ -477,13 +477,27 @@ function closing(
 		s.caramel < 2.5 &&
 		s.hopFlavour < 3 &&
 		s.acidity < 3 &&
-		s.bitterness < 4;
+		s.bitterness < 4 &&
+		s.malt < 4 &&
+		smokeShare(ctx) < 0.03;
 
 	if (technical < 45) {
 		return {
 			another: 'no',
 			closing:
 				'I would not finish this glass. Whatever was intended, something went wrong on the way, and it is in every mouthful.'
+		};
+	}
+	if (worstFault >= 2.5) {
+		/*
+		 * Well past the threshold, not merely over it. "A good beer with
+		 * something wrong with it" is for a hint of butterscotch, not for
+		 * solvent, cardboard and cut grass in the same glass.
+		 */
+		return {
+			another: 'no',
+			closing:
+				'One of those is enough to stop me, and this has more than one. There is a beer underneath it somewhere, but I would not go looking for it in this glass.'
 		};
 	}
 	if (clean && technical >= 62 && (quiet || enjoyment < 50)) {

@@ -1,12 +1,13 @@
 # Where this has got to
 
-Updated 2026-09-14. `CLAUDE.md` is how to work here; `STAGES.md` is the
+Updated 2026-09-14, evening. `CLAUDE.md` is how to work here; `STAGES.md` is the
 standard the UI is held to. This file is the state of the work.
 
 ## Done and stable
 
-**The shape.** Eighteen questions, one decision per screen, grouped into nine
-stages that the engine still works in. `src/lib/state/questions.ts` is the
+**The shape.** Twenty questions, one decision per screen, grouped into nine
+stages that the engine still works in. Batch size opens the day; the
+fermentation is four acts (which yeast, how much, how warm, how long). `src/lib/state/questions.ts` is the
 spine: each question carries its `ask` and a `hint` that says what you are
 physically doing, and the eighteen hints read in order as one brew day.
 
@@ -35,6 +36,13 @@ Mash calibration targets, all hit: 63 °C/75 min → 86.7%, 66/60 → 83.1%,
   language model; every clause is a threshold on a modelled quantity.
 - `rigs.ts` — the run-off screen asks what you are brewing on and derives
   brewhouse efficiency and collection volume from the answer.
+
+**Target-awareness.** `target.ts` compares the projected beer with the chosen
+style from the first grain onward, and the style panel, the watch list, the
+kettle readout and the report all say the miss in a brewer's words. The report
+opens with "you aimed at X and missed on…". Scoring can no longer call an
+87-IBU porter coherent (BU:GU now enters coherence) and a severe fault caps
+both enjoyment and the headline.
 
 **Verification state.** 163 tests green. `svelte-check` 0/0. Contrast audited
 live across every reachable question and the full report with every disclosure
@@ -69,6 +77,9 @@ These were considered and parked on purpose. Do not treat them as oversights.
 - **Smoke has no sensory axis of its own.** It rides the phenol axis, which the
   taster now special-cases by reading the grist. A real `smoke` axis would be
   cleaner but touches sensory, styles and scoring.
+- **Ester/temperature cards can read identically** for a narrow-range strain
+  (English ale at 17/19/21 °C all say "a soft orchard-fruit note · no heat").
+  Honest, but the cards should then say the choice barely matters.
 - **Layers 1–3 have no dedicated test files.** They are covered indirectly
   through the fifteen canonical recipes in `simulate.test.ts`. A regression in
   the ODE would show up as a calibration failure rather than a named test.

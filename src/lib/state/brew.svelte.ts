@@ -2,6 +2,7 @@ import type { Recipe, StoredRecipe } from '$lib/brewing/types';
 import { buildContext, simulate } from '$lib/brewing/simulate';
 import { emptyRecipe, newId } from '$lib/brewing/recipes';
 import { CHALLENGE_BY_ID, evaluateChallenge } from '$lib/brewing/challenges';
+import { targetRows, type TargetKey } from '$lib/brewing/target';
 import { loadProgress, saveProgress, type StoredProgress } from '$lib/persist/recipes';
 import { STAGES, stageIndex, revealedAt, type Reveal, type StageId } from './stages';
 import {
@@ -54,6 +55,27 @@ class BrewStore {
 	knows(reveal: Reveal): boolean {
 		return this.brewedTo >= revealedAt(reveal);
 	}
+
+	/**
+	 * The beer you are heading for against the beer you said you wanted,
+	 * computed once for the style panel, the watch list, the kettle readout and
+	 * the report. Each row knows whether the brew day has made it true yet or
+	 * whether it is still a projection, and the panels decide what to do with
+	 * that; the comparison itself is the same everywhere.
+	 */
+	target = $derived.by(() => {
+		// A plain Set built and read inside one derived; nothing observes it.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		const settled = new Set<TargetKey>();
+		if (this.knows('gravity')) settled.add('og');
+		if (this.knows('colour')) settled.add('ebc');
+		if (this.knows('bitterness')) settled.add('ibu');
+		if (this.knows('alcohol')) {
+			settled.add('fg');
+			settled.add('abv');
+		}
+		return targetRows(this.recipe, this.result.metrics, settled);
+	});
 
 	/** The stage currently being worked on, as an index. */
 	get stageIdx(): number {
