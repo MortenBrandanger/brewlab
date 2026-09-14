@@ -213,7 +213,13 @@
 		if (!did) return;
 		const ctx = untrack(() => brew.context);
 		const playback = ctx && prefs.animate ? playbackFor(did.stage, ctx) : undefined;
-		if (!playback) return;
+		if (!playback) {
+			// Committing a stage with nothing to play — the chill, say — while the
+			// boil was still playing used to freeze the boil's last frame on screen
+			// for the rest of the brew day.
+			playing = undefined;
+			return;
+		}
 		const started = performance.now();
 		cancelAnimationFrame(raf);
 		const tick = (now: number) => {

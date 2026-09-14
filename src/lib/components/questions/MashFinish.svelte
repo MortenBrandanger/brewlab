@@ -382,9 +382,8 @@
 						{/each}
 					</div>
 					<p class="prose-measure mt-1.5 text-xs text-muted">
-						Glucose, maltose and maltotriose are what the yeast can take. The dextrins are chains
-						with branches neither enzyme can cut, and they go into the glass untouched as body and a
-						trace of sweetness.
+						The first three the yeast can eat; the dextrins it cannot, and they go into the glass as
+						body.
 					</p>
 				</div>
 			{/if}

@@ -159,8 +159,8 @@
 	<section class="mt-10">
 		<h2 class="font-display text-base font-semibold">Start from an example</h2>
 		<p class="prose-measure mt-1 text-sm text-muted">
-			Each of these is a complete, working recipe. Open one and change a single thing to see what it
-			does.
+			Each of these is a complete, working recipe — the figures are alcohol, bitterness (IBU) and
+			colour (EBC). Open one and change a single thing to see what it does.
 		</p>
 		<ul class="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
 			{#each previews as preview (preview.example.id)}

@@ -29,7 +29,7 @@
 	 * two hops read the same paragraph twice.
 	 */
 	const AMOUNT_WHY: Record<HopUse, string> = {
-		boil: 'Weight scales bitterness roughly in step, so doubling the grams roughly doubles it. A 20-litre batch takes about 20 g for a lager, 60 g for a pale ale and 150 g for an IPA at the start of a boil; a charge going in late needs far more for the same effect.',
+		boil: 'Doubling the grams roughly doubles the bitterness, and a charge going in late needs far more for the same effect.',
 		whirlpool:
 			'Into the same wort as everything else, but off the heat, so these buy aroma rather than bitterness. Weights run heavier than a bittering charge for the same effect.',
 		dryHop:

@@ -62,37 +62,53 @@
 		}
 		return out;
 	});
+
+	/** A clean strain on an ordinary wort lands the same however much goes in; say so. */
+	const allAlike = $derived.by(() => {
+		const v = Object.values(perOption);
+		return (
+			v.length === OPTIONS.length && v.every((e) => e.fruit === v[0].fruit && e.heat === v[0].heat)
+		);
+	});
 </script>
 
-<ul class="grid gap-2 sm:grid-cols-3">
-	{#each OPTIONS as option (option.value)}
-		{@const selected = brew.recipe.fermentation.pitchRate === option.value}
-		{@const effect = perOption[option.value]}
-		<li>
-			<button
-				type="button"
-				class="h-full w-full rounded-lg p-3 text-start ring-1 {selected
-					? 'bg-copper-dim ring-copper'
-					: 'bg-surface ring-line hover:bg-ui-hover hover:ring-line-strong'}"
-				aria-pressed={selected}
-				onclick={() => (brew.recipe.fermentation.pitchRate = option.value)}
-			>
-				<span class="flex items-baseline justify-between gap-2">
-					<span class="text-sm font-medium">{option.name}</span>
-					{#if selected && option.value === DEFAULTS.fermentation.pitchRate}
-						<span class="text-[0.625rem] tracking-wide text-fg/70 uppercase">default</span>
-					{/if}
-				</span>
-				<span class="mt-0.5 block text-xs {selected ? 'text-fg' : 'text-subtle'}">
-					{option.what}
-				</span>
-				{#if effect}
-					<span class="mt-1.5 block text-xs {selected ? 'text-fg' : 'text-muted'}">
-						{effect.fruit.charAt(0).toUpperCase() + effect.fruit.slice(1)} fruit from the yeast ·
-						{effect.heat}
+<div class="flex flex-col gap-3">
+	<ul class="grid gap-2 sm:grid-cols-3">
+		{#each OPTIONS as option (option.value)}
+			{@const selected = brew.recipe.fermentation.pitchRate === option.value}
+			{@const effect = perOption[option.value]}
+			<li>
+				<button
+					type="button"
+					class="h-full w-full rounded-lg p-3 text-start ring-1 {selected
+						? 'bg-copper-dim ring-copper'
+						: 'bg-surface ring-line hover:bg-ui-hover hover:ring-line-strong'}"
+					aria-pressed={selected}
+					onclick={() => (brew.recipe.fermentation.pitchRate = option.value)}
+				>
+					<span class="flex items-baseline justify-between gap-2">
+						<span class="text-sm font-medium">{option.name}</span>
+						{#if selected && option.value === DEFAULTS.fermentation.pitchRate}
+							<span class="text-[0.625rem] tracking-wide text-fg/70 uppercase">default</span>
+						{/if}
 					</span>
-				{/if}
-			</button>
-		</li>
-	{/each}
-</ul>
+					<span class="mt-0.5 block text-xs {selected ? 'text-fg' : 'text-subtle'}">
+						{option.what}
+					</span>
+					{#if effect}
+						<span class="mt-1.5 block text-xs {selected ? 'text-fg' : 'text-muted'}">
+							{effect.fruit.charAt(0).toUpperCase() + effect.fruit.slice(1)} fruit from the yeast ·
+							{effect.heat}
+						</span>
+					{/if}
+				</button>
+			</li>
+		{/each}
+	</ul>
+	{#if allAlike}
+		<p class="prose-measure text-xs text-subtle">
+			For this yeast on this wort the three land the same in the glass. The pitch matters most on a
+			strong wort or with a fruity strain; here it mostly decides how soon the bubbling starts.
+		</p>
+	{/if}
+</div>

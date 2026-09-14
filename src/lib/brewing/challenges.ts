@@ -22,9 +22,13 @@ export const CHALLENGES: Challenge[] = [
 		difficulty: 'easy',
 		checks: [
 			{ id: 'abv', label: 'Below 4.5% ABV', test: (r) => r.metrics.abv < 4.5 },
-			{ id: 'ibu', label: 'At least 30 IBU', test: (r) => r.metrics.ibu >= 30 },
-			{ id: 'aroma', label: 'Hop aroma of 6 or more', test: (r) => r.sensory.hopAroma >= 6 },
-			{ id: 'quality', label: 'Overall score of 72 or better', test: (r) => r.scores.overall >= 72 }
+			{ id: 'ibu', label: 'Properly bitter: at least 30 IBU', test: (r) => r.metrics.ibu >= 30 },
+			{
+				id: 'aroma',
+				label: 'Smells strongly of hops (aroma 6 of 10 or more)',
+				test: (r) => r.sensory.hopAroma >= 6
+			},
+			{ id: 'quality', label: 'Rated 72 or better overall', test: (r) => r.scores.overall >= 72 }
 		]
 	},
 	{
@@ -48,10 +52,10 @@ export const CHALLENGES: Challenge[] = [
 			{ id: 'colour', label: 'Pale, under 14 EBC', test: (r) => r.metrics.ebc < 14 },
 			{
 				id: 'clean',
-				label: 'No diacetyl finding',
+				label: 'No butterscotch (diacetyl) flagged',
 				test: (r) => !r.findings.some((f) => f.code === 'DIACETYL_RISK')
 			},
-			{ id: 'quality', label: 'Overall score of 78 or better', test: (r) => r.scores.overall >= 78 }
+			{ id: 'quality', label: 'Rated 78 or better overall', test: (r) => r.scores.overall >= 78 }
 		]
 	},
 	{
@@ -62,12 +66,20 @@ export const CHALLENGES: Challenge[] = [
 		difficulty: 'medium',
 		startingRecipeId: 'oversweet-stout',
 		checks: [
-			{ id: 'sweet', label: 'Sweetness below 5.5', test: (r) => r.sensory.sweetness < 5.5 },
-			{ id: 'roast', label: 'Roast still at 4 or above', test: (r) => r.sensory.roast >= 4 },
+			{
+				id: 'sweet',
+				label: 'Not cloying: sweetness under 5.5 of 10',
+				test: (r) => r.sensory.sweetness < 5.5
+			},
+			{
+				id: 'roast',
+				label: 'Still tastes roasty: roast 4 of 10 or more',
+				test: (r) => r.sensory.roast >= 4
+			},
 			{ id: 'dark', label: 'Still a dark beer, 40 EBC or more', test: (r) => r.metrics.ebc >= 40 },
 			{
 				id: 'coherence',
-				label: 'Coherence of 78 or better',
+				label: 'Hangs together: balance score 78 or better',
 				test: (r) => r.scores.coherence.value >= 78
 			}
 		]
@@ -79,15 +91,19 @@ export const CHALLENGES: Challenge[] = [
 		hint: 'Bitterness comes from isomerisation, which needs heat and time. Aroma comes from oils, which heat destroys. Move everything off the boil.',
 		difficulty: 'easy',
 		checks: [
-			{ id: 'aroma', label: 'Hop aroma of 7 or more', test: (r) => r.sensory.hopAroma >= 7 },
+			{
+				id: 'aroma',
+				label: 'Smells strongly of hops (aroma 7 of 10 or more)',
+				test: (r) => r.sensory.hopAroma >= 7
+			},
 			{ id: 'ibu', label: 'Under 35 IBU', test: (r) => r.metrics.ibu < 35 },
 			{
 				id: 'no-grass',
-				label: 'No grassy over-hopping findings',
+				label: 'Not over-hopped into grassiness',
 				test: (r) =>
 					!r.findings.some((f) => f.code === 'DRY_HOP_EXTREME' || f.code === 'DRY_HOP_TOO_LONG')
 			},
-			{ id: 'quality', label: 'Overall score of 75 or better', test: (r) => r.scores.overall >= 75 }
+			{ id: 'quality', label: 'Rated 75 or better overall', test: (r) => r.scores.overall >= 75 }
 		]
 	},
 	{
@@ -107,8 +123,12 @@ export const CHALLENGES: Challenge[] = [
 				label: 'Exactly one hop variety',
 				test: (_r, recipe) => distinctHops(recipe) === 1
 			},
-			{ id: 'bitter', label: 'At least 18 IBU', test: (r) => r.metrics.ibu >= 18 },
-			{ id: 'quality', label: 'Overall score of 80 or better', test: (r) => r.scores.overall >= 80 }
+			{
+				id: 'bitter',
+				label: 'Some bitterness to it: at least 18 IBU',
+				test: (r) => r.metrics.ibu >= 18
+			},
+			{ id: 'quality', label: 'Rated 80 or better overall', test: (r) => r.scores.overall >= 80 }
 		]
 	},
 	{
@@ -118,21 +138,25 @@ export const CHALLENGES: Challenge[] = [
 		hint: 'Saison yeast genuinely likes it warm, but starting hot is still a mistake. Pitch cool, let it rise, and use the mash to build fermentability rather than pushing the yeast.',
 		difficulty: 'medium',
 		checks: [
-			{ id: 'fg', label: 'Final gravity of 1.006 or below', test: (r) => r.metrics.fg <= 1.006 },
+			{
+				id: 'fg',
+				label: 'Finishes bone dry: final gravity 1.006 or below',
+				test: (r) => r.metrics.fg <= 1.006
+			},
 			{ id: 'abv', label: 'Above 5.5% ABV', test: (r) => r.metrics.abv > 5.5 },
 			{
 				id: 'no-fusel',
-				label: 'No hot alcohol finding',
+				label: 'No hot, solvent alcohol flagged',
 				test: (r) => !r.findings.some((f) => f.code === 'FUSEL_RISK')
 			},
 			{
 				id: 'warmth',
-				label: 'Alcohol warmth of 4 or less',
+				label: 'No noticeable burn: alcohol warmth 4 of 10 or less',
 				test: (r) => r.sensory.alcoholWarmth <= 4
 			},
 			{
 				id: 'technical',
-				label: 'Technical quality of 82 or better',
+				label: 'Cleanly made: technical score 82 or better',
 				test: (r) => r.scores.technical.value >= 82
 			}
 		]
@@ -145,20 +169,24 @@ export const CHALLENGES: Challenge[] = [
 		difficulty: 'hard',
 		checks: [
 			{ id: 'abv', label: '9.5% ABV or more', test: (r) => r.metrics.abv >= 9.5 },
-			{ id: 'roast', label: 'Roast of 6 or more', test: (r) => r.sensory.roast >= 6 },
+			{
+				id: 'roast',
+				label: 'Strongly roasty: roast 6 of 10 or more',
+				test: (r) => r.sensory.roast >= 6
+			},
 			{
 				id: 'warmth',
-				label: 'Alcohol warmth of 7 or less',
+				label: 'Warm but not burning: alcohol warmth 7 of 10 or less',
 				test: (r) => r.sensory.alcoholWarmth <= 7
 			},
 			{
 				id: 'coherence',
-				label: 'Coherence of 78 or better',
+				label: 'Hangs together: balance score 78 or better',
 				test: (r) => r.scores.coherence.value >= 78
 			},
 			{
 				id: 'technical',
-				label: 'Technical quality of 78 or better',
+				label: 'Cleanly made: technical score 78 or better',
 				test: (r) => r.scores.technical.value >= 78
 			}
 		]
@@ -173,11 +201,11 @@ export const CHALLENGES: Challenge[] = [
 		checks: [
 			{
 				id: 'no-severe',
-				label: 'No severe or warning findings',
+				label: 'Nothing serious flagged',
 				test: (r) => worstSeverity(r) <= 1
 			},
 			{ id: 'abv', label: 'At least 4.5% ABV', test: (r) => r.metrics.abv >= 4.5 },
-			{ id: 'quality', label: 'Overall score of 78 or better', test: (r) => r.scores.overall >= 78 }
+			{ id: 'quality', label: 'Rated 78 or better overall', test: (r) => r.scores.overall >= 78 }
 		]
 	},
 	{
@@ -187,7 +215,7 @@ export const CHALLENGES: Challenge[] = [
 		hint: 'Pale lagers expose everything: DMS from a short boil, diacetyl from a rushed fermentation, oxidation from a careless transfer. This is a process challenge, not a recipe one.',
 		difficulty: 'hard',
 		checks: [
-			{ id: 'pale', label: 'Under 10 EBC', test: (r) => r.metrics.ebc < 10 },
+			{ id: 'pale', label: 'Very pale: under 10 EBC', test: (r) => r.metrics.ebc < 10 },
 			{
 				id: 'lager',
 				label: 'Fermented with a lager strain',
@@ -196,7 +224,7 @@ export const CHALLENGES: Challenge[] = [
 			{ id: 'clean', label: 'Nothing worse than a caution', test: (r) => worstSeverity(r) <= 1 },
 			{
 				id: 'technical',
-				label: 'Technical quality of 90 or better',
+				label: 'Near-faultless: technical score 90 or better',
 				test: (r) => r.scores.technical.value >= 90
 			}
 		]
@@ -221,8 +249,12 @@ export const CHALLENGES: Challenge[] = [
 					})
 			},
 			{ id: 'abv', label: 'Under 4% ABV', test: (r) => r.metrics.abv < 4 },
-			{ id: 'malt', label: 'Malt character of 4.5 or more', test: (r) => r.sensory.malt >= 4.5 },
-			{ id: 'quality', label: 'Overall score of 75 or better', test: (r) => r.scores.overall >= 75 }
+			{
+				id: 'malt',
+				label: 'Tastes clearly of malt: 4.5 of 10 or more',
+				test: (r) => r.sensory.malt >= 4.5
+			},
+			{ id: 'quality', label: 'Rated 75 or better overall', test: (r) => r.scores.overall >= 75 }
 		]
 	}
 ];

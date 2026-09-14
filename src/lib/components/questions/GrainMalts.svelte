@@ -146,8 +146,7 @@
 			<!-- A glossary note belongs against the numbers it decodes, not floating
 			     at the top of the panel where it explains nothing yet. -->
 			<p class="prose-measure mt-1.5 text-xs text-muted">
-				EBC is the colour scale brewers use, measured on the malt and on the finished beer. Roughly:
-				4 is pale straw, 12 gold, 25 amber, 60 brown and anything past 200 is black.
+				Colour in EBC: 4 is pale straw · 12 gold · 25 amber · 60 brown · 200+ black.
 			</p>
 
 			<p class="tnum mt-1.5 text-xs text-subtle">

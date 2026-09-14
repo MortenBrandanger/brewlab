@@ -38,7 +38,34 @@
 {#if style}
 	<section class="panel p-4">
 		<div class="flex flex-wrap items-baseline justify-between gap-2">
-			<h2 class="font-display text-base font-semibold">Brewing to {style.name}</h2>
+			<h2 class="font-display text-base font-semibold">
+				Brewing to {style.name}<!--
+					The two paragraphs that used to sit under this panel on every one of
+					twenty-one screens — "what this beer asks for", "guidance only, nothing
+					here is blocked" — say the same thing every time. Once is enough, and
+					once is a question mark.
+				-->
+				<details class="group relative inline">
+					<summary
+						class="ms-1.5 inline-grid h-4 w-4 translate-y-0.5 cursor-pointer list-none place-items-center rounded-full align-baseline text-[0.625rem] font-bold text-copper-text ring-1 ring-copper-dim hover:bg-copper-dim/30"
+					>
+						?<span class="sr-only">What this panel is</span>
+					</summary>
+					<div
+						class="absolute top-full left-0 z-20 mt-2 w-[min(24rem,calc(100vw-2rem))] rounded-lg bg-surface-2 p-3 font-sans text-xs font-normal shadow-lg ring-1 ring-line-strong"
+					>
+						<p class="prose-measure text-muted">
+							What this beer asks for. Once there is grain in the kettle, each figure shows where
+							you are heading; a hollow marker is a projection, a solid one has been made.
+						</p>
+						<p class="prose-measure mt-2 text-subtle">
+							Guidance only. Nothing here is blocked, and conformity is kept entirely separate from
+							the quality scores: a beer can be a perfect example of a style and still be badly
+							made, or excellent and fit nothing at all.
+						</p>
+					</div>
+				</details>
+			</h2>
 			{#if conformity && allSettled}
 				<span class="tnum text-sm font-medium text-copper-text">{conformity.match}% conformity</span
 				>
@@ -76,10 +103,6 @@
 					<dd class="tnum text-sm font-medium">{style.ebc.min}–{style.ebc.max} EBC</dd>
 				</div>
 			</dl>
-			<p class="prose-measure mt-3 text-xs text-subtle">
-				What this beer asks for. Once there is grain in the kettle, each figure shows where you are
-				heading.
-			</p>
 		{:else}
 			<ul class="mt-4 flex flex-col gap-3">
 				{#each rows as row (row.key)}
@@ -159,11 +182,5 @@
 				</ul>
 			{/if}
 		{/if}
-
-		<p class="prose-measure mt-3 text-xs text-subtle">
-			Guidance only. Nothing here is blocked, and conformity is kept entirely separate from the
-			quality scores: a beer can be a perfect example of a style and still be badly made, or
-			excellent and fit nothing at all.
-		</p>
 	</section>
 {/if}

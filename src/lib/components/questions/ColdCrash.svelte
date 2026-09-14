@@ -21,9 +21,7 @@
 	<span>
 		<span class="block text-sm font-medium">Finish by chilling it to near freezing</span>
 		<span class="prose-measure block text-xs text-subtle">
-			A couple of days in the cold once the schedule above is done. Yeast and haze settle out and
-			the beer pours clear. Only worth doing after fermentation has genuinely finished — chill it
-			early and the yeast stops before it has cleared up the buttery taste it makes on the way.
+			Two days near freezing after the schedule above, so the yeast drops and the beer pours clear.
 		</span>
 	</span>
 </label>

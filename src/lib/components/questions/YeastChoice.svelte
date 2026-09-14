@@ -5,11 +5,8 @@
 	 * The strains on offer, grouped by what they are, and what the chosen one
 	 * does to the beer.
 	 */
-	import LearningNote from '../LearningNote.svelte';
-	import { YEASTS, getYeast } from '$lib/brewing/ingredients';
+	import { YEASTS } from '$lib/brewing/ingredients';
 	import { brew } from '$lib/state/brew.svelte';
-
-	const chosenYeast = $derived(getYeast(brew.recipe.fermentation.yeastId));
 
 	const byKind = $derived([
 		{ kind: 'ale' as const, label: 'Ale', yeasts: YEASTS.filter((y) => y.kind === 'ale') },
@@ -57,7 +54,4 @@
 			</div>
 		{/each}
 	</div>
-	{#if chosenYeast}
-		<LearningNote why={chosenYeast.note} />
-	{/if}
 </section>
