@@ -40,6 +40,35 @@ a liquid, or a head as a thing with thickness. The 3D one can. Nothing in the
 app needs a game engine, and its cost — download size, battery, no
 accessibility tree, a second source of truth to keep in step — is real.
 
+## The lesson the first version taught
+
+The first 3D vessel was "realistic": physically based materials, an
+environment map to reflect, a plain cylinder. It rendered correctly and it
+looked like a paper cup. The owner said so, and he was right.
+
+Half-realism is a trap. Real objects have a rolled rim, wall thickness,
+handles, a weld line, a shadow where they meet the table, scratches, and a
+hundred other things the eye checks without knowing it checks them. A bare
+cylinder under real light fails every check at once, and the more real the
+lighting, the more obviously it fails. Getting a photoreal pot right is
+weeks of work by someone who does that for a living.
+
+An illustration makes no such promise. Three flat bands of colour
+(`MeshToonMaterial` with a three-step gradient map), an ink line drawn with
+the inverted-hull trick, a copper palette shared with the flat drawings on
+every other screen, a soft dark ellipse for a contact shadow, and the few
+details that make a pot a pot — rim, handles, a tap on the tun, a lid with a
+knob. It matches the app, it hides what the geometry lacks, and it took a
+tenth of the effort the "realistic" version would have needed to stop
+looking cheap. **Stylisation is not the easy way out; it is the way that
+works within a budget**, and it is the single most useful thing to know
+before asking an AI for graphics.
+
+Two smaller lessons from the same afternoon: frame by _width_ as well as
+height (a pot is wider than it is tall, and a tall canvas sees less
+sideways), and shoot from three-quarters above, the way an illustrator
+draws a pot — straight-on and level is how a catalogue shoots a cup.
+
 ## The vocabulary, as used
 
 **Scene.** A tree of everything that exists: meshes, lights, groups. Adding

@@ -92,10 +92,15 @@ mash landing and a skipped vorlauf), keyboard focus rings on cards and
 headings, and a programmatic pass (every button named, every input labelled,
 skip link, lang, landmarks).
 
-**The vessel in 3D.** `Vessel3D.svelte` renders the panel's vessel as a small
-Three.js scene driven by the simulation — liquid level, SRM colour, haze as
-transmission and roughness, head as a foam disc, bubbles as an instanced
-particle set proportional to how hard the model says the beer is working.
+**The vessel in 3D — illustrated, not "realistic".** `Vessel3D.svelte` renders
+the panel's vessel as a small Three.js scene driven by the simulation — liquid
+level, SRM colour, haze as how solid the liquid looks, head as a foam disc,
+bubbles as an instanced particle set proportional to how hard the model says
+the beer is working. Toon-shaded in three bands with an inverted-hull ink
+line, the app's copper palette, a contact shadow, and the details that make a
+pot a pot (rim, handles, tap, lid). The first version was physically based
+and looked like a paper cup; `GRAPHICS.md` explains why that is the most
+useful lesson in the file.
 Loaded on demand (737 KB chunk, ≈180 KB gzipped), falls back to the flat
 vessel without WebGL, stops rendering when nothing moves, and can be switched
 off with the header's "Flat vessel" toggle. `GRAPHICS.md` explains every
