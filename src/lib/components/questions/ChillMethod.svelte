@@ -193,7 +193,9 @@
 							class:text-warn={row.value >= 3 && row.value < 6}
 							class:text-danger-text={row.value >= 6}
 						>
-							{row.value < 3 ? 'low' : row.value < 6 ? 'moderate' : 'high'}
+							<!-- The word alone had no scale. The figure is out of ten, like every other risk in the app. -->
+							<span class="tnum">{row.value.toFixed(1)}<span class="opacity-70">/10</span></span>
+							· {row.value < 3 ? 'low' : row.value < 6 ? 'moderate' : 'high'}
 						</span>
 					</div>
 					<div class="mt-2 h-1.5 rounded-full bg-ui-active" aria-hidden="true">

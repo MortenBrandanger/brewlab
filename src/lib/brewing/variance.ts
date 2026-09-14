@@ -139,7 +139,7 @@ const SIGMA: Record<VarianceSource, number> = {
 
 const LABEL: Record<VarianceSource, string> = {
 	mashTemp: 'Hitting the mash temperature',
-	efficiency: 'Brewhouse efficiency',
+	efficiency: 'How well the grain rinsed',
 	kettleVolume: 'Volume into the kettle',
 	boilOff: 'How hard it boiled',
 	fermentTemp: 'Fermentation temperature',

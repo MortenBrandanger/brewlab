@@ -129,6 +129,10 @@
 				] as [string, number][])
 			: []
 	);
+
+	const everyWaterHigh = $derived(
+		WATER_PROFILES.length > 0 && WATER_PROFILES.every((o) => (perProfile[o.id]?.mashPh ?? 0) > 5.6)
+	);
 </script>
 
 <div class="flex flex-col gap-5">
@@ -248,6 +252,20 @@
 		and the pH for your own blend cannot either, because only this screen
 		knows what you put in it.
 	-->
+	{#if hasGrist && !custom && everyWaterHigh}
+		<!--
+			Seven waters and every one lands the same pale grist at 5.8: the choice
+			does not move the pH, and only acid does. A reader who picked the
+			softest water in the list to fix it was following the fault text's
+			advice, and it did nothing. The lesson belongs here, where the choice is.
+		-->
+		<p class="prose-measure text-sm text-warn-bright">
+			With this grist every water here lands the mash above pH 5.6. A pale grist does that on its
+			own — there is too little dark malt to bring it down — so changing water will not fix it. A
+			few millilitres of lactic acid will: pick <span class="text-fg">Treat it myself</span>.
+		</p>
+	{/if}
+
 	{#if strike !== undefined && firstRest}
 		<p class="prose-measure text-sm text-muted">
 			Fill the pot with

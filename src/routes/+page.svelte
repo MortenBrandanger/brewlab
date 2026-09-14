@@ -10,7 +10,8 @@
 	import ChallengePanel from '$lib/components/ChallengePanel.svelte';
 	import RecipeActions from '$lib/components/RecipeActions.svelte';
 	import { hazeFor } from '$lib/brewing/appearance';
-	import { STAGE_BY_ID, type StageId } from '$lib/state/stages';
+	import { STAGES, STAGE_BY_ID, type StageId } from '$lib/state/stages';
+	import { forecastAbv } from '$lib/brewing/forecast';
 	import { QUESTIONS, questionsForStage } from '$lib/state/questions';
 	import { brew } from '$lib/state/brew.svelte';
 
@@ -38,6 +39,23 @@
 		brew.setStage(next);
 		focusQuestion();
 	}
+
+	/** The bottom bar on a phone says what the panel's headline says. */
+	const mobileStatus = $derived(
+		brew.brewedTo < 0
+			? 'Nothing brewed yet. The water is on.'
+			: brew.brewedTo >= STAGES.length - 1
+				? brew.result.verdict.headline
+				: (STAGES[brew.brewedTo]?.done ?? '')
+	);
+	const mobileForecast = $derived.by(() => {
+		if (brew.knows('judgement')) return undefined;
+		const f = forecastAbv(brew.recipe);
+		if (!f) return undefined;
+		return f.open
+			? `Heading for ${f.low.toFixed(1)}–${f.high.toFixed(1)}% alcohol`
+			: `Heading for ${f.low.toFixed(1)}% alcohol`;
+	});
 </script>
 
 <svelte:head>
@@ -66,8 +84,13 @@
 				{/if}
 
 				<section class="panel p-4 sm:p-6">
+					<!--
+						The text keeps a readable measure: below about 18rem of room the
+						illustration wraps underneath rather than squeezing the hint into a
+						thirty-character column, which is what it did on a phone.
+					-->
 					<div class="flex flex-wrap items-start justify-between gap-4">
-						<div class="min-w-0 flex-1">
+						<div class="min-w-0 flex-1 basis-[18rem]">
 							<p class="field-label">
 								{stage.name}
 								{#if within.length > 1}
@@ -126,20 +149,17 @@
 			class="flex min-h-14 w-full items-center gap-4 px-4 text-start"
 			onclick={() => monitorDialog?.showModal()}
 		>
-			<span class="tnum flex flex-1 flex-wrap gap-x-4 text-xs">
-				{#if brew.knows('gravity')}
-					<span><span class="text-subtle">OG</span> {brew.result.metrics.og.toFixed(3)}</span>
-				{/if}
-				{#if brew.knows('alcohol')}
-					<span><span class="text-subtle">ABV</span> {brew.result.metrics.abv.toFixed(1)}%</span>
-				{/if}
-				{#if brew.knows('bitterness')}
-					<span><span class="text-subtle">IBU</span> {Math.round(brew.result.metrics.ibu)}</span>
-				{/if}
-				{#if brew.knows('colour')}
-					<span><span class="text-subtle">EBC</span> {Math.round(brew.result.metrics.ebc)}</span>
-				{/if}
-				{#if !brew.knows('colour')}
+			<!--
+				Where the brew day has got to, in words, and where it is heading. This
+				bar used to read "OG 1.054 ABV 5.7% IBU 13 EBC 10" — the same column
+				of bare abbreviations the desktop panel folded away because nobody
+				learned anything from it.
+			-->
+			<span class="flex min-w-0 flex-1 flex-col gap-0.5 text-xs">
+				<span class="truncate text-fg">{mobileStatus}</span>
+				{#if mobileForecast}
+					<span class="tnum truncate text-subtle">{mobileForecast}</span>
+				{:else}
 					<span class="text-subtle">{brew.at + 1} of {QUESTIONS.length}</span>
 				{/if}
 			</span>

@@ -97,6 +97,18 @@
 	});
 
 	const risks = $derived(brew.context?.risks);
+
+	/**
+	 * A narrow-range strain lands the same at all three cards. Showing three
+	 * identical consequences without comment looked like a bug; it is a fact
+	 * about the strain, and worth a sentence.
+	 */
+	const allAlike = $derived.by(() => {
+		const v = Object.values(perCard);
+		return (
+			v.length === CARDS.length && v.every((e) => e.fruit === v[0].fruit && e.heat === v[0].heat)
+		);
+	});
 </script>
 
 <div class="flex flex-col gap-5">
@@ -205,6 +217,13 @@
 				{/each}
 			</ul>
 		</section>
+	{/if}
+
+	{#if allAlike}
+		<p class="prose-measure text-xs text-subtle">
+			{yeast.name} lands the same at all three. Its range is narrow and it is a well-behaved strain; inside
+			the green band the choice barely shows in the glass. Outside it is another matter.
+		</p>
 	{/if}
 
 	<FermentationGraph

@@ -55,8 +55,13 @@
 	{#if marks.length}
 		<div class="relative -mt-1 h-3.5" aria-hidden="true">
 			{#each marks as mark (mark.at)}
+				<!-- End marks sit inside the track instead of hanging off its edge. -->
 				<span
-					class="absolute -translate-x-1/2 text-[0.625rem] whitespace-nowrap text-subtle"
+					class="absolute text-[0.625rem] whitespace-nowrap text-subtle {mark.at <= min
+						? 'translate-x-0'
+						: mark.at >= max
+							? '-translate-x-full'
+							: '-translate-x-1/2'}"
 					style="left:{Math.max(0, Math.min(100, ((mark.at - min) / (max - min)) * 100))}%"
 				>
 					{mark.label}

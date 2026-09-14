@@ -21,7 +21,16 @@
 	);
 </script>
 
-<nav aria-label="Brew day" class="border-b border-line bg-surface-2/80 backdrop-blur-sm">
+<!--
+	overflow-x-hidden on the nav, not just the list: the list scrolls on its own,
+	but on a phone the whole page scrolled sideways anyway — Chrome let the
+	list's overflow through the blurred nav into the document. Twenty dots at
+	400 px is a page 655 px wide without it.
+-->
+<nav
+	aria-label="Brew day"
+	class="overflow-x-hidden border-b border-line bg-surface-2/80 backdrop-blur-sm"
+>
 	<ol
 		class="mx-auto flex max-w-[100rem] snap-x [scrollbar-width:thin] items-end gap-3 overflow-x-auto px-3 py-2 sm:gap-4 sm:px-5"
 	>

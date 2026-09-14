@@ -8,6 +8,7 @@
 	import AgeCurve from '../AgeCurve.svelte';
 	import BeerGlass from '../BeerGlass.svelte';
 	import LearningNote from '../LearningNote.svelte';
+	import Glossed from '../Glossed.svelte';
 	import { describeAppearance } from '$lib/brewing/appearance';
 	import { targetMisses } from '$lib/brewing/target';
 	import { scoreBand } from '$lib/brewing/scoring';
@@ -164,7 +165,9 @@
 							{/each}
 						</ul>
 					{/if}
-					<p class="prose-measure mt-2 text-sm text-muted">{result.verdict.summary}</p>
+					<p class="prose-measure mt-2 text-sm text-muted">
+						<Glossed text={result.verdict.summary} />
+					</p>
 				{:else}
 					<p class="prose-measure mt-2 text-sm text-muted">
 						{judged
@@ -353,7 +356,9 @@
 											: ''}
 								</span>
 							</h4>
-							<p class="prose-measure mt-0.5 text-xs text-muted">{decision.detail}</p>
+							<p class="prose-measure mt-0.5 text-xs text-muted">
+								<Glossed text={decision.detail} />
+							</p>
 						</div>
 					</li>
 				{/each}
@@ -387,7 +392,9 @@
 				{#each result.improvements as improvement (improvement.title)}
 					<li class="rounded-lg bg-surface p-3 ring-1 ring-line">
 						<h4 class="font-display text-sm font-semibold">{improvement.title}</h4>
-						<p class="prose-measure mt-1 text-xs text-muted">{improvement.detail}</p>
+						<p class="prose-measure mt-1 text-xs text-muted">
+							<Glossed text={improvement.detail} />
+						</p>
 					</li>
 				{/each}
 			</ul>

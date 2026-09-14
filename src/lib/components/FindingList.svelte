@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Glossed from './Glossed.svelte';
 	import type { Finding, Severity } from '$lib/brewing/types';
 	import { STAGES, stageForFields, type StageId } from '$lib/state/stages';
 
@@ -37,7 +38,7 @@
 				</span>
 				<h4 class="font-display text-sm font-semibold">{finding.title}</h4>
 			</div>
-			<p class="prose-measure mt-1.5 text-xs text-muted">{finding.explanation}</p>
+			<p class="prose-measure mt-1.5 text-xs text-muted"><Glossed text={finding.explanation} /></p>
 			{#if stage && ongoto}
 				<button
 					type="button"

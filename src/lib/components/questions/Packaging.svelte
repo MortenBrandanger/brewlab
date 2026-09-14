@@ -5,7 +5,6 @@
 	 * The choice, and — for bottles only — where the crate sits while it
 	 * carbonates, because that is part of the same decision.
 	 */
-	import SliderField from '../SliderField.svelte';
 	import SegmentedControl from '../SegmentedControl.svelte';
 	import { brew } from '$lib/state/brew.svelte';
 	import { DEFAULTS } from '$lib/brewing/recipes';
@@ -19,6 +18,28 @@
 	 * stage used to allow silently while still printing a sugar dose.
 	 */
 	const tooColdToCarbonate = $derived(packaging === 'bottles' && carbonationTempC < 15);
+
+	/** Where a crate of freshly capped bottles can stand for a fortnight. */
+	const SPOTS = [
+		{
+			id: 'room',
+			name: 'Indoors',
+			tempC: 20,
+			what: 'Room temperature, out of the light. The yeast left in the bottle is awake here and eats the priming sugar in about two weeks.'
+		},
+		{
+			id: 'cool',
+			name: 'A cool room',
+			tempC: 15,
+			what: 'The edge of what the yeast will work at. It gets there, but slowly — give it three weeks rather than two.'
+		},
+		{
+			id: 'cold',
+			name: 'Straight into the cold',
+			tempC: 8,
+			what: 'Too cold. The yeast goes dormant before it has touched the sugar, and the bottles stay flat however long you wait.'
+		}
+	];
 </script>
 
 <div class="flex flex-col gap-6">
@@ -42,20 +63,42 @@
 	/>
 
 	{#if packaging === 'bottles'}
-		<SliderField
-			label="Carbonating at"
-			bind:value={() => carbonationTempC, (v) => (brew.recipe.conditioning.carbonationTempC = v)}
-			defaultValue={DEFAULTS.conditioning.carbonationTempC}
-			min={2}
-			max={28}
-			step={1}
-			unit=" °C"
-			marks={[
-				{ at: 15, label: 'too cold' },
-				{ at: 21, label: 'room' }
-			]}
-			why="Where the crate sits for the first fortnight, before it goes anywhere cold. The yeast left in the bottle has to be awake to eat the priming sugar, and below about 15 °C it is not."
-		/>
+		<!-- Where the crate sits for the first fortnight. A place, not a number. -->
+		<div>
+			<p class="field-label mb-2">Where the crate sits while it carbonates</p>
+			<ul class="grid gap-2 sm:grid-cols-3">
+				{#each SPOTS as spot (spot.id)}
+					{@const selected = carbonationTempC === spot.tempC}
+					<li>
+						<button
+							type="button"
+							class="h-full w-full rounded-lg p-3 text-start ring-1 {selected
+								? 'bg-copper-dim ring-copper'
+								: 'bg-surface ring-line hover:bg-ui-hover hover:ring-line-strong'}"
+							aria-pressed={selected}
+							onclick={() => (brew.recipe.conditioning.carbonationTempC = spot.tempC)}
+						>
+							<span class="flex items-baseline justify-between gap-2">
+								<span class="text-sm font-medium">
+									{spot.name}
+									{#if selected && spot.tempC === DEFAULTS.conditioning.carbonationTempC}
+										<span class="ms-1.5 text-[0.625rem] tracking-wide text-fg/70 uppercase"
+											>default</span
+										>
+									{/if}
+								</span>
+								<span class="tnum text-xs {selected ? 'text-fg' : 'text-muted'}"
+									>{spot.tempC} °C</span
+								>
+							</span>
+							<span class="mt-0.5 block text-xs {selected ? 'text-fg' : 'text-subtle'}"
+								>{spot.what}</span
+							>
+						</button>
+					</li>
+				{/each}
+			</ul>
+		</div>
 		{#if tooColdToCarbonate}
 			<p class="flex items-start gap-1.5 text-sm text-warn">
 				<svg viewBox="0 0 16 16" class="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true">
