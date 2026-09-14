@@ -130,6 +130,8 @@ once.
 - `CLAUDE.md` — how to work in this repo, and the lessons that cost something.
 - `STATUS.md` — where the work has got to, what was parked on purpose, and what
   is still missing.
+- `GRAPHICS.md` — how the graphics are made, and what scene, camera, material,
+  environment map and instancing mean, as used in the 3D vessel.
 
 ## Licence and contributions
 

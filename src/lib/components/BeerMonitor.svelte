@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Vessel from './Vessel.svelte';
+	import Vessel3D from './Vessel3D.svelte';
 	import Meter from './Meter.svelte';
 	import FigureValue from './FigureValue.svelte';
 	import { appearanceOf } from '$lib/brewing/appearance';
@@ -265,6 +266,31 @@
 			.join(' ');
 	});
 
+	/**
+	 * How hard the contents are working, for the 3D vessel's bubbles. During a
+	 * playback it is the frame's own progress — a boil bubbles hardest, a
+	 * fermentation hardest in its first days; at rest it is what the stage
+	 * implies. Never invented: a pot of water does not bubble.
+	 */
+	const vesselActivity = $derived.by(() => {
+		if (playing && frame) {
+			const title = playing.playback.title;
+			if (title === 'Boiling') return 1;
+			if (title === 'Fermenting') return Math.max(0.15, 1 - frame.level) * 0.9;
+			if (title === 'Mashing') return 0.08;
+		}
+		if (brew.brewedTo >= 3 && brew.brewedTo < 4) return 0.9; // boil done: kettle just off the heat
+		if (brew.brewedTo >= 5 && brew.brewedTo < 7) return 0.35; // fermenting
+		if (brew.brewedTo >= 8) return 0.12; // a poured glass: carbonation only
+		return 0;
+	});
+	/** How full: the batch against a vessel a third bigger than it, like a real bucket. */
+	const vesselFill = $derived(
+		brew.brewedTo >= 8
+			? 0.8
+			: Math.min(0.92, brew.recipe.batchVolumeL / (brew.recipe.batchVolumeL * 1.35))
+	);
+
 	const status = $derived(
 		brew.brewedTo < 0
 			? 'Nothing brewed yet. The water is on.'
@@ -279,13 +305,25 @@
 
 <div class="flex flex-col gap-5 p-4">
 	<div class="flex items-start gap-3">
-		<Vessel
-			brewedTo={brew.brewedTo}
-			srm={result.metrics.srm}
-			haze={appearance.haze}
-			head={appearance.head}
-			carbonation={appearance.carbonation}
-		/>
+		{#if prefs.vessel3d}
+			<Vessel3D
+				brewedTo={brew.brewedTo}
+				srm={result.metrics.srm}
+				haze={appearance.haze}
+				head={appearance.head}
+				carbonation={appearance.carbonation}
+				activity={vesselActivity}
+				fill={vesselFill}
+			/>
+		{:else}
+			<Vessel
+				brewedTo={brew.brewedTo}
+				srm={result.metrics.srm}
+				haze={appearance.haze}
+				head={appearance.head}
+				carbonation={appearance.carbonation}
+			/>
+		{/if}
 		<div class="min-w-0 flex-1">
 			<h2 class="font-display text-base font-semibold">
 				{brew.knows('judgement') ? 'Your beer' : 'Brew day'}

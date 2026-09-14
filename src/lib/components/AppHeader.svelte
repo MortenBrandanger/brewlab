@@ -79,6 +79,17 @@
 			<button
 				type="button"
 				class="btn btn-quiet h-9 text-xs"
+				aria-pressed={prefs.vessel3d}
+				onclick={() => {
+					prefs.vessel3d = !prefs.vessel3d;
+					prefs.persist();
+				}}
+			>
+				{prefs.vessel3d ? 'Flat vessel' : '3D vessel'}
+			</button>
+			<button
+				type="button"
+				class="btn btn-quiet h-9 text-xs"
 				aria-pressed={prefs.motion}
 				onclick={() => {
 					prefs.motion = !prefs.motion;

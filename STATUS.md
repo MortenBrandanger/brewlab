@@ -75,6 +75,15 @@ which opens a definition under the word without breaking the sentence.
 Glossing stays out of picker buttons — a word inside a button is a click on
 the button.
 
+**The vessel in 3D.** `Vessel3D.svelte` renders the panel's vessel as a small
+Three.js scene driven by the simulation — liquid level, SRM colour, haze as
+transmission and roughness, head as a foam disc, bubbles as an instanced
+particle set proportional to how hard the model says the beer is working.
+Loaded on demand (737 KB chunk, ≈180 KB gzipped), falls back to the flat
+vessel without WebGL, stops rendering when nothing moves, and can be switched
+off with the header's "Flat vessel" toggle. `GRAPHICS.md` explains every
+concept it uses; the owner asked for the lesson as much as the vessel.
+
 **Verification state.** 197 tests green. `svelte-check` 0/0. Contrast audited
 live across every reachable question and the full report with every disclosure
 open — zero failures.
