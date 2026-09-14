@@ -147,6 +147,23 @@ region, take three frames seconds apart, and compare — that is how the
 frozen-playback bug and the double-size canvas were found. A GIF recording
 is better when motion itself is the question. Never trust "it compiles".
 
+## Figures from primitives
+
+The tasting panel's portraits are built the same way as the vessel
+(`src/lib/components/portraits.ts`): a sphere for a head, a half-sphere for
+shoulders, a cone and a torus for a hat, a squashed sphere for a beard, two
+tori for glasses, a shell for a hood, two flattened spheres for a dog's
+ears. Same three-band toon material, same ink hull, rendered once into a
+256-pixel PNG each through one shared offscreen WebGL context and cached.
+
+They work because they stop before the face. Silhouette and props are how
+pictograms and board-game pieces have always told people apart, and a
+procedural figure can do those well; an expression — a smile that reads as
+warm rather than unsettling — is where it falls apart and a hand takes
+over. So the eyes are two dots, the mouth is absent, and the character is
+carried by a hat, a beard, a hood, a cap, a snout. A real portrait dropped
+into `static/panel/` replaces the figure without a line of code.
+
 ## Where this could go
 
 The same data could drive more than it does: krausen that rises and falls

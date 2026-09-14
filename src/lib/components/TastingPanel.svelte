@@ -8,14 +8,27 @@
 	 * GRAPHICS.md — so they are image files the owner supplies in
 	 * static/panel/, and a monogram stands in until then.
 	 */
+	import { onMount } from 'svelte';
 	import { judgePanel, panelSplit } from '$lib/brewing/panel';
+	import { portraits } from './portraits';
 	import { brew } from '$lib/state/brew.svelte';
 
 	const tasters = $derived(judgePanel(brew.result, brew.recipe));
 	const split = $derived(panelSplit(tasters));
 
-	/** Portraits that failed to load fall back to the badge, once each. */
+	/**
+	 * Portraits: a PNG the owner supplied in static/panel/ wins; otherwise a
+	 * figure built by the graphics engine from primitives (portraits.ts); and
+	 * if even that cannot run, a monogram.
+	 */
 	let missing = $state<Record<string, boolean>>({});
+	let built = $state<Partial<Record<string, string>>>({});
+	onMount(() => {
+		portraits()
+			.then((p) => (built = p))
+			.catch(() => {});
+	});
+	const src = (id: string) => (missing[id] ? built[id] : `/panel/${id}.png`);
 </script>
 
 <section>
@@ -26,9 +39,9 @@
 	<ul class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
 		{#each tasters as t (t.id)}
 			<li class="flex gap-3 rounded-lg bg-surface p-3 ring-1 ring-line">
-				{#if !missing[t.id]}
+				{#if src(t.id)}
 					<img
-						src="/panel/{t.id}.png"
+						src={src(t.id)}
 						alt=""
 						width="56"
 						height="56"

@@ -97,9 +97,11 @@ Enthusiast, the Critic, the Monk, the Hopster, the Wild Card — each a
 weighting of the sensory vector, the faults and the style match, with a line
 chosen from what moved them most and hearts from their score. Their
 disagreement is the point: "The Hopster loved it; The Traditionalist did
-not. That gap is the beer." Portraits are the one thing the assistant should
-not draw: drop PNGs into `static/panel/` (see the README there); a monogram
-badge stands in. The full tasting note is now "What the Critic wrote down".
+not. That gap is the beer." Portraits: a PNG in `static/panel/` wins;
+otherwise `portraits.ts` builds each taster from primitives — head,
+shoulders, hat, beard, glasses, hood, a dog — in the vessel's toon style,
+rendered once offscreen into data URLs. Silhouette and props, two dots for
+eyes; expressions are where procedural figures stop and hand drawing starts. The full tasting note is now "What the Critic wrote down".
 
 **The vessel in 3D — illustrated, not "realistic".** `Vessel3D.svelte` renders
 the panel's vessel as a small Three.js scene driven by the simulation — liquid
