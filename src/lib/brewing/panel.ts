@@ -14,7 +14,7 @@
  * Deterministic, offline, and every heart traceable to a number.
  */
 
-import type { SimulationResult, Recipe, SensoryVector } from './types';
+import type { SimulationResult, Recipe } from './types';
 import { clamp } from './calculations';
 
 export type Taster = {
