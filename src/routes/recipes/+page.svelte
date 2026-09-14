@@ -5,6 +5,7 @@
 	import { simulate } from '$lib/brewing/simulate';
 	import { srmToCss } from '$lib/brewing/appearance';
 	import {
+		saveRecipe,
 		deleteRecipe,
 		duplicateRecipe,
 		importJson,
@@ -44,9 +45,25 @@
 		void goto(resolve('/'));
 	}
 
+	/**
+	 * Undo rather than confirm. A confirm dialog on every delete trains the
+	 * click-through that defeats it; keeping the last deleted recipe in memory
+	 * and offering it back costs nothing and recovers the real mistake.
+	 */
+	let lastDeleted = $state<StoredRecipe | undefined>(undefined);
+
 	async function remove(stored: StoredRecipe) {
 		await deleteRecipe(stored.id);
+		lastDeleted = stored;
 		status = `Deleted "${stored.name}".`;
+		await refresh();
+	}
+
+	async function undoDelete() {
+		if (!lastDeleted) return;
+		await saveRecipe(lastDeleted.recipe, lastDeleted);
+		status = `"${lastDeleted.name}" is back.`;
+		lastDeleted = undefined;
 		await refresh();
 	}
 
@@ -83,7 +100,18 @@
 		someone a link — the whole recipe travels inside the URL.
 	</p>
 
-	<p class="mt-3 min-h-4 text-xs text-muted" role="status" aria-live="polite">{status}</p>
+	<p class="mt-3 min-h-4 text-xs text-muted" role="status" aria-live="polite">
+		{status}
+		{#if lastDeleted}
+			<button
+				type="button"
+				class="ms-2 text-copper-text underline hover:no-underline"
+				onclick={undoDelete}
+			>
+				Undo
+			</button>
+		{/if}
+	</p>
 
 	<section class="mt-6">
 		<div class="flex flex-wrap items-center justify-between gap-3">

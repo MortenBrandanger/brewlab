@@ -316,7 +316,9 @@ export function computeRisks(
 		0,
 		2.5
 	);
-	const astringency = clamp(phRisk + roastRisk + spargeRisk, 0, 10);
+	// Husk fragments in the kettle for an hour give up tannin the grain bed would have held back.
+	const noVorlaufRisk = recipe.mash.vorlauf === false ? 0.9 : 0;
+	const astringency = clamp(phRisk + roastRisk + spargeRisk + noVorlaufRisk, 0, 10);
 
 	// Grassy: very long or very heavy dry hopping.
 	const grassy = clamp(

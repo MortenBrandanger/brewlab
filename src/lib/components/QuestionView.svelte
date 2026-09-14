@@ -11,6 +11,7 @@
 	import MashFinish from './questions/MashFinish.svelte';
 	import MashLanding from './questions/MashLanding.svelte';
 	import BatchSize from './questions/BatchSize.svelte';
+	import Vorlauf from './questions/Vorlauf.svelte';
 	import SpargeStop from './questions/SpargeStop.svelte';
 	import BoilTime from './questions/BoilTime.svelte';
 	import KettleHops from './questions/KettleHops.svelte';
@@ -44,6 +45,8 @@
 	<MashLanding />
 {:else if id === 'batch-size'}
 	<BatchSize />
+{:else if id === 'vorlauf'}
+	<Vorlauf />
 {:else if id === 'sparge-rig'}
 	<SpargeStop />
 {:else if id === 'boil-time'}

@@ -57,10 +57,16 @@ export const QUESTIONS: Question[] = [
 		hint: 'The grain is in and stirred, and you put the thermometer in. It never reads exactly what you aimed for — the grain was colder than you thought, the tun soaked up heat, the water was a degree off. Every brewer knows this moment: you aimed for one number and you are looking at another. A splash of near-boiling water lifts it back, at the cost of a thinner mash. Or you close the lid on what you have got, and the beer finishes a little differently from the one you planned.'
 	},
 	{
+		id: 'vorlauf',
+		stage: 'sparge',
+		ask: 'What do you do with the first jug?',
+		hint: 'The hour is up. You open the tap at the bottom of the tun and the first litre out is not the sweet, clear liquid you were hoping for — it is cloudy with flour and bits of husk that the grain bed has not yet caught. Brewers pour that first jug gently back over the top and let the bed settle and filter itself for a few minutes before they collect anything. The German word for it is vorlauf. Skip it and the flour goes to the kettle with everything else.'
+	},
+	{
 		id: 'sparge-rig',
 		stage: 'sparge',
 		ask: 'What are you brewing on?',
-		hint: 'The hour is up, and what happens next depends on the kit in front of you. You open the tap at the bottom of the tun and the sweet liquid — wort — runs out into the kettle, and then you rinse the grain with fresh hot water to wash out the sugar still clinging to it. That rinsing is what sparging means, and how thoroughly your setup does it is the difference between getting most of the sugar and leaving a good deal of it in the mash. It also decides how much you collect, because the boil takes some of it away as steam.'
+		hint: 'Then the rinse itself. Once the wort runs clear it runs into the kettle, and you rinse the grain with fresh hot water to wash out the sugar still clinging to it — that rinsing is what sparging means. How thoroughly your setup does it depends on the kit in front of you, and it is the difference between getting most of the sugar and leaving a good deal of it in the mash. It also decides how much you collect, because the boil takes some of it away as steam.'
 	},
 	{
 		id: 'boil-time',

@@ -115,8 +115,15 @@ export function hazeFor(recipe: Recipe): number {
 		recipe.hops.filter((h) => h.use === 'dryHop').reduce((sum, h) => sum + h.grams, 0) /
 		Math.max(1, recipe.batchVolumeL);
 
+	/*
+	 * Skipping the vorlauf sends the flour and husk fragments of the first
+	 * runnings to the kettle, and some of it never settles: a permanent light
+	 * haze that no cold crash removes.
+	 */
+	const noVorlauf = recipe.mash.vorlauf === false ? 0.14 : 0;
 	return clamp(
-		proteinShare * 0.55 +
+		noVorlauf +
+			proteinShare * 0.55 +
 			flocculation +
 			clamp(dryHopGPerL * 0.035, 0, 0.22) +
 			(recipe.fermentation.coldCrash ? -0.14 : 0.04) +

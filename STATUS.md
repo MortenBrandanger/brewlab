@@ -5,7 +5,7 @@ standard the UI is held to. This file is the state of the work.
 
 ## Done and stable
 
-**The shape.** Twenty-two questions, one decision per screen, grouped into nine
+**The shape.** Twenty-three questions, one decision per screen, grouped into nine
 stages that the engine still works in. Batch size opens the day; the
 fermentation is four acts (which yeast, how much, how warm, how long). `src/lib/state/questions.ts` is the
 spine: each question carries its `ask` and a `hint` that says what you are
@@ -75,6 +75,23 @@ which opens a definition under the word without breaking the sentence.
 Glossing stays out of picker buttons — a word inside a button is a click on
 the button.
 
+**The variance runs in a worker.** 240 simulations took ~190 ms on a desktop
+and would take the best part of a second on a phone, on the main thread, on
+every control move on the report. `variance.worker.ts` runs the same pure
+function off-thread; `state/variance.svelte.ts` drops stale replies and falls
+back to inline where workers do not exist. Measured before: `simulate` 1.7 ms,
+`forecast` without a yeast 12 ms, `analyseVariance(240)` 194 ms.
+
+**Vorlauf is a step.** The sparge stage opens with the cloudy first jug: pour
+it back (default) or straight to the kettle, which adds haze the cold crash
+cannot remove and a tannin grip. The last of the deliberately parked items.
+
+**Flows checked:** save, duplicate, delete (now with undo rather than a
+confirm), print sheet (plain labels, and it lists the rig, the sanitation, the
+mash landing and a skipped vorlauf), keyboard focus rings on cards and
+headings, and a programmatic pass (every button named, every input labelled,
+skip link, lang, landmarks).
+
 **The vessel in 3D.** `Vessel3D.svelte` renders the panel's vessel as a small
 Three.js scene driven by the simulation — liquid level, SRM colour, haze as
 transmission and roughness, head as a foam disc, bubbles as an instanced
@@ -84,7 +101,7 @@ vessel without WebGL, stops rendering when nothing moves, and can be switched
 off with the header's "Flat vessel" toggle. `GRAPHICS.md` explains every
 concept it uses; the owner asked for the lesson as much as the vessel.
 
-**Verification state.** 197 tests green. `svelte-check` 0/0. Contrast audited
+**Verification state.** 199 tests green. `svelte-check` 0/0. Contrast audited
 live across every reachable question and the full report with every disclosure
 open — zero failures.
 
@@ -92,7 +109,6 @@ open — zero failures.
 
 These were considered and parked on purpose. Do not treat them as oversights.
 
-- **Vorlauf.** Same category.
 - **Free backward navigation.** The owner is undecided on whether you should be
   able to jump back anywhere: _"jeg er egentlig usikker på om man skal kunne
   hoppe fritt bakover også. men vi kan diskutere det mer senere."_ Do not

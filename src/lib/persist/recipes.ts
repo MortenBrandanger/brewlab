@@ -85,6 +85,7 @@ export function normaliseRecipe(input: unknown): Recipe {
 			thicknessLPerKg: num(mash.thicknessLPerKg, base.mash.thicknessLPerKg),
 			landedTempC: typeof mash.landedTempC === 'number' ? mash.landedTempC : undefined,
 			toppedUpL: typeof mash.toppedUpL === 'number' ? mash.toppedUpL : undefined,
+			vorlauf: typeof mash.vorlauf === 'boolean' ? mash.vorlauf : undefined,
 			steps: Array.isArray(mash.steps)
 				? mash.steps
 						.filter((s): s is UnknownRecord => typeof s === 'object' && s !== null)

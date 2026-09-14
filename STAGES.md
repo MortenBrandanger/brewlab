@@ -46,7 +46,7 @@ Nothing is claimed about the beer before it is true.
 
 ## The shape
 
-**One question per screen.** There are twenty-two, and if brewing turns out to
+**One question per screen.** There are twenty-three, and if brewing turns out to
 have more, there are more. Nine stages came from the brief rather than from
 brewing, and every stage that held more than one decision read as a pile — the
 water stage was the only one anybody ever found clear, and it is the only one
@@ -119,8 +119,12 @@ Each names the physical act, the decision it asks for, and what it must not do.
 
 ### 4. Sparge
 
-- **You are doing:** draining the tun into the kettle and rinsing the grain.
-- **You decide:** what you are brewing on. That is the real decision at the tun — how thoroughly you rinse — and it is
+- **You are doing:** opening the tap, dealing with the cloudy first jug, then
+  draining the tun into the kettle and rinsing the grain.
+- **You decide:** what to do with the first runnings — pour them back until the
+  bed runs clear (the vorlauf), or collect from the first drop and send the
+  flour to the kettle, which leaves a haze and a drying grip the model carries
+  through. Then what you are brewing on. That is the real decision at the tun — how thoroughly you rinse — and it is
   the kit in front of you. Efficiency and collection volume are consequences of
   it, never controls.
 - **Must show:** where every litre goes, and that the boil takes volume away.

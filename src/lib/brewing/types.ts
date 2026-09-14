@@ -126,6 +126,12 @@ export type MashSetup = {
 	landedTempC?: Celsius;
 	/** Litres of near-boiling water added to lift a cold mash back to its aim. */
 	toppedUpL?: Litres;
+	/**
+	 * Whether the first cloudy runnings were poured back over the grain until
+	 * the bed had settled and started filtering — the vorlauf. Absent means
+	 * yes, which is what every brewer who has been told about it does.
+	 */
+	vorlauf?: boolean;
 };
 
 /* -------------------------------------------------------------------------- */

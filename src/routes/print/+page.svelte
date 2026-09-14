@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { rigFor } from '$lib/brewing/rigs';
 	import { resolve } from '$app/paths';
 	import { getFermentable, getHop, getYeast } from '$lib/brewing/ingredients';
 	import {
@@ -18,6 +19,13 @@
 	const yeast = $derived(getYeast(recipe.fermentation.yeastId));
 	const waterProfile = $derived(WATER_PROFILE_BY_ID.get(recipe.water.profileId));
 	const activeSalts = $derived(SALTS.filter((s) => (recipe.water.salts[s.key] ?? 0) > 0));
+
+	const SANITATION_LABEL = {
+		rinse: 'rinsed only',
+		boiling: 'boiling water',
+		'no-rinse': 'no-rinse sanitiser',
+		bleach: 'bleach, rinsed'
+	} as const;
 </script>
 
 <svelte:head><title>{recipe.name} — recipe sheet</title></svelte:head>
@@ -34,9 +42,10 @@
 		<header>
 			<h1 class="font-display text-xl">{recipe.name}</h1>
 			<p class="tnum mt-2 text-sm text-muted">
-				{recipe.batchVolumeL.toFixed(1)} L · OG {result.metrics.og.toFixed(3)} · FG
-				{result.metrics.fg.toFixed(3)} · {result.metrics.abv.toFixed(1)}% ABV ·
-				{Math.round(result.metrics.ibu)} IBU · {Math.round(result.metrics.ebc)} EBC
+				{recipe.batchVolumeL.toFixed(1)} L · starting gravity {result.metrics.og.toFixed(3)} · finishing
+				{result.metrics.fg.toFixed(3)} · {result.metrics.abv.toFixed(1)}% alcohol · bitterness {Math.round(
+					result.metrics.ibu
+				)} IBU · colour {Math.round(result.metrics.ebc)} EBC
 			</p>
 			{#if result.styles[0]}
 				<p class="mt-1 text-sm text-subtle">
@@ -81,7 +90,8 @@
 						{#if hop}
 							<tr class="border-b border-line/60">
 								<td class="py-1.5"
-									>{hop.name} <span class="text-subtle">({hop.alphaAcid.toFixed(1)}% AA)</span></td
+									>{hop.name}
+									<span class="text-subtle">({hop.alphaAcid.toFixed(1)}% alpha)</span></td
 								>
 								<td class="tnum py-1.5 text-end">{addition.grams} g</td>
 								<td class="py-1.5 text-end text-subtle">{hopAdditionSummary(addition)}</td>
@@ -114,6 +124,14 @@
 						<li class="tnum">{step.tempC} °C for {step.minutes} min</li>
 					{/each}
 					<li class="tnum">Thickness {recipe.mash.thicknessLPerKg.toFixed(1)} L/kg</li>
+					{#if recipe.mash.landedTempC !== undefined}
+						<li class="tnum">Landed at {recipe.mash.landedTempC.toFixed(1)} °C and left there</li>
+					{:else if recipe.mash.toppedUpL !== undefined}
+						<li class="tnum">Topped up with {recipe.mash.toppedUpL.toFixed(1)} L of hot water</li>
+					{/if}
+					{#if recipe.mash.vorlauf === false}
+						<li>First runnings straight to the kettle, no vorlauf</li>
+					{/if}
 				</ul>
 			</section>
 
@@ -124,8 +142,14 @@
 					<li>
 						Pre-boil {recipe.preBoilVolumeL.toFixed(1)} L → {recipe.batchVolumeL.toFixed(1)} L
 					</li>
-					<li>Efficiency {recipe.efficiencyPct}%</li>
-					<li>Chill in {recipe.chill.minutes} min, pitch at {recipe.chill.pitchTempC} °C</li>
+					<li>
+						{rigFor(recipe.efficiencyPct).name} · washes out about {recipe.efficiencyPct}% of the
+						sugar
+					</li>
+					<li>
+						Kit: {SANITATION_LABEL[recipe.chill.sanitation ?? 'no-rinse']} · chill in {recipe.chill
+							.minutes} min, pitch at {recipe.chill.pitchTempC} °C
+					</li>
 				</ul>
 			</section>
 
