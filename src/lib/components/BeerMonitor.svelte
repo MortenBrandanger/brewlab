@@ -9,6 +9,9 @@
 	import { brew } from '$lib/state/brew.svelte';
 	import { forecastAbv } from '$lib/brewing/forecast';
 	import { targetMisses } from '$lib/brewing/target';
+	import { playbackFor, type Playback } from '$lib/brewing/playback';
+	import { prefs } from '$lib/state/prefs.svelte';
+	import { untrack } from 'svelte';
 	import { STAGES, stageForFields, stageIndex, type Reveal } from '$lib/state/stages';
 	import type { SensoryKey } from '$lib/brewing/types';
 
@@ -197,6 +200,65 @@
 		return rows;
 	});
 
+	/**
+	 * The process the reader just set going, played back from the model's own
+	 * frames. Runs once per act, compressed to a few seconds; a click skips to
+	 * the end. Nothing plays when motion is off — the end state is what the
+	 * panel shows anyway.
+	 */
+	let playing = $state<{ playback: Playback; progress: number } | undefined>(undefined);
+	let raf = 0;
+	$effect(() => {
+		const did = brew.justDid;
+		if (!did) return;
+		const ctx = untrack(() => brew.context);
+		const playback = ctx && prefs.animate ? playbackFor(did.stage, ctx) : undefined;
+		if (!playback) return;
+		const started = performance.now();
+		cancelAnimationFrame(raf);
+		const tick = (now: number) => {
+			const progress = Math.min(1, (now - started) / playback.runMs);
+			playing = { playback, progress };
+			if (progress < 1) raf = requestAnimationFrame(tick);
+			else {
+				// Hold the last frame for a moment, then hand back to the panel.
+				setTimeout(() => {
+					playing = undefined;
+					brew.justDid = undefined;
+				}, 900);
+			}
+		};
+		raf = requestAnimationFrame(tick);
+		return () => cancelAnimationFrame(raf);
+	});
+
+	function skip() {
+		cancelAnimationFrame(raf);
+		playing = undefined;
+		brew.justDid = undefined;
+	}
+
+	const frame = $derived.by(() => {
+		if (!playing) return undefined;
+		const { samples } = playing.playback;
+		const i = Math.min(samples.length - 1, Math.floor(playing.progress * (samples.length - 1)));
+		return samples[i];
+	});
+
+	/** The trace up to now: a path through every sample already played. */
+	const tracePath = $derived.by(() => {
+		if (!playing) return '';
+		const { samples } = playing.playback;
+		const n = Math.max(1, Math.floor(playing.progress * (samples.length - 1)));
+		return samples
+			.slice(0, n + 1)
+			.map(
+				(s, i) =>
+					`${i === 0 ? 'M' : 'L'} ${(s.at * 100).toFixed(2)} ${(30 - s.level * 28).toFixed(2)}`
+			)
+			.join(' ');
+	});
+
 	const status = $derived(
 		brew.brewedTo < 0
 			? 'Nothing brewed yet. The water is on.'
@@ -222,7 +284,53 @@
 			<h2 class="font-display text-base font-semibold">
 				{brew.knows('judgement') ? 'Your beer' : 'Brew day'}
 			</h2>
-			<p class="mt-0.5 text-xs text-muted">{status}</p>
+			{#if playing && frame}
+				<!--
+					Not an animation of brewing: the model's own frames, played back.
+					Every figure here was computed on the way to the report.
+				-->
+				<button
+					type="button"
+					class="mt-0.5 block w-full rounded-md text-start hover:bg-ui-hover"
+					onclick={skip}
+					aria-label="{playing.playback.title}, {frame.when}: {frame.primary}. Skip to the end."
+				>
+					<p class="text-xs text-muted">
+						{playing.playback.title}
+						<span class="text-subtle">· {playing.playback.duration}, played in seconds</span>
+					</p>
+					<p class="tnum mt-1 font-display text-lg leading-tight text-fg">{frame.primary}</p>
+					<p class="tnum text-xs text-muted">
+						{frame.when}{frame.secondary ? ` · ${frame.secondary}` : ''}
+					</p>
+					<svg
+						viewBox="0 0 100 32"
+						preserveAspectRatio="none"
+						class="mt-2 h-8 w-full"
+						aria-hidden="true"
+					>
+						<line
+							x1="0"
+							y1="30"
+							x2="100"
+							y2="30"
+							stroke="var(--color-line)"
+							stroke-width="0.5"
+							vector-effect="non-scaling-stroke"
+						/>
+						<path
+							d={tracePath}
+							fill="none"
+							stroke="var(--color-amber)"
+							stroke-width="2"
+							vector-effect="non-scaling-stroke"
+							stroke-linejoin="round"
+						/>
+					</svg>
+				</button>
+			{:else}
+				<p class="mt-0.5 text-xs text-muted">{status}</p>
+			{/if}
 
 			{#if closest}
 				<p class="mt-3 text-xs text-subtle">

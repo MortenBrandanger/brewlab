@@ -19,7 +19,7 @@ anywhere.
 ```sh
 pnpm install
 pnpm dev        # http://localhost:5173
-pnpm test       # 163 tests
+pnpm test       # 166 tests
 pnpm check      # svelte-check
 pnpm lint
 pnpm build      # static site in build/
@@ -90,10 +90,14 @@ esters, fusels and diacetyl all come out of one mechanism — how much the yeast
 grew, and how warm it was while growing. Attenuation is therefore an outcome
 rather than a strain property.
 
-Three things are built on top: `forecast.ts` narrows a range of what the beer
-could still become as decisions land, `taster.ts` writes a first-person
-tasting note from the finished model, and `rigs.ts` turns "what are you brewing
-on" into brewhouse efficiency and collection volume.
+Five things are built on top: `forecast.ts` narrows a range of what the beer
+could still become as decisions land; `target.ts` compares that projection
+with the style you said you wanted, from the first grain onward; `taster.ts`
+writes a first-person tasting note from the finished model; `rigs.ts` turns
+"what are you brewing on" into brewhouse efficiency and collection volume; and
+`playback.ts` hands the panel the frames the model computed on the way — the
+mash minute by minute, the boil, the fermentation day by day — so pressing
+"Mash in" shows the hour happen rather than a label change.
 
 ### What the model is, and is not
 

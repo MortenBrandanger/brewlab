@@ -114,11 +114,22 @@ class BrewStore {
 		return undefined;
 	}
 
+	/**
+	 * The stage just carried out, for the panel to play back. Cleared when the
+	 * playback ends or the reader moves on; never restored from storage,
+	 * because a playback is of the act of pressing the button.
+	 */
+	justDid = $state<{ stage: StageId; at: number } | undefined>(undefined);
+
 	/** Carry out the current stage and move to the next one. */
 	commit(stage: StageId): StageId | undefined {
 		const index = stageIndex(stage);
 		if (this.blockedBecause(stage)) return undefined;
+		const first = this.brewedTo < index;
 		this.brewedTo = Math.max(this.brewedTo, index);
+		// Only the first time through: re-committing a stage after going back
+		// to change something is an edit, not a brew day.
+		this.justDid = first ? { stage, at: Date.now() } : undefined;
 		const next = STAGES[index + 1];
 		if (next) {
 			this.stage = next.id;

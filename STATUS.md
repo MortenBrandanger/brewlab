@@ -44,7 +44,14 @@ opens with "you aimed at X and missed on…". Scoring can no longer call an
 87-IBU porter coherent (BU:GU now enters coherence) and a severe fault caps
 both enjoyment and the headline.
 
-**Verification state.** 163 tests green. `svelte-check` 0/0. Contrast audited
+**The brew day plays back.** `playback.ts` exposes the frames the model already
+computed — the mash minute by minute, the boil as bitterness accumulates and
+water leaves, the fermentation day by day — and the panel plays them for a
+few seconds when a stage is carried out. Not an animation drawn to look like
+brewing: a playback of the simulation that ran. Skippable by click, silent
+when motion is off, and only on the first pass through a stage.
+
+**Verification state.** 166 tests green. `svelte-check` 0/0. Contrast audited
 live across every reachable question and the full report with every disclosure
 open — zero failures.
 
