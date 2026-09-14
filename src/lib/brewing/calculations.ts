@@ -286,7 +286,7 @@ export function computeMashProfile(mash: MashSetup, inputs: MashInputs = {}): Ma
 	if (hasMashOut) {
 		efficiencyFactor *= 1.02;
 		notes.push(
-			'The mash-out — a short hot rest at the end — stops the enzymes, so the sugar profile is fixed from here, and it thins the wort so it runs off more freely.'
+			'The short hot rest at the end stops the enzymes, so what the bar shows is what goes to the kettle.'
 		);
 	}
 

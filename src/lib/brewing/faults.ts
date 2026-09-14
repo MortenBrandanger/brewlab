@@ -25,7 +25,9 @@ export const FAULT_THRESHOLD = {
 	oxidation: 5,
 	infection: 5,
 	/** Vegetal character from over-long or over-large dry hopping. */
-	grassy: 4
+	grassy: 4,
+	/** Chlorine left on the kit meeting the beer's phenols. */
+	chlorophenol: 3.5
 } as const;
 
 export function computeFindings(ctx: EngineContext): Finding[] {
@@ -545,9 +547,22 @@ export function computeFindings(ctx: EngineContext): Finding[] {
 			severity: risks.infection > 7 ? 'warning' : 'caution',
 			title: 'Contamination risk',
 			explanation:
-				'Wort is an ideal growth medium for almost anything. Slow chilling, hot pitching and careless transfers all give wild yeast and bacteria a head start before your yeast takes over. The result is usually a slow souring or a stubborn haze weeks later.',
+				(recipe.chill.sanitation ?? 'no-rinse') === 'rinse'
+					? 'Wort is an ideal growth medium for almost anything, and a rinse under the tap leaves whatever the last batch left on the fermenter. This is the step most first brews go wrong on. A no-rinse sanitiser takes two minutes and removes most of the risk.'
+					: 'Wort is an ideal growth medium for almost anything. Slow chilling, hot pitching and careless transfers all give wild yeast and bacteria a head start before your yeast takes over. The result is usually a slow souring or a stubborn haze weeks later.',
 			impact: { technical: -clamp((risks.infection - 4) * 2, 0, 12) },
 			fields: ['chill']
+		});
+	}
+	if (risks.chlorophenol > FAULT_THRESHOLD.chlorophenol) {
+		add({
+			code: 'CHLOROPHENOL',
+			severity: 'caution',
+			title: 'A medicinal note from the bleach',
+			explanation:
+				'Bleach kills everything, and then it has to be rinsed off with water that is not sterile. A trace left on the kit meets the phenols in the beer and makes chlorophenol, which tastes of plastic and antiseptic at a few parts per billion. Rinse three times with hot water, or use a no-rinse sanitiser and skip the problem.',
+			impact: { technical: -4, enjoyment: -3 },
+			fields: ['chill.sanitation']
 		});
 	}
 

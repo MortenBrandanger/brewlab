@@ -82,6 +82,12 @@ export const QUESTIONS: Question[] = [
 		optional: true
 	},
 	{
+		id: 'sanitise',
+		stage: 'chill',
+		ask: 'How clean is everything the beer will touch?',
+		hint: 'The boil is nearly done, and the moment the wort drops below about 60 °C anything that touches it can grow in it. So before that happens you deal with everything on the cold side — the fermenter, the siphon, the airlock, the spoon, your hands. Cleaning removes what you can see; sanitising kills what you cannot, and the two are not the same job. It is the least interesting quarter of an hour on the day, and the one most first batches go wrong on.'
+	},
+	{
 		id: 'chill-method',
 		stage: 'chill',
 		ask: 'How are you cooling it down?',
@@ -91,7 +97,7 @@ export const QUESTIONS: Question[] = [
 		id: 'transfer',
 		stage: 'chill',
 		ask: 'How carefully does it go into the fermenter?',
-		hint: 'You siphon the cooled wort off the sludge of spent hops and settled protein and into a clean bucket. Everything it touches from here has been sanitised, because the beer has no heat defending it any more. How gently it goes across decides how much air goes in with it.'
+		hint: 'You siphon the cooled wort off the sludge of spent hops and settled protein and into the bucket you sanitised earlier. The beer has no heat defending it any more, so how gently it goes across decides how much air goes in with it — and air, from here on, is the enemy.'
 	},
 	{
 		id: 'yeast',

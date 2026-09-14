@@ -5,7 +5,7 @@ standard the UI is held to. This file is the state of the work.
 
 ## Done and stable
 
-**The shape.** Twenty-one questions, one decision per screen, grouped into nine
+**The shape.** Twenty-two questions, one decision per screen, grouped into nine
 stages that the engine still works in. Batch size opens the day; the
 fermentation is four acts (which yeast, how much, how warm, how long). `src/lib/state/questions.ts` is the
 spine: each question carries its `ask` and a `hint` that says what you are
@@ -53,6 +53,13 @@ not close the lid until the thermometer has been read. The brewer persona's
 number-one request, and the variance panel's "hitting the mash temperature"
 is now something you experience rather than read.
 
+**Sanitation is modelled.** The chill stage opens with "how clean is everything
+the beer will touch": rinse, boiling water, no-rinse sanitiser (default) or
+bleach. A rinse adds 4.5 to the contamination risk; bleach adds a
+chlorophenol risk with its own fault and taster line. Each card shows its risk
+from a run of the model. `chill.sanitation` is optional on the recipe and read
+as the default when absent, so saved recipes round-trip unchanged.
+
 **The brew day plays back.** `playback.ts` exposes the frames the model already
 computed — the mash minute by minute, the boil as bitterness accumulates and
 water leaves, the fermentation day by day — and the panel plays them for a
@@ -68,7 +75,7 @@ which opens a definition under the word without breaking the sentence.
 Glossing stays out of picker buttons — a word inside a button is a click on
 the button.
 
-**Verification state.** 171 tests green. `svelte-check` 0/0. Contrast audited
+**Verification state.** 174 tests green. `svelte-check` 0/0. Contrast audited
 live across every reachable question and the full report with every disclosure
 open — zero failures.
 
@@ -76,9 +83,6 @@ open — zero failures.
 
 These were considered and parked on purpose. Do not treat them as oversights.
 
-- **Sanitation as a modelled variable.** Infection risk exists as a signal but
-  nothing the reader does feeds it. Wiring it up means a calibrated change, not
-  a bolt-on.
 - **Vorlauf.** Same category.
 - **Free backward navigation.** The owner is undecided on whether you should be
   able to jump back anywhere: _"jeg er egentlig usikker på om man skal kunne

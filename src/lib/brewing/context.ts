@@ -53,5 +53,7 @@ export type EngineContext = {
 		astringency: number;
 		dms: number;
 		grassy: number;
+		/** Chlorine left on the kit meeting the phenols in the beer: medicinal, plastic. */
+		chlorophenol: number;
 	};
 };

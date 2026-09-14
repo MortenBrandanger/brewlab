@@ -20,7 +20,7 @@ making the surface say something truer, not by adding a control.
 
 ```sh
 pnpm dev          # dev server
-pnpm test         # vitest, 171 tests — must stay green
+pnpm test         # vitest, 174 tests — must stay green
 pnpm check        # svelte-check, must be 0 errors 0 warnings
 pnpm lint         # prettier + eslint
 pnpm build        # static site into build/

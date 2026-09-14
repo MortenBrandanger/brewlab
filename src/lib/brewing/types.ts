@@ -244,12 +244,22 @@ export type FermentationSetup = {
 	coldCrash: boolean;
 };
 
+/**
+ * What was done to everything the cold wort will touch. Cleaning removes what
+ * you can see; sanitising kills what you cannot. A rinse is the first, a
+ * no-rinse sanitiser the second, boiling water somewhere between, and bleach
+ * the second with a cost of its own if the rinse afterwards is ordinary.
+ */
+export type Sanitation = 'rinse' | 'boiling' | 'no-rinse' | 'bleach';
+
 export type ChillSetup = {
 	/** Minutes from flameout to pitching temperature. */
 	minutes: number;
 	pitchTempC: Celsius;
 	/** How carefully the cold side is handled. */
 	transferQuality: 'careless' | 'normal' | 'closed';
+	/** Absent on older recipes, which are read as the sensible default. */
+	sanitation?: Sanitation;
 };
 
 export type ConditioningSetup = {

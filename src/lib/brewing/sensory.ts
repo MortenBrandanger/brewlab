@@ -264,10 +264,38 @@ export function computeRisks(
 	const dryHopOxygen = clamp(hopLoad.dryHopGPerL / 6, 0, 1.5);
 	const oxidation = clamp(transferRisk + warmAge + dryHopOxygen, 0, 10);
 
-	// Infection: slow chilling, careless handling, wild cultures aside.
+	/*
+	 * Infection: slow chilling, careless handling, and above all what was done
+	 * to the kit. Sanitation used to be the one thing on a brew day the model
+	 * did not know about, which meant a fermenter rinsed under the tap scored
+	 * the same as one soaked in sanitiser. A rinse leaves what the last batch
+	 * left; boiling water reaches the surfaces it is poured on and not the
+	 * inside of the tubing; a no-rinse sanitiser is what the number assumes.
+	 */
+	const sanitation = recipe.chill.sanitation ?? 'no-rinse';
+	const kitRisk =
+		sanitation === 'rinse'
+			? 4.5
+			: sanitation === 'boiling'
+				? 1.6
+				: sanitation === 'bleach'
+					? 0.3
+					: 0;
 	const chillRisk = clamp((recipe.chill.minutes - 30) / 60, 0, 3);
 	const hotPitch = clamp((recipe.chill.pitchTempC - (yeast.tempMaxC + 2)) / 5, 0, 3);
-	const infection = clamp(chillRisk + hotPitch + (transfer === 'careless' ? 2.5 : 0), 0, 10);
+	const infection = clamp(
+		kitRisk + chillRisk + hotPitch + (transfer === 'careless' ? 2.5 : 0),
+		0,
+		10
+	);
+
+	/*
+	 * Bleach kills everything and then has to be rinsed off with water that is
+	 * not sterile, and a trace left behind meets the phenols in the beer and
+	 * makes chlorophenol — medicinal, plastic, TCP. The model assumes an
+	 * ordinary rinse rather than a heroic one.
+	 */
+	const chlorophenol = sanitation === 'bleach' ? 4.2 : 0;
 
 	// DMS: pilsner malt plus a short or covered boil.
 	const pilsnerShare = recipe.fermentables.reduce((sum, a) => {
@@ -297,7 +325,7 @@ export function computeRisks(
 		10
 	);
 
-	return { fusel, diacetyl, oxidation, infection, astringency, dms, grassy };
+	return { fusel, diacetyl, oxidation, infection, astringency, dms, grassy, chlorophenol };
 }
 
 /* -------------------------------------------------------------------------- */

@@ -129,7 +129,14 @@ export function normaliseRecipe(input: unknown): Recipe {
 		chill: {
 			minutes: num(chill.minutes, base.chill.minutes),
 			pitchTempC: num(chill.pitchTempC, base.chill.pitchTempC),
-			transferQuality: (chill.transferQuality as Recipe['chill']['transferQuality']) ?? 'normal'
+			transferQuality: (chill.transferQuality as Recipe['chill']['transferQuality']) ?? 'normal',
+			// Left undefined when absent: the engine reads that as the sensible
+			// default, and a recipe must survive export and import byte for byte.
+			sanitation: (['rinse', 'boiling', 'no-rinse', 'bleach'] as const).includes(
+				chill.sanitation as never
+			)
+				? (chill.sanitation as Recipe['chill']['sanitation'])
+				: undefined
 		},
 		conditioning: {
 			days: num(conditioning.days, base.conditioning.days),

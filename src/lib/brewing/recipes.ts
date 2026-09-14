@@ -656,7 +656,7 @@ export function emptyRecipe(): Recipe {
 			steps: [fermStep('Primary', 19, 14)],
 			coldCrash: true
 		},
-		chill: { minutes: 25, pitchTempC: 18, transferQuality: 'normal' },
+		chill: { minutes: 25, pitchTempC: 18, transferQuality: 'normal', sanitation: 'no-rinse' },
 		conditioning: {
 			days: 14,
 			tempC: 8,

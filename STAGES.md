@@ -46,7 +46,7 @@ Nothing is claimed about the beer before it is true.
 
 ## The shape
 
-**One question per screen.** There are twenty-one, and if brewing turns out to
+**One question per screen.** There are twenty-two, and if brewing turns out to
 have more, there are more. Nine stages came from the brief rather than from
 brewing, and every stage that held more than one decision read as a pile — the
 water stage was the only one anybody ever found clear, and it is the only one
@@ -139,10 +139,17 @@ Each names the physical act, the decision it asks for, and what it must not do.
 
 ### 6. Chill
 
-- **You are doing:** cooling the wort and siphoning it into a clean bucket.
-- **You decide:** how fast, what temperature to pitch at, how carefully to
-  transfer.
-- **Must show:** risk as probability, not prophecy.
+- **You are doing:** sanitising everything the cold wort will touch, cooling
+  the wort, and siphoning it into the bucket.
+- **You decide:** how clean the kit is — a rinse, boiling water, a no-rinse
+  sanitiser, or bleach — then how fast to chill, then how carefully to
+  transfer. Sanitation is a modelled variable: a rinse leaves what the last
+  batch left and feeds the contamination risk; bleach kills everything and
+  leaves a medicinal note if the rinse afterwards is ordinary. It was the one
+  thing on a brew day the model did not know about, and the step most first
+  batches go wrong on.
+- **Must show:** risk as probability, not prophecy, and each choice's risk on
+  its card from a run of the model.
 
 ### 7. Ferment
 

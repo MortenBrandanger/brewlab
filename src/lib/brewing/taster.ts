@@ -83,7 +83,8 @@ const FAULT_SMELL: { key: keyof typeof FAULT_THRESHOLD; text: string }[] = [
 	{ key: 'oxidation', text: 'wet cardboard, and a stale sherry note under it' },
 	{ key: 'fusel', text: 'a hot, solvent edge' },
 	{ key: 'grassy', text: 'cut grass and green tea' },
-	{ key: 'infection', text: 'a sourness nobody asked for' }
+	{ key: 'infection', text: 'a sourness nobody asked for' },
+	{ key: 'chlorophenol', text: 'a medicinal, plastic note, like a swimming pool' }
 ];
 
 /**

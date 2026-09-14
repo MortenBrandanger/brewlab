@@ -15,6 +15,7 @@
 	import BoilTime from './questions/BoilTime.svelte';
 	import KettleHops from './questions/KettleHops.svelte';
 	import FlameoutHops from './questions/FlameoutHops.svelte';
+	import Sanitise from './questions/Sanitise.svelte';
 	import ChillMethod from './questions/ChillMethod.svelte';
 	import Transfer from './questions/Transfer.svelte';
 	import YeastChoice from './questions/YeastChoice.svelte';
@@ -51,6 +52,8 @@
 	<KettleHops />
 {:else if id === 'flameout-hops'}
 	<FlameoutHops />
+{:else if id === 'sanitise'}
+	<Sanitise />
 {:else if id === 'chill-method'}
 	<ChillMethod />
 {:else if id === 'transfer'}
