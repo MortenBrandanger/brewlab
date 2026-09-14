@@ -20,7 +20,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 110,
 		fermentability: 1,
 		sensory: { malt: 3, crispness: 2 },
-		blurb: 'Pale, clean and faintly honeyed. The blank canvas of continental brewing.',
+		blurb:
+			'The palest, cleanest base malt there is: faintly honeyed, and it gets out of the way of everything else. What most European lagers are built on.',
 		note: 'Kilned gently, so it keeps a high enzyme load and a delicate, slightly grainy sweetness. Rich in the precursor that turns into DMS, which is why pilsner malt likes a vigorous, uncovered 90 minute boil.'
 	},
 	{
@@ -34,7 +35,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 60,
 		fermentability: 1,
 		sensory: { malt: 3.5 },
-		blurb: 'A touch more kilning than pilsner: bready, dependable, forgiving.',
+		blurb:
+			'Dried a little harder than pilsner malt, so it tastes of bread rather than honey. Forgiving, dependable, and the base of most ales.',
 		note: 'The default base malt for ales. Plenty of diastatic power to convert itself and a reasonable load of adjuncts alongside it.'
 	},
 	{
@@ -48,7 +50,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 45,
 		fermentability: 0.99,
 		sensory: { malt: 4.5, caramel: 0.5 },
-		blurb: 'English floor-malted classic with a nutty, biscuit depth.',
+		blurb:
+			'An English barley variety with a nutty, biscuity depth that plain pale malt does not have. The base of a proper bitter.',
 		note: 'A heritage barley variety kept alive by brewers rather than farmers. It gives more malt character than its colour suggests, which is why so many British bitters use nothing else.'
 	},
 	{
@@ -62,7 +65,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 50,
 		fermentability: 0.99,
 		sensory: { malt: 5, caramel: 0.5 },
-		blurb: 'Light toast and a warm golden colour.',
+		blurb:
+			'Toasted lightly, so it brings a warm golden colour and a hint of toast without any sweetness. Can be the whole base of a beer.',
 		note: 'Kilned a little hotter than pale malt. Fine as 100% of a grist when you want a malt-forward beer that still finishes clean.'
 	},
 	{
@@ -76,7 +80,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 40,
 		fermentability: 0.97,
 		sensory: { malt: 6.5, caramel: 1 },
-		blurb: 'Deep bready malt with a faint toasted crust.',
+		blurb:
+			'Toasted further than Vienna: deep bready flavour and a faint crust. Used as a share of the base to make a beer taste more of malt.',
 		note: 'Retains just enough enzymes to convert itself. Use it as a base for märzen and bock, or as 10–20% of a pale grist to add malt depth without sweetness.'
 	},
 	{
@@ -90,7 +95,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 25,
 		fermentability: 0.95,
 		sensory: { malt: 8, caramel: 2 },
-		blurb: 'Rich toasted bread crust and dark amber colour.',
+		blurb:
+			'Darker still — rich toasted crust and an amber colour. A little goes a long way toward a malty, autumnal beer.',
 		note: 'Low diastatic power, so it usually needs a pale base alongside it above about half the grist.'
 	},
 	{
@@ -104,7 +110,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 160,
 		fermentability: 0.99,
 		sensory: { malt: 2.5, body: 1.5 },
-		blurb: 'Protein-rich, builds dense foam and a soft haze.',
+		blurb:
+			'Wheat instead of barley. Its protein builds a dense, lasting foam and a soft haze; half a wheat beer is made of it.',
 		note: 'Husk-free, so a large share makes the mash sticky and slow to run off. Rice hulls help above roughly 50%.'
 	},
 	{
@@ -118,7 +125,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 90,
 		fermentability: 0.98,
 		sensory: { malt: 3, body: 2, crispness: 1 },
-		blurb: 'Peppery, dry and slick on the palate.',
+		blurb:
+			'Rye instead of barley: peppery, dry, and it gives the beer a slick, oily feel in the mouth. Sticky in the tun.',
 		note: 'Extremely gummy in the mash. Rewarding in small amounts, and a genuine lautering hazard above a third of the grist.'
 	},
 	{
@@ -132,7 +140,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 55,
 		fermentability: 0.99,
 		sensory: { malt: 3, phenols: 9.5 },
-		blurb: 'Beechwood smoke, from a whisper to a campfire.',
+		blurb:
+			'Barley dried over a beechwood fire, so it tastes of smoke. A handful reads as savoury; half the grist is a campfire.',
 		note: 'Traditional rauchbier uses 50–100%. At 5–10% it reads as savoury complexity rather than smoke.'
 	},
 	{
@@ -146,7 +155,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 0,
 		fermentability: 0.92,
 		sensory: { body: 3.5, sweetness: 0.5 },
-		blurb: 'Silky body and a soft, hazy mouthfeel.',
+		blurb:
+			'Rolled oats, as in porridge. No flavour to speak of, but a silky, full body and a soft haze — the secret of hazy IPAs and oatmeal stouts.',
 		note: 'The beta-glucans that make oat beers feel creamy also make the mash gluey. 10–20% is the usual sweet spot.'
 	},
 	{
@@ -160,7 +170,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 0,
 		fermentability: 0.97,
 		sensory: { body: 1.5 },
-		blurb: 'Foam stability and protein haze, with little flavour of its own.',
+		blurb:
+			'Rolled wheat, unmalted. Builds foam and a lasting haze, and tastes of very little on its own.',
 		note: 'Unmalted, so it contributes no enzymes. Common in witbier and modern hazy IPA.'
 	},
 	{
@@ -174,7 +185,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 0,
 		fermentability: 0.75,
 		sensory: { caramel: 3, sweetness: 1.5, body: 1 },
-		blurb: 'Light toffee and a golden glow.',
+		blurb:
+			'Malt that was stewed while wet so its sugar caramelised inside the grain. Light toffee and a golden glow; the yeast cannot eat much of it, so it sweetens as well as colours.',
 		note: 'Stewed while still wet so the starch converts inside the husk, then kilned. The sugars it carries are largely unfermentable, which is why crystal malt sweetens as well as colours.'
 	},
 	{
@@ -188,7 +200,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 0,
 		fermentability: 0.7,
 		sensory: { caramel: 5, sweetness: 2.5, body: 1.5 },
-		blurb: 'Caramel, dried fruit and copper colour.',
+		blurb:
+			'The same, stewed darker: caramel, dried fruit and a copper colour. Sweetens the beer and gives it body. Ten percent is plenty.',
 		note: 'The traditional backbone of English bitters and American amber ales. Above roughly 12% it starts to taste sticky.'
 	},
 	{
@@ -202,7 +215,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 0,
 		fermentability: 0.65,
 		sensory: { caramel: 6, sweetness: 2.5, roast: 1, body: 1.5 },
-		blurb: 'Burnt sugar, raisin and a hint of roast.',
+		blurb:
+			'Stewed darker again: burnt sugar, raisin and the beginnings of roast. Strong stuff — a few percent is enough to notice.',
 		note: 'Powerful. Beyond about 8% of the grist, dark crystal reads as cough syrup rather than caramel.'
 	},
 	{
@@ -216,7 +230,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 0,
 		fermentability: 0.7,
 		sensory: { caramel: 6, sweetness: 2, roast: 1.5 },
-		blurb: 'Raisin, plum and dark rum. Unmistakably Belgian.',
+		blurb:
+			'The darkest of the caramelised malts: raisin, plum and dark rum. The taste of Belgian abbey beers, and unmistakable.',
 		note: 'A deeply stewed crystal malt. Two to five percent is usually plenty in a dubbel.'
 	},
 	{
@@ -230,7 +245,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 0,
 		fermentability: 0.98,
 		sensory: { malt: 4, caramel: 0.5 },
-		blurb: 'Toasted bread and digestive biscuit, with no added sweetness.',
+		blurb:
+			'Toasted like a digestive biscuit — bread crust and biscuit with no added sweetness. Used in small amounts for a toasty note.',
 		note: 'Roasted rather than stewed, so it adds flavour and colour without the residual sugar of crystal malt.'
 	},
 	{
@@ -244,7 +260,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 25,
 		fermentability: 0.97,
 		sensory: { malt: 6 },
-		blurb: 'Concentrated malt aroma, like Munich turned up.',
+		blurb:
+			'Munich malt taken further, for a concentrated malt smell. A little makes a beer smell more of malt than it tastes.',
 		note: 'A few percent lifts malt aroma noticeably. Large amounts turn muddy.'
 	},
 	{
@@ -258,7 +275,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 20,
 		fermentability: 0.96,
 		sensory: { malt: 5, caramel: 1.5 },
-		blurb: 'The decoction shortcut: bready depth and red hues.',
+		blurb:
+			'Toasted to build the deep, bready flavour and red colour that long, old-fashioned boiling of the mash used to give. A shortcut to that.',
 		note: 'Rich in Maillard products that a long decoction mash would otherwise create.'
 	},
 	{
@@ -272,7 +290,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 0,
 		fermentability: 0.9,
 		sensory: { roast: 4, malt: 1 },
-		blurb: 'Cocoa and coffee cream without harsh edges.',
+		blurb:
+			'Roasted gently: cocoa and coffee-with-cream without any harsh edge. The soft way to make a porter dark.',
 		note: 'Gentler than standard chocolate malt. Useful when you want colour and cocoa but not ash.'
 	},
 	{
@@ -286,7 +305,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 0,
 		fermentability: 0.9,
 		sensory: { roast: 6, caramel: 0.5 },
-		blurb: 'Dark cocoa, espresso and deep brown colour.',
+		blurb:
+			"Roasted hard: dark cocoa, espresso, and a deep brown colour. The backbone of a porter's flavour.",
 		note: 'The backbone of porters. Five percent already reads clearly as roast.'
 	},
 	{
@@ -300,7 +320,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 0,
 		fermentability: 0.9,
 		sensory: { roast: 5 },
-		blurb: 'Dehusked, so it darkens deeply without astringency.',
+		blurb:
+			'Roasted with the husk removed first, so it colours a beer black without the sharp, drying bitterness that roasting the husk gives. Colour without the bite.',
 		note: 'The husk carries most of the harsh, tannic character of roasted grain. Removing it lets you reach black colour with a smooth palate.'
 	},
 	{
@@ -314,7 +335,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 0,
 		fermentability: 0.9,
 		sensory: { roast: 8, bitterness: 1.5, crispness: 1 },
-		blurb: 'Dry coffee bitterness. The signature of Irish stout.',
+		blurb:
+			'Unmalted barley roasted until it is nearly black: dry coffee bitterness and a tan head. What makes Irish stout taste of Irish stout.',
 		note: 'Unmalted and roasted hard. It contributes real bitterness alongside the hops, which is why dry stouts need less alpha acid than their flavour suggests.'
 	},
 	{
@@ -328,7 +350,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 0,
 		fermentability: 0.9,
 		sensory: { roast: 8, bitterness: 1, crispness: 1.5 },
-		blurb: 'Sharp, ashy and jet black.',
+		blurb:
+			'Malt roasted to the edge of burnt: sharp, ashy and jet black. For colour more than for flavour, and very little is needed.',
 		note: 'Mostly used in small amounts for colour adjustment. Above a few percent it turns acrid.'
 	},
 	{
@@ -342,7 +365,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 0,
 		fermentability: 1,
 		sensory: { acidity: 1.5, crispness: 1 },
-		blurb: 'Lactic-acid coated malt for lowering mash pH.',
+		blurb:
+			"Ordinary pale malt with a coating of lactic acid. It does not add flavour; it brings the mash's acidity down, which the enzymes want.",
 		note: 'Roughly 1% of the grist drops mash pH by about 0.1. A clean way to acidify without touching a bottle of acid.'
 	},
 	{
@@ -356,7 +380,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 0,
 		fermentability: 1.35,
 		sensory: { crispness: 1.5, alcoholWarmth: 0.5 },
-		blurb: 'Pure fermentable: more alcohol, less body.',
+		blurb:
+			'Plain sugar (dextrose). The yeast eats all of it, so it adds alcohol without adding any body — it makes a beer thinner and stronger.',
 		note: 'Belgian brewers use sugar to reach high strength while keeping the beer drinkable. Above roughly 20% the beer starts to taste thin and cidery.'
 	},
 	{
@@ -370,7 +395,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 0,
 		fermentability: 1.25,
 		sensory: { caramel: 3, malt: 1, alcoholWarmth: 0.5 },
-		blurb: 'Dried fruit, toffee and rum, and still highly fermentable.',
+		blurb:
+			'Belgian caramelised sugar syrup: dried fruit, toffee and rum, and the yeast still eats nearly all of it. Alcohol and flavour without body.',
 		note: 'The trick behind dubbels: dark, complex flavour that ferments almost completely away, leaving depth without sweetness.'
 	},
 	{
@@ -384,7 +410,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 0,
 		fermentability: 0,
 		sensory: { sweetness: 5, body: 2 },
-		blurb: 'Milk sugar. Brewing yeast cannot ferment it at all.',
+		blurb:
+			'Milk sugar. Brewing yeast cannot eat it at all, so every gram stays in the beer as sweetness and body. What makes a milk stout sweet.',
 		note: 'Everything you add stays in the glass as sweetness and body. Use it deliberately, and remember it raises FG without raising ABV.'
 	},
 	{
@@ -398,7 +425,8 @@ export const FERMENTABLES: Fermentable[] = [
 		diastaticPowerLintner: 0,
 		fermentability: 0.8,
 		sensory: { sweetness: 2.5, malt: 3, caramel: 1.5 },
-		blurb: 'Intense honeyed sweetness.',
+		blurb:
+			'A malt with an intense honeyed sweetness. A little in a pale beer is lovely; more than a little is cloying.',
 		note: 'Distinctive and easy to overdo. Three to five percent is usually enough to notice.'
 	}
 ];
@@ -423,7 +451,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 0.8,
 		bitternessQuality: 0.8,
 		tags: ['floral', 'herbal', 'spicy'],
-		blurb: 'The classic noble hop: soft, floral and slightly herbal.'
+		blurb:
+			'The classic German hop: soft, flowery and slightly herbal, with a gentle bitterness. Ideal for a lager.'
 	},
 	{
 		id: 'tettnanger',
@@ -433,7 +462,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 0.8,
 		bitternessQuality: 0.8,
 		tags: ['spicy', 'herbal', 'floral'],
-		blurb: 'Delicate and peppery, a touch brighter than Hallertau.'
+		blurb:
+			'A delicate German hop, a little peppery and a touch brighter than Hallertau. Lagers and wheat beers.'
 	},
 	{
 		id: 'spalt-select',
@@ -443,7 +473,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 0.75,
 		bitternessQuality: 0.8,
 		tags: ['floral', 'spicy', 'herbal'],
-		blurb: 'Refined and restrained. Built for pilsner and altbier.'
+		blurb:
+			'Refined and restrained: the hop for a pilsner or an altbier that wants its bitterness to stay in the background.'
 	},
 	{
 		id: 'hersbrucker',
@@ -453,7 +484,7 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 0.75,
 		bitternessQuality: 0.8,
 		tags: ['floral', 'herbal', 'earthy'],
-		blurb: 'Gentle hay and wildflower character.'
+		blurb: 'Gentle hay and wildflower. The quiet hop in many German lagers.'
 	},
 	{
 		id: 'saphir',
@@ -463,7 +494,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 0.9,
 		bitternessQuality: 0.75,
 		tags: ['citrus', 'floral', 'herbal'],
-		blurb: 'A modern noble hop with tangerine brightness.'
+		blurb:
+			'A modern German hop with a tangerine brightness the older ones lack, and still soft enough for a lager.'
 	},
 	{
 		id: 'perle',
@@ -473,7 +505,7 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 0.85,
 		bitternessQuality: 0.85,
 		tags: ['spicy', 'floral', 'herbal'],
-		blurb: 'Clean bittering with a minty, green edge.'
+		blurb: 'A clean bittering hop with a minty, green edge. Bitterness first, aroma second.'
 	},
 	{
 		id: 'magnum',
@@ -483,7 +515,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 0.4,
 		bitternessQuality: 0.6,
 		tags: ['herbal', 'earthy'],
-		blurb: 'Almost neutral. Chosen for smooth bitterness, not aroma.'
+		blurb:
+			'Almost no aroma at all. Chosen for a smooth bitterness that gets out of the way — the workhorse for the early kettle charge.'
 	},
 	{
 		id: 'herkules',
@@ -493,7 +526,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 0.5,
 		bitternessQuality: 0.75,
 		tags: ['resin', 'spicy', 'earthy'],
-		blurb: 'High alpha workhorse with a faint dank undertone.'
+		blurb:
+			'A strong bittering hop with a faint earthy, resinous undertone. A little goes a long way.'
 	},
 	// Czech and neighbours
 	{
@@ -504,7 +538,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 0.8,
 		bitternessQuality: 0.7,
 		tags: ['spicy', 'herbal', 'earthy'],
-		blurb: 'Soft, hay-like and unmistakable in a Czech pilsner.'
+		blurb:
+			'Soft, hay-like and spicy. The smell of a Czech pilsner, and gentle enough to use in quantity.'
 	},
 	{
 		id: 'styrian-goldings',
@@ -514,7 +549,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 0.85,
 		bitternessQuality: 0.75,
 		tags: ['earthy', 'floral', 'herbal'],
-		blurb: 'Elegant and slightly lemony, despite its Fuggle parentage.'
+		blurb:
+			'Elegant and slightly lemony, related to the English Fuggle but brighter. Traditional in Belgian and English ales.'
 	},
 	{
 		id: 'strisselspalt',
@@ -524,7 +560,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 0.75,
 		bitternessQuality: 0.75,
 		tags: ['floral', 'herbal', 'citrus'],
-		blurb: 'Alsace noble hop with a pear and blossom lift.'
+		blurb:
+			'The French hop from Alsace: pear and blossom, light and pretty. Lagers and Belgian styles.'
 	},
 	// England
 	{
@@ -535,7 +572,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 0.85,
 		bitternessQuality: 0.7,
 		tags: ['floral', 'earthy', 'herbal'],
-		blurb: 'Honeyed, lavender-tinged and deeply traditional.'
+		blurb:
+			'East Kent Goldings, the classic English aroma hop: honeyed, faintly of lavender, and deeply traditional. Bitters and pale ales.'
 	},
 	{
 		id: 'fuggle',
@@ -545,7 +583,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 0.8,
 		bitternessQuality: 0.7,
 		tags: ['earthy', 'herbal', 'floral'],
-		blurb: 'Woodland floor and mild mint. The other half of English brewing.'
+		blurb:
+			'Earthy, like a woodland floor, with a little mint. With Goldings it is the other half of English brewing.'
 	},
 	{
 		id: 'challenger',
@@ -555,7 +594,7 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 0.85,
 		bitternessQuality: 0.75,
 		tags: ['spicy', 'floral', 'citrus'],
-		blurb: 'Versatile: clean bitterness and a marmalade note late.'
+		blurb: 'An English all-rounder: clean bitterness early, a marmalade note when added late.'
 	},
 	{
 		id: 'target',
@@ -565,7 +604,7 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 0.8,
 		bitternessQuality: 0.95,
 		tags: ['resin', 'earthy', 'herbal'],
-		blurb: 'Assertive and sage-like. Bitterness with shoulders.'
+		blurb: 'Assertive and sage-like: bitterness with shoulders. The English bittering hop.'
 	},
 	{
 		id: 'bramling-cross',
@@ -575,7 +614,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 0.9,
 		bitternessQuality: 0.75,
 		tags: ['berry', 'spicy', 'earthy'],
-		blurb: 'Blackcurrant and lemon. A British hop that behaves like a new-world one.'
+		blurb:
+			'Blackcurrant and lemon — an English hop that tastes like a modern American one. Good in a dark beer.'
 	},
 	{
 		id: 'first-gold',
@@ -585,7 +625,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 0.85,
 		bitternessQuality: 0.75,
 		tags: ['citrus', 'floral', 'spicy'],
-		blurb: 'Orange peel and a touch of apricot over a Goldings base.'
+		blurb:
+			'Orange peel and a hint of apricot over an English base. A gentle way into fruitier hopping.'
 	},
 	// United States
 	{
@@ -596,7 +637,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 1,
 		bitternessQuality: 0.8,
 		tags: ['citrus', 'floral'],
-		blurb: 'Grapefruit and flowers. The hop that started American craft brewing.'
+		blurb:
+			'Grapefruit and flowers. The hop that started American craft brewing, and still the easiest one to like.'
 	},
 	{
 		id: 'centennial',
@@ -606,7 +648,7 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 1.05,
 		bitternessQuality: 0.85,
 		tags: ['citrus', 'floral', 'resin'],
-		blurb: 'Lemon and pine. Sometimes called super Cascade.'
+		blurb: 'Lemon and pine, stronger than Cascade in every way. Sometimes called super Cascade.'
 	},
 	{
 		id: 'chinook',
@@ -616,7 +658,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 1.05,
 		bitternessQuality: 1.05,
 		tags: ['pine', 'resin', 'citrus'],
-		blurb: 'Pine forest and grapefruit pith, with a firm bitterness.'
+		blurb:
+			'Pine forest and grapefruit pith with a firm, assertive bitterness. The old-school IPA hop.'
 	},
 	{
 		id: 'columbus',
@@ -626,7 +669,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 1.1,
 		bitternessQuality: 1,
 		tags: ['dank', 'resin', 'earthy'],
-		blurb: 'Pungent, oily and herbal. The classic dank hop.'
+		blurb:
+			'Pungent, oily and herbal — the smell people mean by dank. Loud, and it makes a strong bittering hop too.'
 	},
 	{
 		id: 'simcoe',
@@ -636,7 +680,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 1.15,
 		bitternessQuality: 0.9,
 		tags: ['pine', 'berry', 'tropical'],
-		blurb: 'Pine and passionfruit at once, with a savoury edge.'
+		blurb:
+			'Pine and passionfruit at the same time, with a savoury edge. The signature of many modern IPAs.'
 	},
 	{
 		id: 'citra',
@@ -646,7 +691,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 1.3,
 		bitternessQuality: 0.8,
 		tags: ['citrus', 'tropical', 'stone-fruit'],
-		blurb: 'Mango, lime and grapefruit. Loud in the best way.'
+		blurb:
+			'Mango, lime and grapefruit, loud in the best way. The most popular hop in the world, and you can taste why.'
 	},
 	{
 		id: 'mosaic',
@@ -656,7 +702,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 1.3,
 		bitternessQuality: 0.85,
 		tags: ['tropical', 'berry', 'dank'],
-		blurb: 'Blueberry, mango and a dank underside.'
+		blurb:
+			'Blueberry and mango over an earthy, resinous base. Complex, and made for late additions.'
 	},
 	{
 		id: 'amarillo',
@@ -666,7 +713,7 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 1.15,
 		bitternessQuality: 0.8,
 		tags: ['citrus', 'stone-fruit', 'floral'],
-		blurb: 'Orange, apricot and blossom.'
+		blurb: 'Orange, apricot and blossom. Soft and fruity; hard to overdo.'
 	},
 	{
 		id: 'willamette',
@@ -676,7 +723,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 0.8,
 		bitternessQuality: 0.7,
 		tags: ['floral', 'earthy', 'herbal'],
-		blurb: 'The American answer to Fuggle: mild and slightly fruity.'
+		blurb:
+			'The American cousin of Fuggle: mild, earthy and a little fruity. Porters and brown ales.'
 	},
 	{
 		id: 'el-dorado',
@@ -686,7 +734,7 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 1.2,
 		bitternessQuality: 0.8,
 		tags: ['tropical', 'stone-fruit', 'citrus'],
-		blurb: 'Pear drop, watermelon and candied pineapple.'
+		blurb: 'Pear drop, watermelon and candied pineapple. Sweet-smelling, almost like boiled sweets.'
 	},
 	{
 		id: 'sorachi-ace',
@@ -696,7 +744,7 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 1.2,
 		bitternessQuality: 0.85,
 		tags: ['citrus', 'herbal'],
-		blurb: 'Lemon zest and fresh dill. Polarising, and unforgettable.'
+		blurb: 'Lemon zest and fresh dill. People love it or hate it, and nobody forgets it.'
 	},
 	// New Zealand
 	{
@@ -707,7 +755,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 1.25,
 		bitternessQuality: 0.9,
 		tags: ['tropical', 'stone-fruit', 'resin'],
-		blurb: 'Gooseberry and white wine. Named for Sauvignon Blanc.'
+		blurb:
+			'Gooseberry and white wine — named for the Sauvignon Blanc grape it smells like. A New Zealand original.'
 	},
 	{
 		id: 'motueka',
@@ -717,7 +766,7 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 1.1,
 		bitternessQuality: 0.75,
 		tags: ['citrus', 'tropical', 'herbal'],
-		blurb: 'Lime and lemongrass over a noble backbone.'
+		blurb: "Lime and lemongrass over a soft, lager-friendly base. New Zealand's answer to Saaz."
 	},
 	{
 		id: 'riwaka',
@@ -727,7 +776,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 1.25,
 		bitternessQuality: 0.75,
 		tags: ['citrus', 'tropical', 'stone-fruit'],
-		blurb: 'Intense grapefruit and passionfruit for its modest alpha.'
+		blurb:
+			'Intense grapefruit and passionfruit from a hop that is not especially bitter. All about the smell.'
 	},
 	// Australia
 	{
@@ -738,7 +788,8 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 1.35,
 		bitternessQuality: 0.9,
 		tags: ['tropical', 'citrus', 'stone-fruit'],
-		blurb: 'Passionfruit and peach at full volume.'
+		blurb:
+			"Passionfruit and peach at full volume. Australia's loudest hop, and a favourite in hazy IPAs."
 	},
 	{
 		id: 'vic-secret',
@@ -748,7 +799,7 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 1.2,
 		bitternessQuality: 0.9,
 		tags: ['tropical', 'pine', 'stone-fruit'],
-		blurb: 'Pineapple and pine needles, with real bittering power.'
+		blurb: 'Pineapple and pine needles, with real bittering power behind them.'
 	},
 	{
 		id: 'ella',
@@ -758,7 +809,7 @@ export const HOPS: Hop[] = [
 		aromaIntensity: 1.05,
 		bitternessQuality: 0.85,
 		tags: ['floral', 'spicy', 'stone-fruit'],
-		blurb: 'Aniseed and grapefruit when pushed, delicate when restrained.'
+		blurb: 'Aniseed and grapefruit when used generously; delicate and floral when restrained.'
 	}
 ];
 
@@ -788,7 +839,8 @@ export const YEASTS: Yeast[] = [
 		souring: 0,
 		alcoholTolerance: 0.11,
 		esterNotes: ['a clean, almost neutral fruitiness', 'a light note of pear'],
-		blurb: 'Neutral and dependable. Lets malt and hops speak for themselves.',
+		blurb:
+			'Neutral and dependable: it makes alcohol and very little else, so the malt and the hops do the talking. The safe choice for a pale ale or an IPA.',
 		note: 'The default choice for American pale ales and IPAs. Its neutrality is the point: almost nothing it produces distracts from the hops.'
 	},
 	{
@@ -806,7 +858,8 @@ export const YEASTS: Yeast[] = [
 		souring: 0,
 		alcoholTolerance: 0.1,
 		esterNotes: ['a soft orchard-fruit note', 'pear drops and orange marmalade'],
-		blurb: 'Fruity, malty and quick to drop bright.',
+		blurb:
+			'Fruity and a little sweet, and it leaves some body behind. Drops clear quickly. The taste of an English bitter.',
 		note: 'Low attenuation leaves body and sweetness behind, which is exactly what a bitter needs. High flocculation can stall if the beer is left cold and undisturbed.'
 	},
 	{
@@ -824,7 +877,8 @@ export const YEASTS: Yeast[] = [
 		souring: 0,
 		alcoholTolerance: 0.11,
 		esterNotes: ['a faint dark-fruit note', 'plum and a touch of raisin'],
-		blurb: 'Slightly fruity with a dry, mineral finish.',
+		blurb:
+			'Slightly fruity with a dry, mineral finish that stands up to roasted grain. Built for stout.',
 		note: 'Built for stout: it tolerates roast bitterness and finishes crisply without stripping the malt.'
 	},
 	{
@@ -842,7 +896,8 @@ export const YEASTS: Yeast[] = [
 		souring: 0,
 		alcoholTolerance: 0.11,
 		esterNotes: ['a quiet stone-fruit note', 'peach and apricot'],
-		blurb: 'Stone-fruit esters and a permanent soft haze.',
+		blurb:
+			'Peach-and-apricot fruitiness, and it stays in suspension so the beer keeps a soft, permanent haze. Made for hazy IPAs.',
 		note: 'Low flocculation keeps yeast in suspension, which is part of why hazy IPAs stay hazy. Its esters are chosen to echo tropical hop aroma rather than compete with it.'
 	},
 	{
@@ -861,7 +916,8 @@ export const YEASTS: Yeast[] = [
 		alcoholTolerance: 0.13,
 		esterNotes: ['a gentle banana note', 'banana, pear and something candied'],
 		phenolNotes: 'clove and a dusting of pepper',
-		blurb: 'Banana, pear and a warm peppery lift.',
+		blurb:
+			'Banana, pear and a warm, peppery spice. Ferments strong beers happily. The character of Belgian abbey ales.',
 		note: 'Traditionally allowed to free-rise during fermentation. That rising temperature is what builds the ester ladder of a dubbel or tripel.'
 	},
 	{
@@ -880,7 +936,8 @@ export const YEASTS: Yeast[] = [
 		alcoholTolerance: 0.13,
 		esterNotes: ['a light note of citrus peel', 'pear, citrus peel and a spirity lift'],
 		phenolNotes: 'white pepper',
-		blurb: 'Ferments almost everything. Peppery, citric and bone dry.',
+		blurb:
+			'Eats almost every last bit of sugar, so the beer finishes bone dry, with pepper and citrus peel from the yeast. Likes it warm.',
 		note: 'Famous for stalling around 1.030 and then finishing if kept warm. Saison strains genuinely prefer heat, so the usual warning about hot fermentation applies much later than normal.'
 	},
 	{
@@ -899,7 +956,8 @@ export const YEASTS: Yeast[] = [
 		alcoholTolerance: 0.1,
 		esterNotes: ['a quiet banana note', 'banana and bubblegum'],
 		phenolNotes: 'clove, with vanilla behind',
-		blurb: 'Banana and clove, dialled by temperature.',
+		blurb:
+			'Banana and clove, and the balance between them is set by how warm you ferment. The whole flavour of a German wheat beer.',
 		note: 'Cooler fermentation favours clove-like phenols, warmer favours banana esters. Few strains give the brewer this much direct control over flavour.'
 	},
 	{
@@ -917,7 +975,8 @@ export const YEASTS: Yeast[] = [
 		souring: 0,
 		alcoholTolerance: 0.11,
 		esterNotes: ['almost nothing — a whisper of white wine', 'pear, and a faint sulphur edge'],
-		blurb: 'An ale that wants to be a lager: subtle fruit, crisp finish.',
+		blurb:
+			'An ale yeast that behaves like a lager yeast: a whisper of fruit, a crisp finish, and very clean. Kölsch, and clean pale beers.',
 		note: 'Fermented cool and then lagered, it produces a beer most drinkers would guess was bottom-fermented.'
 	},
 	{
@@ -935,7 +994,8 @@ export const YEASTS: Yeast[] = [
 		souring: 0,
 		alcoholTolerance: 0.1,
 		esterNotes: ['nothing fruity at all', 'a green-apple note that has no business being there'],
-		blurb: 'Malty, soft and slow. Leaves a little sweetness behind.',
+		blurb:
+			'Fermented cold and slowly: soft, malty, and it leaves a little sweetness behind. For pilsners and dark lagers.',
 		note: 'Lager strains work slowly and produce diacetyl on the way. A warm rest at the end of fermentation is how brewers clean it up.'
 	},
 	{
@@ -953,7 +1013,8 @@ export const YEASTS: Yeast[] = [
 		souring: 0,
 		alcoholTolerance: 0.11,
 		esterNotes: ['nothing fruity at all', 'a green-apple note that has no business being there'],
-		blurb: 'Crisp, dry and almost invisible.',
+		blurb:
+			'Fermented cold: crisp, dry and almost invisible, so the malt and the hops are all you taste. Needs weeks, not days.',
 		note: 'The most unforgiving yeast in this list: with nothing to hide behind, every process flaw shows up in the glass.'
 	},
 	{
@@ -971,7 +1032,8 @@ export const YEASTS: Yeast[] = [
 		souring: 0,
 		alcoholTolerance: 0.11,
 		esterNotes: ['a clean, faintly fruity note', 'pear and melon'],
-		blurb: 'A lager strain that tolerates ale temperatures.',
+		blurb:
+			'A lager yeast that puts up with ale temperatures. Clean and crisp without a fridge — the steam-beer yeast.',
 		note: 'Used for steam beer. It gives lager-like cleanliness without refrigeration, at the cost of a slight woody fruitiness.'
 	},
 	{
@@ -989,7 +1051,8 @@ export const YEASTS: Yeast[] = [
 		souring: 0,
 		alcoholTolerance: 0.14,
 		esterNotes: ['a soft citrus note', 'orange peel, mango and tropical fruit'],
-		blurb: 'Norwegian farmhouse yeast: orange peel, and astonishingly fast.',
+		blurb:
+			'A Norwegian farmhouse yeast that ferments hot and astonishingly fast — done in days — and tastes of orange peel. Forgiving.',
 		note: 'Kveik breaks the usual rule that hot fermentation means fusel alcohol. At 35 °C it can finish a beer in two days and still taste clean.'
 	},
 	{
@@ -1008,7 +1071,8 @@ export const YEASTS: Yeast[] = [
 		alcoholTolerance: 0.12,
 		esterNotes: ['a dry, faintly earthy note', 'pineapple, hay and horse blanket'],
 		phenolNotes: 'barnyard',
-		blurb: 'Pineapple, hay and barnyard funk. Very dry.',
+		blurb:
+			'A wild yeast alongside a normal one: pineapple, hay and barnyard funk, and it eats sugars other yeasts leave, so the beer ends very dry. Slow.',
 		note: 'Brettanomyces slowly consumes sugars other yeasts leave behind, so these beers keep drying out for months in the bottle.'
 	},
 	{
@@ -1026,7 +1090,8 @@ export const YEASTS: Yeast[] = [
 		souring: 6,
 		alcoholTolerance: 0.12,
 		esterNotes: ['a clean lactic tang', 'lemon, green apple and a lactic sharpness'],
-		blurb: 'Lactic bacteria alongside yeast: clean tartness and depth.',
+		blurb:
+			'Souring bacteria alongside yeast: a clean tartness and depth, like a good yoghurt. For sour beers only — it will sour anything it touches.',
 		note: 'Lactobacillus is inhibited by hops, so soured beers are traditionally brewed with very low bitterness. High IBU and a sour culture fight each other.'
 	}
 ];

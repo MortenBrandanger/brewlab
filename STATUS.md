@@ -60,6 +60,14 @@ few seconds when a stage is carried out. Not an animation drawn to look like
 brewing: a playback of the simulation that ran. Skippable by click, silent
 when motion is off, and only on the first pass through a stage.
 
+**The words are for a person who has never brewed.** All 76 ingredient blurbs
+say what the thing does to the beer and what you would use it for, in plain
+words, and the hop picker explains alpha once above the list. `Glossed.svelte`
+scans report prose for the 62 glossary words and hands each to `TermWord`,
+which opens a definition under the word without breaking the sentence.
+Glossing stays out of picker buttons — a word inside a button is a click on
+the button.
+
 **Verification state.** 171 tests green. `svelte-check` 0/0. Contrast audited
 live across every reachable question and the full report with every disclosure
 open — zero failures.
@@ -79,9 +87,6 @@ These were considered and parked on purpose. Do not treat them as oversights.
 
 ## Known gaps
 
-- **Hop and malt blurbs are written brewer-to-brewer.** "Despite its Fuggle
-  parentage", "the classic dank hop", "like Munich turned up". A novice tester
-  guessed "noble" meant premium.
 - **Smoke has no sensory axis of its own.** It rides the phenol axis, which the
   taster now special-cases by reading the grist. A real `smoke` axis would be
   cleaner but touches sensory, styles and scoring.

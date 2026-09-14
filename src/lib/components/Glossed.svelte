@@ -14,7 +14,14 @@
 	import TermWord from './TermWord.svelte';
 	import { TERMS } from '$lib/brewing/glossary';
 
-	let { text }: { text: string } = $props();
+	let {
+		text,
+		except = []
+	}: {
+		text: string;
+		/** Words not to gloss here — "malt" in the malt picker teaches nobody anything. */
+		except?: string[];
+	} = $props();
 
 	/**
 	 * One regex for all sixty-two words, built once. Plurals are accepted by
@@ -28,6 +35,8 @@
 
 	type Piece = { text: string; term?: string };
 
+	const skip = $derived(new Set(except.map((w) => w.toLowerCase())));
+
 	const pieces = $derived.by((): Piece[] => {
 		const out: Piece[] = [];
 		// eslint-disable-next-line svelte/prefer-svelte-reactivity
@@ -37,7 +46,7 @@
 			const shown = m[0];
 			const key = m[1].toLowerCase();
 			const index = m.index ?? 0;
-			if (!KNOWN.has(key) || seen.has(key)) continue;
+			if (!KNOWN.has(key) || seen.has(key) || skip.has(key)) continue;
 			seen.add(key);
 			if (index > last) out.push({ text: text.slice(last, index) });
 			out.push({ text: shown, term: key });

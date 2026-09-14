@@ -370,3 +370,16 @@ input[type='range']::-moz-range-thumb {
 		color: #5d564c;
 	}
 }
+
+/*
+ * A glossed word sits inside a sentence. Chrome wraps a <details> element's
+ * content in a block-level box even when the element itself is inline, which
+ * broke the line after every underlined word. Inline-block keeps the word in
+ * the sentence; the definition is positioned absolutely so the box itself
+ * never grows. (Inlining the content wrapper instead made closed definitions
+ * visible — content-visibility does not apply to inline boxes.)
+ */
+details.inline {
+	display: inline-block;
+	vertical-align: baseline;
+}

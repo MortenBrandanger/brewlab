@@ -236,6 +236,11 @@
 				</button>
 			{/each}
 		</div>
+		<!-- Said once, above the list, rather than left as a percentage with no meaning. -->
+		<p class="prose-measure mb-2 text-xs text-subtle">
+			Alpha is how much bitterness a gram can give. Around 4% is a gentle aroma hop; 12–16% is a
+			bittering hop, where a small handful does the whole job.
+		</p>
 		<ul class="grid gap-1.5 sm:grid-cols-2">
 			{#each pickerHops as hop (hop.id)}
 				<li>
@@ -246,7 +251,7 @@
 					>
 						<span class="flex items-baseline justify-between gap-2">
 							<span class="text-sm font-medium">{hop.name}</span>
-							<span class="tnum text-xs text-muted">{hop.alphaAcid.toFixed(1)}% AA</span>
+							<span class="tnum text-xs text-muted">{hop.alphaAcid.toFixed(1)}% alpha</span>
 						</span>
 						<span class="block text-xs text-subtle">{hop.blurb}</span>
 					</button>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Glossed from '../Glossed.svelte';
 	/**
 	 * What malt goes in?
 	 *
@@ -215,7 +216,19 @@
 								</button>
 							</div>
 						</div>
-						<p class="mt-1.5 text-xs text-muted">{f.blurb}</p>
+						<p class="mt-1.5 text-xs text-muted">
+							<Glossed
+								text={f.blurb}
+								except={[
+									'malt',
+									'base malt',
+									'speciality malt',
+									'crystal malt',
+									'roasted malt',
+									'adjunct'
+								]}
+							/>
+						</p>
 						{#if over}
 							<p class="mt-1.5 flex items-start gap-1.5 text-xs text-warn">
 								<svg viewBox="0 0 16 16" class="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true">
