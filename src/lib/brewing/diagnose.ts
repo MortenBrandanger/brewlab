@@ -116,6 +116,61 @@ const SENSORY_KEYS: SensoryKey[] = [
 	'crispness'
 ];
 
+/**
+ * What a drinker can actually put a name to, in their words rather than the model's.
+ *
+ * Here rather than in the component because `faults.ts` already carries the lesson: the
+ * first taster kept its own thresholds and put butterscotch in the tasting note one
+ * paragraph under "no significant faults were found". Two sets of numbers for one
+ * question is one set too many, and a list of tasteable faults held in a Svelte file
+ * while the codes live here is the same shape of mistake.
+ *
+ * Eight, because eight is what `FAULT_THRESHOLD` covers — the risks the engine carries
+ * all the way to something a person would notice in the glass.
+ */
+export const TASTEABLE: { code: string; label: string; hint: string }[] = [
+	{
+		code: 'DIACETYL_RISK',
+		label: 'Butterscotch or butter',
+		hint: 'Slick on the tongue, like the butter on cinema popcorn.'
+	},
+	{
+		code: 'OXIDATION_RISK',
+		label: 'Wet cardboard, or sherry',
+		hint: 'Papery and stale, or a sweet sherry note in a beer that should be fresh.'
+	},
+	{
+		code: 'CHLOROPHENOL',
+		label: 'Plaster, TCP or a swimming pool',
+		hint: 'Medicinal and plastic, and it stays at the back of the throat.'
+	},
+	{
+		code: 'FUSEL_RISK',
+		label: 'Solvent or nail varnish',
+		hint: 'A burn in the throat out of all proportion to the strength.'
+	},
+	{
+		code: 'DMS_RISK',
+		label: 'Sweetcorn or cooked vegetable',
+		hint: 'Tinned corn, or tomato sauce.'
+	},
+	{
+		code: 'ASTRINGENCY_RISK',
+		label: 'Drying, with a grip like strong tea',
+		hint: 'Puckering, the way over-brewed tea or grape skins are.'
+	},
+	{
+		code: 'INFECTION_RISK',
+		label: 'Sour or farmyard, and not on purpose',
+		hint: 'Tart, or a horse-blanket funk you did not ask for.'
+	},
+	{
+		code: 'DRY_HOP_TOO_LONG',
+		label: 'Grass or hay',
+		hint: 'Green and vegetal, like a cut lawn.'
+	}
+];
+
 /** Below this a suspect is a coincidence, not an explanation, and is not offered. */
 export const MIN_CLOSES = 0.15;
 /**
@@ -126,7 +181,24 @@ export const MIN_CLOSES = 0.15;
  */
 const SIZE_PENALTY = 0.18;
 
-const clone = (r: Recipe): Recipe => structuredClone(r);
+/**
+ * A copy that does not care what it was handed.
+ *
+ * This was `structuredClone`, which is correct and fails in the app: the recipe the
+ * component passes in is Svelte reactive state, and a `$state` proxy cannot be cloned
+ * structurally — `DataCloneError` on the first click. The tests never saw it because
+ * they hand over plain objects from `defaultRecipe()`, so two hundred and thirty-two of
+ * them were green while the feature threw. It took opening it in a browser, which is
+ * what CLAUDE.md says is the only review here that has ever found anything.
+ *
+ * The obvious repair is `$state.snapshot`, and it is the wrong one: this engine is
+ * framework-free TypeScript and importing Svelte into it to satisfy one caller makes
+ * every other caller pay. A recipe is numbers, strings, booleans and arrays of them —
+ * no dates, no maps, nothing with identity — so a JSON round trip both copies it and
+ * strips whatever proxy it arrived wrapped in. Absent optional fields stay absent,
+ * because a key whose value is undefined is dropped, which is what they mean anyway.
+ */
+const clone = (r: Recipe): Recipe => JSON.parse(JSON.stringify(r)) as Recipe;
 
 /**
  * The ways a brew day drifts from the page.

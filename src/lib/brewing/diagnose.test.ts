@@ -175,6 +175,27 @@ describe('the model run backwards', () => {
 		expect(out.map((e) => e.code)).not.toContain('FERMENTED_WARM');
 	});
 
+	test('a recipe that arrives wrapped in a proxy still works', () => {
+		/**
+		 * The guard for the one this suite missed.
+		 *
+		 * The component hands over `brew.recipe`, which is Svelte reactive state, and a
+		 * `$state` proxy cannot be cloned structurally — the engine threw `DataCloneError`
+		 * on the first click while all two hundred and thirty-two tests were green, because
+		 * every one of them handed it a plain object from `defaultRecipe()`. A bare Proxy
+		 * fails `structuredClone` the same way, so this reproduces it without dragging Svelte
+		 * into a test for framework-free code.
+		 */
+		const r = new Proxy(defaultRecipe(), {}) as Recipe;
+		expect(() => structuredClone(r)).toThrow();
+		const g = brewWrong(
+			defaultRecipe(),
+			SUSPECTS.find((s) => s.code === 'FERMENTED_WARM')!,
+			8
+		);
+		expect(diagnose(r, { sensory: g.sensory })[0]?.code).toBe('FERMENTED_WARM');
+	});
+
 	test('the search is what finds it, not the shape of the test', () => {
 		// The guard on the guards. If ranking by the closed gap were doing nothing, a
 		// diagnoser that searched a single fixed magnitude of one wrong suspect would still

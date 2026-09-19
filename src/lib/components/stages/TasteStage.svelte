@@ -10,6 +10,7 @@
 	import LearningNote from '../LearningNote.svelte';
 	import Glossed from '../Glossed.svelte';
 	import TastingPanel from '../TastingPanel.svelte';
+	import WhatWentWrong from '../WhatWentWrong.svelte';
 	import { describeAppearance } from '$lib/brewing/appearance';
 	import { targetMisses } from '$lib/brewing/target';
 	import { scoreBand } from '$lib/brewing/scoring';
@@ -408,6 +409,46 @@
 			<h3 class="field-label mb-3">How it develops over time</h3>
 			<AgeCurve curve={result.ageCurve} />
 		</section>
+
+		<!--
+			The model run backwards, and the only place in the app that does.
+
+			It sits here, after the report and before the workings, because that is where the
+			question arises: everything above is the beer this recipe makes, and a brewer
+			reading it with a glass in their hand either recognises it or does not. Folded
+			away, because most of the time the answer is that they do.
+		-->
+		{#if judged}
+			<section>
+				<details class="group">
+					<summary
+						class="flex cursor-pointer list-none items-center gap-2 rounded-md py-1 font-display text-sm font-semibold text-copper-text hover:underline"
+					>
+						<svg
+							viewBox="0 0 16 16"
+							class="h-3.5 w-3.5 transition-transform group-open:rotate-90"
+							aria-hidden="true"
+						>
+							<path
+								d="M6 3.5 L11 8 L6 12.5"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+							/>
+						</svg>
+						Mine came out different — what did I do?
+					</summary>
+					<div class="mt-3">
+						<WhatWentWrong
+							recipe={brew.recipe}
+							predicted={result.sensory}
+							predictedHaze={appearance.haze}
+						/>
+					</div>
+				</details>
+			</section>
+		{/if}
 
 		<!-- Show the model -->
 		{#if judged}
