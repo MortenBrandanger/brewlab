@@ -14,7 +14,7 @@
  * Solid copper, amber, hop and danger fills all carry ink-coloured text.
  */
 
-@theme {
+@theme static {
 	--color-*: initial;
 
 	/* Warm neutral ramp, dark to light */
@@ -84,6 +84,35 @@
 		0 12px 28px -8px oklch(0.06 0.01 62 / 0.7);
 
 	--ease-out-soft: cubic-bezier(0.22, 0.8, 0.3, 1);
+}
+
+/*
+ * Scene tokens are read by name from a canvas, never through a class, so
+ * Tailwind would tree-shake them away. `static` keeps them in the output.
+ */
+@theme static {
+	/*
+	 * The hands-on brew day's workshop, painted on a canvas. A canvas cannot
+	 * read a class, so the scene reads these by name; nothing in a scene file
+	 * names a colour of its own. One warm key light from the lamp over the
+	 * bench, so every surface has a lit top and a shaded foot.
+	 */
+	--color-scene-wall: oklch(0.255 0.03 55);
+	--color-scene-wall-low: oklch(0.205 0.026 52);
+	--color-scene-tile: oklch(0.3 0.026 60);
+	--color-scene-dusk: oklch(0.42 0.07 255);
+	--color-scene-dusk-low: oklch(0.55 0.09 40);
+	--color-scene-wood: oklch(0.45 0.075 55);
+	--color-scene-wood-light: oklch(0.58 0.085 62);
+	--color-scene-wood-dark: oklch(0.3 0.05 45);
+	--color-scene-steel-light: oklch(0.9 0.012 230);
+	--color-scene-steel: oklch(0.66 0.016 240);
+	--color-scene-steel-dark: oklch(0.36 0.016 240);
+	--color-scene-plastic: oklch(0.88 0.03 95);
+	--color-scene-water: oklch(0.72 0.055 225);
+	--color-scene-lamp: oklch(0.9 0.12 80);
+	--color-scene-flame: oklch(0.72 0.15 250);
+	--color-scene-shadow: oklch(0.1 0.02 50);
 }
 
 /* -------------------------------------------------------------------------- */

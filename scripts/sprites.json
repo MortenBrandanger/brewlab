@@ -1,0 +1,37 @@
+{
+	"style": "Hand-painted 2D game illustration, cosy and warm. A small home brewery at dusk. Soft painterly shading over clean flat shapes, gentle gradients, no hard outlines. One warm pendant lamp above is the only light: lit tops, shaded feet, soft contact shadows. Palette of malt browns, warm copper, muted cream, deep shadow; a little dusk blue only through windows. Seen side-on at bench height, like a stage set. No text, no letters, no logos, no people.",
+	"images": [
+		{
+			"id": "wall",
+			"size": "1536x1024",
+			"prompt": "The back wall of the brewery behind a long wooden workbench, with the bench top itself left out (the bottom fifth of the picture is plain dark tiled splashback). A window onto evening rooftops on the left, wooden shelves with glass jars of malt and hop pellets and burlap grain sacks in the middle, a pegboard of brewing tools (paddle, ladle, coiled hose) on the right. Slightly soft focus, as a background."
+		},
+		{
+			"id": "wall-2",
+			"size": "1536x1024",
+			"reference": "wall",
+			"prompt": "The next stretch of the SAME brewery wall, continuing to the right of the reference picture, same plaster, same dark tiled splashback in the bottom fifth, same light and palette. Here: an exposed brick chimney breast, a cold-water tap with a coiled garden hose on the tiles, a stack of white plastic fermenting buckets on a high shelf, a copper immersion chiller coil hanging on a hook, dried hop bines draped along a beam. Slightly soft focus, as a background. The left and right tenth of the picture are plain warm plaster above the same dark tiled splashback, with nothing cut off at the edges, so pieces of wall can be joined side by side."
+		},
+		{
+			"id": "wall-3",
+			"size": "1536x1024",
+			"reference": "wall",
+			"prompt": "The far end of the SAME brewery wall, continuing further right, same plaster, same dark tiled splashback in the bottom fifth, same light and palette. Here: a second window onto the dusk sky, a shelf of empty brown beer bottles and a bowl of bottle caps, a small blank chalkboard, a framed painting of hop fields, a second copper pendant lamp. Cosy, like the corner where the first glass gets poured. Slightly soft focus, as a background. The left and right tenth of the picture are plain warm plaster above the same dark tiled splashback, with nothing cut off at the edges, so pieces of wall can be joined side by side."
+		},
+		{
+			"id": "grain-sack",
+			"transparent": true,
+			"prompt": "A single open burlap sack of crushed pale malt standing on its own, rolled top, a few kernels spilling. Centred, whole object visible, transparent background."
+		},
+		{
+			"id": "hop-jar",
+			"transparent": true,
+			"prompt": "A single glass storage jar of green hop pellets with a steel clip lid. Centred, whole object visible, transparent background."
+		},
+		{
+			"id": "kettle",
+			"transparent": true,
+			"prompt": "A single stainless steel electric water kettle with a dark handle, three-quarter view from slightly above. Centred, whole object visible, transparent background."
+		}
+	]
+}

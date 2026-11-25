@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { dev } from '$app/environment';
 	import { resolve } from '$app/paths';
 	import { srmToCss } from '$lib/brewing/appearance';
 	import { EXAMPLES } from '$lib/brewing/recipes';
@@ -48,7 +49,26 @@
 			<StyleChoice onchoose={(styleId) => brew.startFresh(styleId)} />
 		</section>
 	{:else}
-		<div class="mt-6 grid gap-3 sm:grid-cols-[1.2fr_1fr]">
+		<!--
+			The hands-on brew day: the same engine, but you do each step with your
+			hands instead of answering a question about it. Shown in development
+			only until it is ready to be the first thing a visitor is offered.
+		-->
+		{#if dev}
+			<a
+				href={resolve('/brew')}
+				class="panel mt-6 flex flex-col items-start gap-2 p-5 ring-1 ring-amber/60 transition-colors hover:bg-ui"
+			>
+				<span class="chip text-amber">New</span>
+				<span class="font-display text-lg">Brew it with your hands</span>
+				<span class="prose-measure text-sm text-muted">
+					Pick a recipe card and do the brew day yourself. You light the gas, tip the grain in, add
+					the hops when the clock says so and pour the first glass. What you did is what gets
+					judged.
+				</span>
+			</a>
+		{/if}
+		<div class="{dev ? 'mt-3' : 'mt-6'} grid gap-3 sm:grid-cols-[1.2fr_1fr]">
 			<button
 				type="button"
 				class="panel flex flex-col items-start gap-2 p-5 text-start ring-1 ring-copper-dim transition-colors hover:bg-ui"

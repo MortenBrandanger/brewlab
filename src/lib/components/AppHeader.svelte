@@ -1,12 +1,16 @@
 <script lang="ts">
+	import { dev } from '$app/environment';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { brew } from '$lib/state/brew.svelte';
 	import { prefs } from '$lib/state/prefs.svelte';
 	import { STYLES } from '$lib/brewing/styles';
 
+	// The hands-on brew day is still proving itself, so the way in to it is
+	// only shown in development. The route itself is built and reachable.
 	const links = [
 		{ path: '/', label: 'Brew' },
+		...(dev ? ([{ path: '/brew', label: 'By hand' }] as const) : []),
 		{ path: '/challenges', label: 'Challenges' },
 		{ path: '/recipes', label: 'Recipes' }
 	] as const;
